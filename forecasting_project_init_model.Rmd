@@ -1,0 +1,66 @@
+---
+title: "Forecasting project"
+author: "Maggie Walters"
+date: "September 8, 2017"
+output: pdf_document
+---
+
+```{r set-up}
+install.packages('deSolve')
+library(deSolve)
+```
+
+```{r function}
+model <- function(t, y, parms){
+  dS1 <- -parms[1] * y[1] * sum(y[2], y[5], y[8], y[11]) + parms[4] * sum(y[1:12]) - parms[5] * y[1]
+  dI1 <- parms[1] * y[1] * sum(y[2], y[5], y[8], y[11]) - parms[2] * y[2] - parms[5] * y[2]
+  dR1 <- parms[2] * y[2] - parms[5] * y[3] - parms[3] * y[3]
+  dS2 <- (-3/4) * parms[1] * y[3] * sum(y[2], y[5], y[8], y[11]) + parms[3] * y[3] - parms[5] * y[4]
+  dI2 <- (3/4) * parms[1] * y[3] * sum(y[2], y[5], y[8], y[11]) - parms[2] * y[5] - parms[5] * y[5]
+  dR2 <- parms[2] * y[5] - parms[3] * y[6] - parms[5] * y[6]
+  dS3 <- (-1/2) * parms[1] * y[6] * sum(y[2], y[5], y[8], y[11]) + parms[3] * y[6] - parms[5] * y[7]
+  dI3 <- (1/2) * parms[1] * y[6] * sum(y[2], y[5], y[8], y[11]) - parms[2] * y[8] - parms[5] * y[8]
+  dR3 <- parms[2] * y[8] - parms[3] * y[9] - parms[5] * y[9]
+  dS4 <- (-1/4) * parms[1] * y[9] * sum(y[2], y[5], y[8], y[11]) + parms[3] * y[9] - parms[5] * y[10]
+  dI4 <- (1/4) * parms[1] * y[9] * sum(y[2], y[5], y[8], y[11]) - parms[2] * y[11] - parms[5] * y[11]
+  dR4 <- parms[2] * y[11] - parms[5] * y[12]
+  list(c(dS1, dI1, dR1,
+         dS2, dI2, dR2,
+         dS3, dI3, dR3,
+         dS4, dI4, dR4))
+}
+
+```
+
+###Notes
+
+* Need to find estimates of parameter values. 
+    * Beta: find from the Ferguson et. al paper, setting to 1 to assume that it is endemic. 
+    * Gamma: Ferguson et. al paper
+    * Sigma: Duration of heterologous protection following natural infection (Ferguson says 1 year)
+    * Mu: average human birth rate per day (because rn the time step is by day)
+    * Delta: death rate per day x the chance that they were in that class. 
+        * Very simply, this could just be the death rate divided by the number of classes there are (12), but I feel like death rate should be higher for the second infection. Also if you have been infected more times, you are more likely to be an older individual, so the death rate is probably higher for these classes. 
+* Need to introduce a parameter to represent the vaccination rate times the chance that they are in that specific class. Could most likely make this age-dependent. 
+* What are good inital population/condition estimates? 
+* Ferguson et. al has proportions of the different serotypes (ranging from 0.81 to 0.85).
+
+```{r initial conditions and parms}
+y_init <- c(dS1 = 100, dI1 = 10, dR1 = 1,
+         dS2 = 100, dI2 = 10, dR2 = 1,
+         dS3 = 100, dI3 = 10, dR3 = 1,
+         dS4 = 100, dI4 = 10, dR4 = 1)
+
+times <- seq(from = 0, to = 365 * 30, by = 1)
+
+parms <- c(beta = 1,
+           gamma = 0.5,
+           sigma = 1,
+           mu = 6.02 * 10^-4 / 7,
+           delta = 7.167 * 10^-6)
+```
+
+```{r run prelim model}
+out <- ode(times = times, y = y_init, func = model, parms = parms)
+```
+
