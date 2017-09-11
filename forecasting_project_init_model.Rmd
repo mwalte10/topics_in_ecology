@@ -64,3 +64,8 @@ parms <- c(beta = 1,
 out <- ode(times = times, y = y_init, func = model, parms = parms)
 ```
 
+```{r graphs}
+plot(out)
+
+```
+
