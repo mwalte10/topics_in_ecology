@@ -5,26 +5,43 @@ date: "September 8, 2017"
 output: pdf_document
 ---
 
-```{r set-up}
+```{r set-up, include=FALSE}
 install.packages('deSolve')
 library(deSolve)
+
+
 ```
 
 ```{r function}
 model <- function(t, y, parms){
-  dS1 <- -parms[1] * y[1] * sum(y[2], y[5], y[8], y[11]) + parms[4] * sum(y[1:12]) - parms[5] * y[1]
-  dI1 <- parms[1] * y[1] * sum(y[2], y[5], y[8], y[11]) - parms[2] * y[2] - parms[5] * y[2]
-  dR1 <- parms[2] * y[2] - parms[5] * y[3] - parms[3] * y[3]
-  dS2 <- (-3/4) * parms[1] * y[3] * sum(y[2], y[5], y[8], y[11]) + parms[3] * y[3] - parms[5] * y[4]
-  dI2 <- (3/4) * parms[1] * y[3] * sum(y[2], y[5], y[8], y[11]) - parms[2] * y[5] - parms[5] * y[5]
-  dR2 <- parms[2] * y[5] - parms[3] * y[6] - parms[5] * y[6]
-  dS3 <- (-1/2) * parms[1] * y[6] * sum(y[2], y[5], y[8], y[11]) + parms[3] * y[6] - parms[5] * y[7]
-  dI3 <- (1/2) * parms[1] * y[6] * sum(y[2], y[5], y[8], y[11]) - parms[2] * y[8] - parms[5] * y[8]
-  dR3 <- parms[2] * y[8] - parms[3] * y[9] - parms[5] * y[9]
-  dS4 <- (-1/4) * parms[1] * y[9] * sum(y[2], y[5], y[8], y[11]) + parms[3] * y[9] - parms[5] * y[10]
-  dI4 <- (1/4) * parms[1] * y[9] * sum(y[2], y[5], y[8], y[11]) - parms[2] * y[11] - parms[5] * y[11]
-  dR4 <- parms[2] * y[11] - parms[5] * y[12]
-  list(c(dS1, dI1, dR1,
+  susceptible <- c(y[1], y[4], y[7], y[10])
+  infected <- c(y[2], y[5], y[8], y[11])
+  recovered <- c(y[3], y[6], y[9], y[12])
+  population <- c(susceptible, infected, recovered)
+  
+  beta <- parms[1]
+  gamma <- parms[2]
+  sigma <- parms[3]
+  mu <- parms[4]
+  delta <- parms[5]
+  
+  dS1 <- -beta * susceptible[1] * sum(infected) + mu * sum(population) - delta * susceptible[1]
+  dI1 <- beta * susceptible[1] * sum(infected) - gamma * infected[1] - delta * infected[1]
+  dR1 <- gamma * infected[1] - delta * recovered[1] - sigma * recovered[1]
+  
+  dS2 <- (-3/4) * beta * susceptible[2] * sum(infected) + sigma * recovered[1] - delta * susceptible[2]
+  dI2 <- (3/4) * beta * susceptible[2] * sum(infected) - beta * infected[2] - delta * infected[2]
+  dR2 <- gamma * infected[2] - sigma * recovered[2] - delta * recovered[2]
+  
+  dS3 <- (-1/2) * beta * susceptible[3] * sum(infected) + sigma * recovered[2] - delta * susceptible[3]
+  dI3 <- (1/2) * beta * susceptible[3] * sum(infected) - gamma * infected[3] - delta * infected[3]
+  dR3 <- gamma * infected[3] - sigma * recovered[3] - delta * recovered[3]
+  
+  dS4 <- (-1/4) * beta * susceptible[4] * sum(infected) + sigma * recovered[3] - delta * susceptible[4]
+  dI4 <- (1/4) * beta * susceptible[4] * sum(infected)- gamma * infected[4] - delta * infected[4]
+  dR4 <- gamma * infected[4] - delta * recovered[4]
+ 
+   list(c(dS1, dI1, dR1,
          dS2, dI2, dR2,
          dS3, dI3, dR3,
          dS4, dI4, dR4))
@@ -46,26 +63,27 @@ model <- function(t, y, parms){
 * Ferguson et. al has proportions of the different serotypes (ranging from 0.81 to 0.85).
 
 ```{r initial conditions and parms}
-y_init <- c(dS1 = 100, dI1 = 10, dR1 = 1,
-         dS2 = 100, dI2 = 10, dR2 = 1,
-         dS3 = 100, dI3 = 10, dR3 = 1,
-         dS4 = 100, dI4 = 10, dR4 = 1)
+y_init <- c(S1 = 1e6, I1 = 1, R1 = 0,
+         S2 = 100, I2 = 0, R2 = 0,
+         S3 = 100, I3 = 0, R3 = 0,
+         S4 = 100, I4 = 0, R4 = 0)
 
-times <- seq(from = 0, to = 365 * 30, by = 1)
+times <- seq(from = 0, to = 365 * 10, by = .1)
 
-parms <- c(beta = 1,
-           gamma = 0.5,
-           sigma = 1,
+parms <- c(beta = 0.05,
+           gamma = 0.25,
+           sigma = 1/365,
            mu = 6.02 * 10^-4 / 7,
            delta = 7.167 * 10^-6)
 ```
 
-```{r run prelim model}
+```{r run prelim model, include = FALSE}
 out <- ode(times = times, y = y_init, func = model, parms = parms)
 ```
 
 ```{r graphs}
-plot(out)
+{par(mfrow=c(3,1))
+plot(out)}
 
 ```
 
