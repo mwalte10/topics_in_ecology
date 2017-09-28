@@ -1,0 +1,118 @@
+---
+title: "Vectorized model"
+author: "Maggie Walters"
+date: "September 27, 2017"
+output: html_document
+---
+```{r setup}
+rm(list = ls())
+install.packages('deSolve', dependencies = TRUE, repos='http://cran.us.r-project.org')
+library(deSolve)
+
+```
+
+```{r initial conditions}
+percentage_vec <- c(rep(1.92,5), rep(1.84,5), rep(1.8,5), rep(1.74,5),
+                    17.5, 15, 12.1, 8.9, 5.7, 3, 1.4, 0.2)
+percentage_vec <- percentage_vec / 100
+initial_conditions <- as.data.frame(matrix(NA, nrow = 28*4, ncol = 3))
+initial_conditions[,2] <- rep(1:28,4)
+for(i in 1:4){
+  x <- i - 1
+  initial_conditions[x*(28) + (1:28),1] <- rep(i,28)
+}
+initial_conditions[,3] <- rep(percentage_vec,4)
+
+susceptible_init <- cbind(initial_conditions[,1], initial_conditions[,2], rep(NA, 112))
+susceptible_init[,3] <- c(initial_conditions[1:28,3] * 3 *10^6, initial_conditions[29:56,3] * 1.5 * 10^6, 
+                          initial_conditions[57:84,3] * 0.25 * 10^6, initial_conditions[85:112,3] * 0.24 * 10^6)
+
+infected_init <- cbind(initial_conditions[,1], initial_conditions[,2], rep(NA, 112))
+infected_init[,3] <- c(initial_conditions[1:28,3] * 1, initial_conditions[29:56,3] * 0, 
+                         initial_conditions[57:84,3] * 0, initial_conditions[85:112,3] * 0)
+
+recovered_init <- cbind(initial_conditions[,1], initial_conditions[,2], rep(NA, 112))
+recovered_init[,3] <- c(initial_conditions[1:28,3] * 0, initial_conditions[29:56,3] * 0, 
+                         initial_conditions[57:84,3] * 0, initial_conditions[85:112,3] * 0)
+
+age_window <- c(rep(1, 21), rep(10, 7))
+
+susceptible <- function(exposure){
+    x <- exposure - 1
+    susceptible <- c(x * 87 + susceptible_init[1:29,3])
+  }
+susceptible_total <- susceptible(1) + susceptible(2) + susceptible(3) + susceptible(4)
+  
+infected <- function(exposure){
+    x <- exposure - 1
+    infected <- c(x * 87 + infected_init[1:29,3])
+  } 
+infected_total <- infected(1) + infected(2) + infected(3) + infected(4)
+  
+recovered <- function(exposure){
+    x <- exposure - 1
+    recovered <- c(x * 87 + recovered_init[1:29,3])
+  } 
+recovered_total <- recovered(1) + recovered(2) + recovered(3) + recovered(4)
+  
+population <- sum(susceptible_total + infected_total + recovered_total)
+
+parms <- c(beta = 0.05,
+           gamma = 0.25,
+           sigma = 1/365,
+           mu = 6.02 * 10^-4 / 7,
+           delta = 7.167 * 10^-6)
+
+  
+beta <- parms[1]
+gamma <- parms[2]
+sigma <- parms[3]
+mu <- parms[4]
+delta <- parms[5]
+
+```
+
+```{r Model}
+model <- function(t, y, parms){
+
+  for(i in 1:29){
+    #first infection
+    dS1 <-  susceptible(1)[i] * (-beta * sum(infected_total) - delta) - (1/365) * (1/age_window[i]) * c(head(susceptible(1), - 1), 0) + mu * c(population, rep(0,28)) + c(0, (1/365) * (1/(head(age_window, -1)))) * head(susceptible(1), -1)
+      -beta * susceptible(1)[i] * sum(infected_total) + mu * population - delta * susceptible(1)[i]
+    dI1 <- susceptible(1)[i] * (beta * sum(infected_total)) - infected(1)[i] * (gamma + delta)
+    dR1 <- infected(1)[i] * gamma - recovered(1)[i] * (delta + sigma)
+    
+    #second infection
+    dS2 <- susceptible(2)[i] * ((-3/4) * beta * sum(infected_total) - delta) - (1/365) * (1/age_window[i])*c(head(susceptible(2), - 1), 0) + c(0, (1/365)*(1/(head(age_window, -1)))) * head(susceptible(2), -1) + sigma * recovered(1)[i] 
+    dI2 <- susceptible(2)[i] * ((3/4) * beta * sum(infected_total)) - infected(2)[i] * (gamma + delta)
+    dR2 <-  infected(2)[i] * gamma - recovered(2)[i] * (delta + sigma)
+    
+    #third infection
+    dS3 <- susceptible(3)[i] * ((-2/4) * beta * sum(infected_total) - delta) - (1/365) * (1/age_window[i])*c(head(susceptible(3), - 1), 0) + c(0, (1/365)*(1/(head(age_window, -1)))) * head(susceptible(3), -1) + sigma * recovered(2)[i] 
+    dI3 <- susceptible(3)[i] * ((2/4) * beta * sum(infected_total)) - infected(3)[i] * (gamma + delta)
+    dR3 <- infected(3)[i] * gamma - recovered(3)[i] * (delta + sigma) 
+    
+    #fourth infection
+    dS4 <- susceptible(4)[i] * ((-1/4) * beta * sum(infected_total) - delta) - (1/365) * (1/age_window[i])*c(head(susceptible(4), - 1), 0) + c(0, (1/365)*(1/(head(age_window, -1)))) * head(susceptible(4), -1) + sigma * recovered(3)[i] 
+    dI4 <- susceptible(4)[i] * ((1/4) * beta * sum(infected_total)) - infected(4)[i] * (gamma + delta)
+    dR4 <- infected(4)[i] * gamma - recovered(4)[i] * (delta) 
+    
+    list(c(dS1, dI1, dR1,
+         dS2, dI2, dR2,
+         dS3, dI3, dR3,
+         dS4, dI4, dR4))
+  }}
+```
+
+
+```{r}
+y_init <- c(susceptible(1), infected(1), recovered(1),
+            susceptible(2), infected(2), recovered(2),
+            susceptible(3), infected(3), recovered(3),
+            susceptible(4), infected(4), recovered(4))
+
+times <- seq(from = 0, to = 365 * 10, by = .1)
+
+out <- ode(times = times, y = y_init, func = model, parms = parms)
+```
+
