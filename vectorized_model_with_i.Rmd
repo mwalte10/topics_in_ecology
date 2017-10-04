@@ -56,15 +56,22 @@ recovered_total <- recovered(1) + recovered(2) + recovered(3) + recovered(4)
   
 population <- sum(susceptible_total + infected_total + recovered_total)
 
-  parms <- c(beta = 0.05,
-           gamma = 0.25,
-           sigma = 1/365,
-           mu = 6.02 * 10^-4 / 7,
-           delta = 7.167 * 10^-6,
-           age_window = c(rep(1, 21), rep(10, 7)))
+parms <- c(beta = 0.05,
+          gamma = 0.25,
+          sigma = 1/(365* 1.4),
+          mu = 19 / (1000 * 365),
+          delta = 8 / (1000 * 365),
+          age_window = c(rep(1, 21), rep(10, 7)))
 
 
 ```
+
+Notes on parameters:
+Halsted and Zompi (2015) say that cross-protection could last any where from 1.4 to 1.9 years. Also notes that cross-protection could be longer for more severe cases. Could this be altered for the second infection then? Should it be amplified for R2 to S3?
+
+Mu (birth) was altered to reflect 19 births per 1000 people per year, but put on a daily scale. 
+
+Delta (death) was altered to reflect 8 deaths per 1000 people per year, but put on a daily scale. 
 
 ```{r Model}
 model <- function(t, y, parms){
@@ -103,11 +110,19 @@ population <- sum(y)
     dI1 <- 
       #DEMO IN: due to infection 
       S1 * (beta * sum(infected_total))
+      #DEMO IN: due to aging
+      + c(0, gamma * (1/365)) * c(head(I1, -1), 0)
+      #DEMO OUT: due to aging
+      - gamma * (1/365) * c(head(I1, -1), 0)
       #DEMO OUT: due to recovery and death
       - I1 * (gamma + delta)
     dR1 <-
       #DEMO IN: due to recovery
       I1 * gamma 
+      #DEMO IN: due to aging
+      + c(0, sigma * (1/365)) * c(head(R1, -1), 0)
+      #DEMO OUT: due to aging
+      - sigma * (1/365) *c(head(R1, -1), 0)
       #DEMO OUT: due to death and loss of cross-protection
       - R1 * (delta + sigma)
     
@@ -124,11 +139,19 @@ population <- sum(y)
     dI2 <- 
       #DEMO IN: due to infection
       S2 * ((3/4) * beta * sum(infected_total)) 
+      #DEMO IN: due to aging
+      + c(0, gamma * (1/365)) * c(head(I2, -1), 0)
+      #DEMO OUT: due to aging
+      - gamma * (1/365) * c(head(I2, -1), 0)
       #DEMO OUT: due to recovery and death
       - I2 * (gamma + delta)
     dR2 <-  
       #DEMO IN: due to recovery
       I2 * gamma 
+      #DEMO IN: due to aging
+      + c(0, sigma * (1/365)) * c(head(R2, -1), 0)
+      #DEMO OUT: due to aging
+      - sigma * (1/365) *c(head(R2, -1), 0)
       #DEMO OUT: due to death and loss of cross-protection
       - R2 * (delta + sigma)
     
@@ -145,11 +168,19 @@ population <- sum(y)
     dI3 <- 
       #DEMO IN: due to infection
       S3 * ((2/4) * beta * sum(infected_total)) 
+      #DEMO IN: due to aging
+      + c(0, gamma * (1/365)) * c(head(I3, -1), 0)
+      #DEMO OUT: due to aging
+      - gamma * (1/365) * c(head(I3, -1), 0)
       #DEMO OUT: due to recovery and death
       - I3 * (gamma + delta)
     dR3 <- 
       #DEMO IN: due to recovery
       I3 * gamma 
+      #DEMO IN: due to aging
+      + c(0, sigma * (1/365)) * c(head(R3, -1), 0)
+      #DEMO OUT: due to aging
+      - sigma * (1/365) *c(head(R3, -1), 0)
       #DEMO OUT: due to death and loss of cross-protection
       - R3 * (delta + sigma) 
     
@@ -166,11 +197,19 @@ population <- sum(y)
     dI4 <- 
       #DEMO IN: due to infection
       S4 * ((1/4) * beta * sum(infected_total)) 
+      #DEMO IN: due to aging
+      + c(0, gamma * (1/365)) * c(head(I4, -1), 0)
+      #DEMO OUT: due to aging
+      - gamma * (1/365) * c(head(I4, -1), 0)
       #DEMO OUT: due to recovery and death
       - I4 * (gamma + delta)
     dR4 <- 
       #DEMO IN: due to recovery
       I4 * gamma 
+      #DEMO IN: due to aging
+      + c(0, sigma * (1/365)) * c(head(R4, -1), 0)
+      #DEMO OUT: due to aging
+      - sigma * (1/365) *c(head(R4, -1), 0)
       #DEMO OUT: due to death and loss of cross-protection
       - R4 * (delta) 
     
@@ -196,27 +235,13 @@ times <- seq(from = 0, to = 365 * 10, by = .1)
 
 out <- ode(times = times, y = y_init, func = model, parms = parms)
 
-S1_names <- c(assign(paste( "S_1_", 1:28, sep='')))
-
-plot(out, main = c(assign(paste( "S_1_", 1:28, sep='')), 
-                   assign(paste( "I_1_", 1:28, sep='')),
-                   assign(paste( "R_1_", 1:28, sep='')),
-                   assign(paste( "S_2_", 1:28, sep='')), 
-                   assign(paste( "I_2_", 1:28, sep='')),
-                   assign(paste( "R_2_", 1:28, sep='')),
-                   assign(paste( "S_3_", 1:28, sep='')), 
-                   assign(paste( "I_3_", 1:28, sep='')),
-                   assign(paste( "R_3_", 1:28, sep='')),
-                   assign(paste( "S_4_", 1:28, sep='')), 
-                   assign(paste( "I_4_", 1:28, sep='')),
-                   assign(paste( "R_4_", 1:28, sep=''))))
+plot(out)
 ```
 
-Getting the error: Model function must return a list. 
+##NOTES ON OUTPUT:
 
-Right now it is a list of vectors, does this not work? Tried to insert a for loop
-
-
+* Reach 0 susceptibles 1's by the 64th timestep. 
+* Something after the first timestep is immediately moving all susceptible(1) into the infected(1) category. 
 
 
 
