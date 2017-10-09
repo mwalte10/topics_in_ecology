@@ -24,8 +24,8 @@ for(i in 1:4){
 initial_conditions[,3] <- rep(percentage_vec,4)
 
 susceptible_init <- cbind(initial_conditions[,1], initial_conditions[,2], rep(NA, 112))
-susceptible_init[,3] <- c(initial_conditions[1:28,3] * 3 *10^6, initial_conditions[29:56,3] * 1.5 * 10^6, 
-                          initial_conditions[57:84,3] * 0.25 * 10^6, initial_conditions[85:112,3] * 0.24 * 10^6)
+susceptible_init[,3] <- c(initial_conditions[1:28,3] * 1 *10^6, initial_conditions[29:56,3] * 0.5 * 10^6, 
+                          initial_conditions[57:84,3] * 0.25 * 10^6, initial_conditions[85:112,3] * 0.25 * 10^6)
 
 infected_init <- cbind(initial_conditions[,1], initial_conditions[,2], rep(NA, 112))
 infected_init[,3] <- c(initial_conditions[1:28,3] * 1, initial_conditions[29:56,3] * 0, 
@@ -56,9 +56,9 @@ recovered_total <- sum(recovered(1) + recovered(2) + recovered(3) + recovered(4)
   
 population <- sum(susceptible_total + infected_total + recovered_total)
 
-parms <- c(beta = 5e-6,
-          gamma = 2.5e-6,
-          sigma = 1/(365* 1.4),
+parms <- c(beta = 3e-10,
+          gamma = 2.5e-10,
+          sigma = 1/(365 * 1.4),
           mu = 19 / (1000 * 365),
           delta = 8 / (1000 * 365),
           age_window = c(rep(1, 21), rep(10, 7)))
@@ -72,6 +72,8 @@ Halsted and Zompi (2015) say that cross-protection could last any where from 1.4
 Mu (birth) was altered to reflect 19 births per 1000 people per year, but put on a daily scale. 
 
 Delta (death) was altered to reflect 8 deaths per 1000 people per year, but put on a daily scale. 
+
+Eventually the age distribution in the later infections should be higher for older individuals
 
 ```{r Model}
 model <- function(t, y, parms){
@@ -102,91 +104,87 @@ population <- sum(y)
     #first infection
     dS1 <-  
       -S1 * (beta * infected_total) - S1 * delta 
-      - (1/365) * (1/age_window) * c(head(S1, - 1), 0)
+      - (1/365) * (1/c(head(age_window, -1), 0)) * c(head(S1, - 1), 0)
       + mu * c(population, rep(0,27)) 
-      + c(0, (1/365) * (1/(head(age_window, -1)))) * c(head(S1, -1), 0)
+      + c(0, (1/365) * (1/(head(age_window, -1)))) * c(0, head(S1, -1))
     
     dI1 <- 
       S1 * (beta * infected_total)
-      + c(0, (1/365) * (1/(head(age_window, -1)))) * c(head(I1, -1), 0)
-      - (1/365) * (1/age_window) * c(head(I1, - 1), 0)
+      + (1/365) * (1/c(head(age_window, -1), 0)) * c(head(I1, -1), 0)
+      - (1/365) * (1/c(head(age_window, -1), 0)) * c(head(I1, - 1), 0)
       - I1 * (gamma + delta)
     
     dR1 <-
       I1 * gamma 
-      + c(0, (1/365) * (1/(head(age_window, -1)))) * c(head(R1, -1), 0)
-      - (1/365) * (1/age_window) * c(head(R1, - 1), 0)
+      + (1/365) * (1/c(head(age_window, -1), 0)) * c(head(R1, -1), 0)
+      - (1/365) * (1/c(head(age_window, -1), 0)) * c(head(R1, - 1), 0)
       - R1 * (delta + sigma)
     
     #second infection
     dS2 <- 
       S2 * ((-3/4) * beta * infected_total - delta) 
-      - (1/365) * (1/age_window)*c(head(S2, - 1), 0)
-      + c(0, (1/365)*(1/(head(age_window, -1)))) * c(head(S2, -1),0)
+      - (1/365) * (1/c(head(age_window, -1), 0)) *c(head(S2, - 1), 0)
+      + (1/365)*(1/c(head(age_window, -1), 0)) * c(head(S2, -1),0)
       + sigma * R1 
     
     dI2 <- 
       S2 * ((3/4) * beta * infected_total)
-      + c(0, (1/365) * (1/(head(age_window, -1)))) * c(head(I2, -1), 0)
-      - (1/365) * (1/age_window) * c(head(I2, - 1), 0)
+      + (1/365) * (1/c(head(age_window, -1), 0)) * c(head(I2, -1), 0)
+      - (1/365) * (1/c(head(age_window, -1), 0)) * c(head(I2, - 1), 0)
       - I2 * (gamma + delta)
     
     dR2 <-  
       I2 * gamma 
-      + c(0, (1/365) * (1/(head(age_window, -1)))) * c(head(R2, -1), 0)
-      - (1/365) * (1/age_window) * c(head(R2, - 1), 0)
+      + (1/365) * (1/c(head(age_window, -1), 0)) * c(head(R2, -1), 0)
+      - (1/365) * (1/c(head(age_window, -1), 0)) * c(head(R2, - 1), 0)
       - R2 * (delta + sigma)
     
     #third infection
     dS3 <- 
       S3 * ((-2/4) * beta * infected_total - delta) 
-      - (1/365) * (1/age_window)*c(head(S3, - 1), 0) 
-      + c(0, (1/365)*(1/(head(age_window, -1)))) * c(head(S3, -1),0)
+      - (1/365) * (1/c(head(age_window, -1), 0))*c(head(S3, - 1), 0) 
+      + (1/365)*(1/c(head(age_window, -1), 0)) * c(head(S3, -1),0)
       + sigma * R2
     
     dI3 <- 
       S3 * ((2/4) * beta * infected_total) 
-      + c(0, (1/365) * (1/(head(age_window, -1)))) * c(head(I3, -1), 0)
-      - (1/365) * (1/age_window) * c(head(I3, - 1), 0)
+      + (1/365) * (1/c(head(age_window, -1), 0)) * c(head(I3, -1), 0)
+      - (1/365) * (1/c(head(age_window, -1), 0)) * c(head(I3, - 1), 0)
       - I3 * (gamma + delta)
     
     dR3 <- 
       I3 * gamma 
-      + c(0, (1/365) * (1/(head(age_window, -1)))) * c(head(R3, -1), 0)
-      - (1/365) * (1/age_window) * c(head(R3, - 1), 0)
+      + (1/365) * (1/c(head(age_window, -1), 0)) * c(head(R3, -1), 0)
+      - (1/365) * (1/c(head(age_window, -1), 0)) * c(head(R3, - 1), 0)
       - R3 * (delta + sigma) 
     
     #fourth infection
     dS4 <- 
       S4 * ((-1/4) * beta * sum(infected_total) - delta) 
-      - (1/365) * (1/age_window)*c(head(S4, - 1), 0)
-      + c(0, (1/365)*(1/(head(age_window, -1)))) * c(head(S4, -1),0)
+      - (1/365) * (1/c(head(age_window, -1), 0))*c(head(S4, - 1), 0)
+      + (1/365)*(1/c(head(age_window, -1), 0)) * c(head(S4, -1),0)
       + sigma * R3
     
     dI4 <- 
       S4 * ((1/4) * beta * infected_total) 
-      + c(0, (1/365) * (1/(head(age_window, -1)))) * c(head(I4, -1), 0)
-      - (1/365) * (1/age_window) * c(head(I4, - 1), 0)
+      + (1/365) * (1/c(head(age_window, -1), 0)) * c(head(I4, -1), 0)
+      - (1/365) * (1/c(head(age_window, -1), 0)) * c(head(I4, - 1), 0)
       - I4 * (gamma + delta)
     
     dR4 <- 
       I4 * gamma 
-      + c(0, (1/365) * (1/(head(age_window, -1)))) * c(head(R4, -1), 0)
-      - (1/365) * (1/age_window) * c(head(R4, - 1), 0)
+      + (1/365) * (1/c(head(age_window, -1), 0)) * c(head(R4, -1), 0)
+      - (1/365) * (1/c(head(age_window, -1), 0)) * c(head(R4, - 1), 0)
       - R4 * (delta) 
     
   list(c(dS1, dI1, dR1,
-     dS2, dI2, dR2,
-       dS3, dI3, dR3,
-        dS4, dI4, dR4))
+         dS2, dI2, dR2,
+         dS3, dI3, dR3,
+         dS4, dI4, dR4))
   
 
   }
 ```
-susceptible(1) refers to the initial conditions but it should instead be in terms of y. e.g. for susceptible 1 age group 1 would be y[1]
-
-* do for infected_total as well, or anything that has to do with the values of the compartments.
-put age_window in parms
 
 
 ```{r}
@@ -195,42 +193,27 @@ y_init <- c(susceptible(1), infected(1), recovered(1),
             susceptible(3), infected(3), recovered(3),
             susceptible(4), infected(4), recovered(4))
 
-times <- seq(from = 0, to = 365 * 10, by = .1)
+times <- seq(from = 0, to = 365 * 5, by = .1)
 
 out <- ode(times = times, y = y_init, func = model, parms = parms)
 
-titles <- c(rep("SUSCEPTIBLE(1)", 28), rep("INFECTED(1)", 28), rep("RECOVERED(1)", 28),
-            rep("SUSCEPTIBLE(2)", 28), rep("INFECTED(2)", 28), rep("RECOVERED(2)", 28),
-          rep("SUSCEPTIBLE(3)", 28), rep("INFECTED(3)", 28), rep("RECOVERED(3)", 28),
-            rep("SUSCEPTIBLE(4)", 28), rep("INFECTED(4)", 28), rep("RECOVERED(4)", 28))
-plot(out, main = titles)
-View(out)
+
 ```
 
 
 ```{r}
-sum_mat <- matrix(NA, nrow = 36501, ncol = 12)
+matplot(sapply(1:28,function(aa)rowSums(out[,1+((1:12)-1)*28+aa])),type='l',lty=1)
+
+
+sum_titles <- c("SUSCEPTIBLE(1)", "INFECTED(1)", "RECOVERED(1)",
+           "SUSCEPTIBLE(2)", "INFECTED(2)", "RECOVERED(2)", 
+          "SUSCEPTIBLE(3)", "INFECTED(3)","RECOVERED(3)", 
+         "SUSCEPTIBLE(4)", "INFECTED(4)", "RECOVERED(4)")
 
 for(i in 1:12){
-  for(j in 1:36501){
-    if(i != 1){
-      x <- rep(i * 28, 28)
-      sum_mat[j,i+1] <- sum(out[j,x + (2:29)])
-    }else{
-       sum_mat[j,i+1] <- sum(out[j,2:29])
-    }
-  }
+  plot(out[,1],rowSums(out[,(1+(i-1)*28+1):(1+(i)*28)]),type='l',main = sum_titles[i])
 }
 
-titles <- c("susceptible_1", "infected_1", "recovered_1",
-            "susceptible_2", "infected_2", "recovered_2",
-            "susceptible_3", "infected_3", "recovered_3",
-            "susceptible_4", "infected_4", "recovered_4")
-
-##plots of sums
-for(i in 1:12){
-  plot(sum_mat[,i], main = titles[i], type = "l")
-}
 
 ```
 
