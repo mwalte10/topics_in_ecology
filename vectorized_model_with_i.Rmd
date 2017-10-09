@@ -56,8 +56,8 @@ recovered_total <- sum(recovered(1) + recovered(2) + recovered(3) + recovered(4)
   
 population <- sum(susceptible_total + infected_total + recovered_total)
 
-parms <- c(beta = 3e-10,
-          gamma = 2.5e-10,
+parms <- c(beta = 3e-1,
+          gamma = 2.5e-1,
           sigma = 1/(365 * 1.4),
           mu = 19 / (1000 * 365),
           delta = 8 / (1000 * 365),
@@ -103,13 +103,13 @@ population <- sum(y)
 
     #first infection
     dS1 <-  
-      -S1 * (beta * infected_total) - S1 * delta 
+      -S1 * (beta * infected_total / population) - S1 * delta 
       - (1/365) * (1/c(head(age_window, -1), 0)) * c(head(S1, - 1), 0)
       + mu * c(population, rep(0,27)) 
       + c(0, (1/365) * (1/(head(age_window, -1)))) * c(0, head(S1, -1))
     
     dI1 <- 
-      S1 * (beta * infected_total)
+      S1 * (beta * infected_total / population)
       + (1/365) * (1/c(head(age_window, -1), 0)) * c(head(I1, -1), 0)
       - (1/365) * (1/c(head(age_window, -1), 0)) * c(head(I1, - 1), 0)
       - I1 * (gamma + delta)
@@ -122,13 +122,13 @@ population <- sum(y)
     
     #second infection
     dS2 <- 
-      S2 * ((-3/4) * beta * infected_total - delta) 
+      S2 * ((-3/4) * beta * infected_total / population - delta) 
       - (1/365) * (1/c(head(age_window, -1), 0)) *c(head(S2, - 1), 0)
       + (1/365)*(1/c(head(age_window, -1), 0)) * c(head(S2, -1),0)
       + sigma * R1 
     
     dI2 <- 
-      S2 * ((3/4) * beta * infected_total)
+      S2 * ((3/4) * beta * infected_total / population)
       + (1/365) * (1/c(head(age_window, -1), 0)) * c(head(I2, -1), 0)
       - (1/365) * (1/c(head(age_window, -1), 0)) * c(head(I2, - 1), 0)
       - I2 * (gamma + delta)
@@ -141,13 +141,13 @@ population <- sum(y)
     
     #third infection
     dS3 <- 
-      S3 * ((-2/4) * beta * infected_total - delta) 
+      S3 * ((-2/4) * beta * infected_total / population - delta) 
       - (1/365) * (1/c(head(age_window, -1), 0))*c(head(S3, - 1), 0) 
       + (1/365)*(1/c(head(age_window, -1), 0)) * c(head(S3, -1),0)
       + sigma * R2
     
     dI3 <- 
-      S3 * ((2/4) * beta * infected_total) 
+      S3 * ((2/4) * beta * infected_total / population) 
       + (1/365) * (1/c(head(age_window, -1), 0)) * c(head(I3, -1), 0)
       - (1/365) * (1/c(head(age_window, -1), 0)) * c(head(I3, - 1), 0)
       - I3 * (gamma + delta)
@@ -160,13 +160,13 @@ population <- sum(y)
     
     #fourth infection
     dS4 <- 
-      S4 * ((-1/4) * beta * sum(infected_total) - delta) 
+      S4 * ((-1/4) * beta * infected_total / population - delta) 
       - (1/365) * (1/c(head(age_window, -1), 0))*c(head(S4, - 1), 0)
       + (1/365)*(1/c(head(age_window, -1), 0)) * c(head(S4, -1),0)
       + sigma * R3
     
     dI4 <- 
-      S4 * ((1/4) * beta * infected_total) 
+      S4 * ((1/4) * beta * infected_total / population) 
       + (1/365) * (1/c(head(age_window, -1), 0)) * c(head(I4, -1), 0)
       - (1/365) * (1/c(head(age_window, -1), 0)) * c(head(I4, - 1), 0)
       - I4 * (gamma + delta)
@@ -193,7 +193,7 @@ y_init <- c(susceptible(1), infected(1), recovered(1),
             susceptible(3), infected(3), recovered(3),
             susceptible(4), infected(4), recovered(4))
 
-times <- seq(from = 0, to = 365 * 5, by = .1)
+times <- seq(from = 0, to = 180, by = .1)
 
 out <- ode(times = times, y = y_init, func = model, parms = parms)
 
@@ -213,6 +213,9 @@ sum_titles <- c("SUSCEPTIBLE(1)", "INFECTED(1)", "RECOVERED(1)",
 for(i in 1:12){
   plot(out[,1],rowSums(out[,(1+(i-1)*28+1):(1+(i)*28)]),type='l',main = sum_titles[i])
 }
+
+i=12
+matplot(out[1:300,(1+(i-1)*28+1):(1+(i)*28)],type='l',lty=1)
 
 
 ```
