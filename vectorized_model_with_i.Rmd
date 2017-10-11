@@ -56,7 +56,7 @@ recovered_total <- sum(recovered(1) + recovered(2) + recovered(3) + recovered(4)
   
 population <- sum(susceptible_total + infected_total + recovered_total)
 
-parms <- c(beta = 3e-1,
+parms <- c(beta = 3e-1 ,
           gamma = 2.5e-1,
           sigma = 1/(365 * 1.4),
           mu = 19 / (1000 * 365),
@@ -104,9 +104,9 @@ population <- sum(y)
     #first infection
     dS1 <-  
       -S1 * (beta * infected_total / population) - S1 * delta 
-      - (1/365) * (1/c(head(age_window, -1), 0)) * c(head(S1, - 1), 0)
       + mu * c(population, rep(0,27)) 
       + c(0, (1/365) * (1/(head(age_window, -1)))) * c(0, head(S1, -1))
+      - (1/365) * (1/c(head(age_window, -1), 0)) * c(head(S1, - 1), 0)
     
     dI1 <- 
       S1 * (beta * infected_total / population)
@@ -123,8 +123,8 @@ population <- sum(y)
     #second infection
     dS2 <- 
       S2 * ((-3/4) * beta * infected_total / population - delta) 
-      - (1/365) * (1/c(head(age_window, -1), 0)) *c(head(S2, - 1), 0)
       + (1/365)*(1/c(head(age_window, -1), 0)) * c(head(S2, -1),0)
+      - (1/365) * (1/c(head(age_window, -1), 0)) *c(head(S2, - 1), 0)
       + sigma * R1 
     
     dI2 <- 
@@ -142,8 +142,8 @@ population <- sum(y)
     #third infection
     dS3 <- 
       S3 * ((-2/4) * beta * infected_total / population - delta) 
-      - (1/365) * (1/c(head(age_window, -1), 0))*c(head(S3, - 1), 0) 
       + (1/365)*(1/c(head(age_window, -1), 0)) * c(head(S3, -1),0)
+      - (1/365) * (1/c(head(age_window, -1), 0))*c(head(S3, - 1), 0) 
       + sigma * R2
     
     dI3 <- 
@@ -161,8 +161,8 @@ population <- sum(y)
     #fourth infection
     dS4 <- 
       S4 * ((-1/4) * beta * infected_total / population - delta) 
-      - (1/365) * (1/c(head(age_window, -1), 0))*c(head(S4, - 1), 0)
       + (1/365)*(1/c(head(age_window, -1), 0)) * c(head(S4, -1),0)
+      - (1/365) * (1/c(head(age_window, -1), 0))*c(head(S4, - 1), 0)
       + sigma * R3
     
     dI4 <- 
@@ -193,7 +193,7 @@ y_init <- c(susceptible(1), infected(1), recovered(1),
             susceptible(3), infected(3), recovered(3),
             susceptible(4), infected(4), recovered(4))
 
-times <- seq(from = 0, to = 180, by = .1)
+times <- seq(from = 0, to = 365 * 3, by = .1)
 
 out <- ode(times = times, y = y_init, func = model, parms = parms)
 
@@ -211,11 +211,47 @@ sum_titles <- c("SUSCEPTIBLE(1)", "INFECTED(1)", "RECOVERED(1)",
          "SUSCEPTIBLE(4)", "INFECTED(4)", "RECOVERED(4)")
 
 for(i in 1:12){
-  plot(out[,1],rowSums(out[,(1+(i-1)*28+1):(1+(i)*28)]),type='l',main = sum_titles[i])
+  plot(out[,1],rowSums(out[,(1+(i-1)*28+1):(1+(i)*28)]),type='l',main = sum_titles[i], ylim= range(0:1e6))
 }
 
-i=12
-matplot(out[1:300,(1+(i-1)*28+1):(1+(i)*28)],type='l',lty=1)
+#Plot susceptibles
+{plot(out[,1],rowSums(out[,(1+(1-1)*28+1):(1+(1)*28)]),type='l', ylim= range(0:1e6), main = "Susceptible")
+lines(out[,1],rowSums(out[,(1+(4-1)*28+1):(1+(4)*28)]),type='l', col ="red")
+lines(out[,1],rowSums(out[,(1+(7-1)*28+1):(1+(7)*28)]),type='l', col ="blue")
+lines(out[,1],rowSums(out[,(1+(10-1)*28+1):(1+(10)*28)]),type='l', col ="green")
+legend(800, 8e5, legend=c("Susceptible 1", "Susceptible 2", "Susceptible 3", "Susceptible 4"),
+       col=c("black","red", "blue","green"), lty=1, cex=0.8)
+}
+
+#Plot infected
+{plot(out[,1],rowSums(out[,(1+(2-1)*28+1):(1+(2)*28)]),type='l', ylim= range(0:1e6), main = "Infected")
+lines(out[,1],rowSums(out[,(1+(5-1)*28+1):(1+(5)*28)]),type='l', col ="red")
+lines(out[,1],rowSums(out[,(1+(8-1)*28+1):(1+(8)*28)]),type='l', col ="blue")
+lines(out[,1],rowSums(out[,(1+(11-1)*28+1):(1+(11)*28)]),type='l', col ="green")
+legend(800, 8e5, legend=c("Infected 1", "Infected 2", "Infected 3", "Infected 4"),
+       col=c("black","red", "blue","green"), lty=1, cex=0.8)
+}
+
+#Plot Recovered
+{plot(out[,1],rowSums(out[,(1+(3-1)*28+1):(1+(3)*28)]),type='l', ylim= range(0:1e6), main = "Recovered")
+lines(out[,1],rowSums(out[,(1+(6-1)*28+1):(1+(6)*28)]),type='l', col ="red")
+lines(out[,1],rowSums(out[,(1+(9-1)*28+1):(1+(9)*28)]),type='l', col ="blue")
+lines(out[,1],rowSums(out[,(1+(12-1)*28+1):(1+(12)*28)]),type='l', col ="green")
+legend(800, 8e5, legend=c("Recovered 1", "Recovered 2", "Recovered 3", "Recovered 4"),
+       col=c("black","red", "blue","green"), lty=1, cex=0.8)
+}
+##With the appropriate scale
+{plot(out[,1],rowSums(out[,(1+(3-1)*28+1):(1+(3)*28)]),type='l', ylim= range(0:1e8), main = "Recovered")
+lines(out[,1],rowSums(out[,(1+(6-1)*28+1):(1+(6)*28)]),type='l', col ="red")
+lines(out[,1],rowSums(out[,(1+(9-1)*28+1):(1+(9)*28)]),type='l', col ="blue")
+lines(out[,1],rowSums(out[,(1+(12-1)*28+1):(1+(12)*28)]),type='l', col ="green")
+legend(800, 8e7, legend=c("Recovered 1", "Recovered 2", "Recovered 3", "Recovered 4"),
+       col=c("black","red", "blue","green"), lty=1, cex=0.8)
+}
+
+
+i=3
+matplot(out[1:300,(1+(i-1)*28+1):(1+(i)*28)],type='l',lty=1, main = "Proportion of R1 Ages When R-nought is 2")
 
 
 ```
