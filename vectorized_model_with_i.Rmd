@@ -56,12 +56,13 @@ recovered_total <- sum(recovered(1) + recovered(2) + recovered(3) + recovered(4)
   
 population <- sum(susceptible_total + infected_total + recovered_total)
 
-parms <- c(beta = 3e-1 ,
-          gamma = 2.5e-1,
+parms <- c(beta = 3e-2,
+          gamma = 2.5e-2,
           sigma = 1/(365 * 1.4),
           mu = 19 / (1000 * 365),
           delta = 8 / (1000 * 365),
           age_window = c(rep(1, 21), rep(10, 7)))
+
 
 
 ```
@@ -112,13 +113,13 @@ population <- sum(y)
       S1 * (beta * infected_total / population)
       + (1/365) * (1/c(head(age_window, -1), 0)) * c(head(I1, -1), 0)
       - (1/365) * (1/c(head(age_window, -1), 0)) * c(head(I1, - 1), 0)
-      - I1 * (gamma + delta)
+      - I1 * gamma - I1 * delta
     
     dR1 <-
-      I1 * gamma 
+      I1  * gamma 
       + (1/365) * (1/c(head(age_window, -1), 0)) * c(head(R1, -1), 0)
       - (1/365) * (1/c(head(age_window, -1), 0)) * c(head(R1, - 1), 0)
-      - R1 * (delta + sigma)
+      - R1 * sigma - R1 * delta
     
     #second infection
     dS2 <- 
@@ -131,48 +132,48 @@ population <- sum(y)
       S2 * ((3/4) * beta * infected_total / population)
       + (1/365) * (1/c(head(age_window, -1), 0)) * c(head(I2, -1), 0)
       - (1/365) * (1/c(head(age_window, -1), 0)) * c(head(I2, - 1), 0)
-      - I2 * (gamma + delta)
+      - I2  * gamma - I2 * delta
     
     dR2 <-  
-      I2 * gamma 
+      I2  * gamma  
       + (1/365) * (1/c(head(age_window, -1), 0)) * c(head(R2, -1), 0)
       - (1/365) * (1/c(head(age_window, -1), 0)) * c(head(R2, - 1), 0)
-      - R2 * (delta + sigma)
+      - R2  * sigma - R2 * delta
     
     #third infection
     dS3 <- 
       S3 * ((-2/4) * beta * infected_total / population - delta) 
       + (1/365)*(1/c(head(age_window, -1), 0)) * c(head(S3, -1),0)
       - (1/365) * (1/c(head(age_window, -1), 0))*c(head(S3, - 1), 0) 
-      + sigma * R2
+      + sigma * R2 
     
     dI3 <- 
       S3 * ((2/4) * beta * infected_total / population) 
       + (1/365) * (1/c(head(age_window, -1), 0)) * c(head(I3, -1), 0)
       - (1/365) * (1/c(head(age_window, -1), 0)) * c(head(I3, - 1), 0)
-      - I3 * (gamma + delta)
+      - I3  * gamma - I3 * delta
     
     dR3 <- 
-      I3 * gamma 
+      I3  * gamma  
       + (1/365) * (1/c(head(age_window, -1), 0)) * c(head(R3, -1), 0)
       - (1/365) * (1/c(head(age_window, -1), 0)) * c(head(R3, - 1), 0)
-      - R3 * (delta + sigma) 
+      - R3 * sigma - R3 * delta
     
     #fourth infection
     dS4 <- 
       S4 * ((-1/4) * beta * infected_total / population - delta) 
       + (1/365)*(1/c(head(age_window, -1), 0)) * c(head(S4, -1),0)
       - (1/365) * (1/c(head(age_window, -1), 0))*c(head(S4, - 1), 0)
-      + sigma * R3
+      + sigma * R3 
     
     dI4 <- 
       S4 * ((1/4) * beta * infected_total / population) 
       + (1/365) * (1/c(head(age_window, -1), 0)) * c(head(I4, -1), 0)
       - (1/365) * (1/c(head(age_window, -1), 0)) * c(head(I4, - 1), 0)
-      - I4 * (gamma + delta)
+      - I4 * gamma - I4 * delta
     
     dR4 <- 
-      I4 * gamma 
+      I4 * gamma  
       + (1/365) * (1/c(head(age_window, -1), 0)) * c(head(R4, -1), 0)
       - (1/365) * (1/c(head(age_window, -1), 0)) * c(head(R4, - 1), 0)
       - R4 * (delta) 
@@ -193,7 +194,7 @@ y_init <- c(susceptible(1), infected(1), recovered(1),
             susceptible(3), infected(3), recovered(3),
             susceptible(4), infected(4), recovered(4))
 
-times <- seq(from = 0, to = 365 * 3, by = .1)
+times <- seq(from = 0, to = 365 * 10, by = .1)
 
 out <- ode(times = times, y = y_init, func = model, parms = parms)
 
@@ -219,8 +220,9 @@ for(i in 1:12){
 lines(out[,1],rowSums(out[,(1+(4-1)*28+1):(1+(4)*28)]),type='l', col ="red")
 lines(out[,1],rowSums(out[,(1+(7-1)*28+1):(1+(7)*28)]),type='l', col ="blue")
 lines(out[,1],rowSums(out[,(1+(10-1)*28+1):(1+(10)*28)]),type='l', col ="green")
-legend(800, 8e5, legend=c("Susceptible 1", "Susceptible 2", "Susceptible 3", "Susceptible 4"),
+legend(800, 9e5, legend=c("Susceptible 1", "Susceptible 2", "Susceptible 3", "Susceptible 4"),
        col=c("black","red", "blue","green"), lty=1, cex=0.8)
+legend(800, 6e5, legend=c("beta = 0.03", "gamma = 0.025"),  cex=0.8)
 }
 
 #Plot infected
@@ -228,8 +230,9 @@ legend(800, 8e5, legend=c("Susceptible 1", "Susceptible 2", "Susceptible 3", "Su
 lines(out[,1],rowSums(out[,(1+(5-1)*28+1):(1+(5)*28)]),type='l', col ="red")
 lines(out[,1],rowSums(out[,(1+(8-1)*28+1):(1+(8)*28)]),type='l', col ="blue")
 lines(out[,1],rowSums(out[,(1+(11-1)*28+1):(1+(11)*28)]),type='l', col ="green")
-legend(800, 8e5, legend=c("Infected 1", "Infected 2", "Infected 3", "Infected 4"),
-       col=c("black","red", "blue","green"), lty=1, cex=0.8)
+legend(600, 8.05e5, legend=c("Infected 1", "Infected 2", "Infected 3", "Infected 4"),
+       col=c("black","red", "blue","green"), lty = 1, cex=0.8)
+legend(850, 8.05e5, legend=c("beta = 0.03", "gamma = 0.025"),  cex=0.8)
 }
 
 #Plot Recovered
@@ -237,24 +240,33 @@ legend(800, 8e5, legend=c("Infected 1", "Infected 2", "Infected 3", "Infected 4"
 lines(out[,1],rowSums(out[,(1+(6-1)*28+1):(1+(6)*28)]),type='l', col ="red")
 lines(out[,1],rowSums(out[,(1+(9-1)*28+1):(1+(9)*28)]),type='l', col ="blue")
 lines(out[,1],rowSums(out[,(1+(12-1)*28+1):(1+(12)*28)]),type='l', col ="green")
-legend(800, 8e5, legend=c("Recovered 1", "Recovered 2", "Recovered 3", "Recovered 4"),
+legend(0, 8e5, legend=c("Recovered 1", "Recovered 2", "Recovered 3", "Recovered 4"),
        col=c("black","red", "blue","green"), lty=1, cex=0.8)
+legend(0, 5e5, legend=c("beta = 0.03", "gamma = 0.025"),  cex=0.8)
 }
 ##With the appropriate scale
-{plot(out[,1],rowSums(out[,(1+(3-1)*28+1):(1+(3)*28)]),type='l', ylim= range(0:1e8), main = "Recovered")
+{plot(out[,1],rowSums(out[,(1+(3-1)*28+1):(1+(3)*28)]),type='l', main = "Recovered")
 lines(out[,1],rowSums(out[,(1+(6-1)*28+1):(1+(6)*28)]),type='l', col ="red")
 lines(out[,1],rowSums(out[,(1+(9-1)*28+1):(1+(9)*28)]),type='l', col ="blue")
 lines(out[,1],rowSums(out[,(1+(12-1)*28+1):(1+(12)*28)]),type='l', col ="green")
-legend(800, 8e7, legend=c("Recovered 1", "Recovered 2", "Recovered 3", "Recovered 4"),
+legend(0, 2e8, legend=c("Recovered 1", "Recovered 2", "Recovered 3", "Recovered 4"),
        col=c("black","red", "blue","green"), lty=1, cex=0.8)
+legend(0, 1e8, legend=c("beta = 0.03", "gamma = 0.025"),  cex=0.8)
 }
 
 
-i=3
+i=1
 matplot(out[1:300,(1+(i-1)*28+1):(1+(i)*28)],type='l',lty=1, main = "Proportion of R1 Ages When R-nought is 2")
 
 
 ```
 
 
+```{r}
+test_vec <- rep(NA,1095)
+for(i in 1:1095){
+  test_vec[i] <- which(out[,58] > i)[1]
+}
+print(test_vec)
+```
 
