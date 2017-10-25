@@ -57,20 +57,29 @@ recovered_total <- sum(recovered(1) + recovered(2) + recovered(3) + recovered(4)
   
 population <- sum(susceptible_total + infected_total + recovered_total)
 
-parms <- c(beta = 3e-1,
+parms <- c(beta = 1,
           gamma = 2.5e-1,
           sigma = 1/(365 * 1.2),
           mu = 19 / (1000 * 365),
-          delta = 8 / (1000 * 365),
+          delta = c((0.013 / 365), rep(0.001 / 365, 4), rep(0, 10), rep(0.001, 5), 
+                    0.002 / 365, 0.0025 / 365, 
+                    0.004 / 365, 0.0085 / 365,
+                    0.0175 / 365, 0.0425 / 365,
+                    0.114 / 365, 0.151 / 365),
           age_window = c(rep(1, 21), rep(10, 7)))
 
-parms_vac <- c(beta = 3e-1,
+parms_vac <- c(beta = 1,
           gamma = 2.5e-1,
           sigma = 1/(365 * 1.2),
           mu = 19 / (1000 * 365),
-          delta = 8 / (1000 * 365),
+          delta = c((0.013 / 365), rep(0.001 / 365, 4), rep(0, 10), rep(0.001, 5), 
+                    0.002 / 365, 0.0025 / 365, 
+                    0.004 / 365, 0.0085 / 365,
+                    0.0175 / 365, 0.0425 / 365,
+                    0.114 / 365, 0.151 / 365),
           age_window = c(rep(1, 21), rep(10, 7)),
-          vac = c(rep(0,8), 1, rep(0.2, 8), rep(0, 11)))
+          vac = c(rep(0,8), 0.5, rep(0.2, 8), rep(0, 11)))
+
 ```
 
 ```{r Model, no vaccination}
@@ -80,8 +89,8 @@ beta <- parms[1]
 gamma <- parms[2]
 sigma <- parms[3]
 mu <- parms[4]
-delta <- parms[5]
-age_window <- parms[6:33]
+delta <- parms[5:32]
+age_window <- parms[33:60]
 
 S1 <- y[1:28]
 I1 <- y[29:56]
@@ -101,79 +110,90 @@ population <- sum(y)
 
     #first infection
     dS1 <-  
-      -S1 * (beta * infected_total / population) - S1 * delta 
-      + mu * c(population, rep(0,27)) 
-      + c(0, (1/365) * (1/(head(age_window, -1)))) * c(0, head(S1, -1))
-      - (1/365) * c((1/c(head(age_window, -1))), 0) * c(head(S1, - 1), 0)
-    
+      mu * c(population, rep(0,27)) + 
+      c(0, 1/365 / head(age_window, -1) * head(S1, -1)) -
+      c(1/365 / head(age_window, -1) * head(S1, -1), 0) -
+      S1 * (beta * infected_total / population) -
+      S1 * delta 
+      
     dI1 <- 
-      S1 * (beta * infected_total / population)
-      + (1/365) * (1/age_window) * c(0, head(I1, -1))
-      - (1/365) * (1/age_window) * c(head(I1, - 1), 0)
-      - I1 * gamma - I1 * delta
+      S1 * (beta * infected_total / population)+
+      c(0, 1/365 / head(age_window, -1) * head(I1, -1)) -
+      c(1/365 / head(age_window, -1) * head(I1, -1), 0) -
+      I1 * gamma - 
+      I1 * delta
     
     dR1 <-
-      I1  * gamma 
-      + (1/365) * (1/age_window) * c(0, head(R1, -1))
-      - (1/365) * (1/age_window) * c(head(R1, - 1), 0)
-      - R1 * sigma - R1 * delta
+      I1  * gamma +
+      c(0, 1/365 / head(age_window, -1) * head(R1, -1)) -
+      c(1/365 / head(age_window, -1) * head(R1, -1), 0) -
+      R1 * sigma -
+      R1 * delta
     
     #second infection
     dS2 <- 
-      S2 * ((-3/4) * beta * infected_total / population - delta) 
-      + (1/365) * (1/age_window) * c(0, head(S2, -1))
-      - (1/365) * (1/age_window) *c(head(S2, - 1), 0)
-      + sigma * R1 
+      R1 * sigma +
+      c(0, 1/365 / head(age_window, -1) * head(S2, -1)) -
+      c(1/365 / head(age_window, -1) * head(S2, -1), 0) -
+      S2 * (3/4 * beta * infected_total / population) -
+      S2 * delta
     
     dI2 <- 
-      S2 * ((3/4) * beta * infected_total / population)
-      + (1/365) * (1/age_window) * c(0, head(I2, -1))
-      - (1/365) * (1/age_window) * c(head(I2, - 1), 0)
-      - I2  * gamma - I2 * delta
+      S2 * (3/4 * beta * infected_total / population) +
+      c(0, 1/365 / head(age_window, -1) * head(I2, -1)) -
+      c(1/365 / head(age_window, -1) * head(I2, -1), 0) -
+      I2 * gamma -
+      I2 * delta
     
     dR2 <-  
-      I2  * gamma  
-      + (1/365) * (1/age_window) * c(0, head(I2, -1))
-      - (1/365) * (1/age_window) * c(head(R2, - 1), 0)
-      - R2  * sigma - R2 * delta
+      I2 * gamma +  
+      c(0, 1/365 / head(age_window, -1) * head(R2, -1)) -
+      c(1/365 / head(age_window, -1) * head(R2, -1), 0) -
+      R2 * sigma -
+      R2 * delta
     
     #third infection
     dS3 <- 
-      S3 * ((-2/4) * beta * infected_total / population - delta) 
-      + (1/365) * (1/age_window) * c(0, head(S3, -1))
-      - (1/365) * (1/age_window) * c(head(S3, - 1), 0) 
-      + sigma * R2 
+      R2 * sigma + 
+      c(0, 1/365 / head(age_window, -1) * head(S3, -1)) -
+      c(1/365 / head(age_window, -1) * head(S3, -1), 0) -
+      S3 * (2/4 * beta * infected_total / population) -
+      S3 * delta
     
     dI3 <- 
-      S3 * ((2/4) * beta * infected_total / population) 
-      + (1/365) * (1/age_window) * c(0, head(I3, -1))
-      - (1/365) * (1/age_window) * c(head(I3, - 1), 0)
-      - I3  * gamma - I3 * delta
+      S3 * (2/4 * beta * infected_total / population) +
+      c(0, 1/365 / head(age_window, -1) * head(I3, -1)) -
+      c(1/365 / head(age_window, -1) * head(I3, -1), 0) -
+      I3 * gamma -
+      I3 * delta
     
     dR3 <- 
-      I3  * gamma  
-      + (1/365) * (1/age_window) * c(0, head(R3, -1))
-      - (1/365) * (1/age_window) * c(head(R3, - 1), 0)
-      - R3 * sigma - R3 * delta
+      I3 * gamma +
+      c(0, 1/365 / head(age_window, -1) * head(R3, -1)) -
+      c(1/365 / head(age_window, -1) * head(R3, -1), 0) -
+      R3 * sigma -
+      R3 * delta
     
     #fourth infection
     dS4 <- 
-      S4 * ((-1/4) * beta * infected_total / population - delta) 
-      + (1/365)* (1/age_window) * c(0, head(S4, -1))
-      - (1/365) * (1/age_window) *c(head(S4, - 1), 0)
-      + sigma * R3 
+      R3 * sigma +
+      c(0, 1/365 / head(age_window, -1) * head(S4, -1)) -
+      c(1/365 / head(age_window, -1) * head(S4, -1), 0) -
+      S4 * (1/4 * beta * infected_total / population) -
+      S4 * delta 
     
     dI4 <- 
-      S4 * ((1/4) * beta * infected_total / population) 
-      + (1/365) * (1/age_window) * c(0, head(I4, -1))
-      - (1/365) * (1/age_window) * c(head(I4, - 1), 0)
-      - I4 * gamma - I4 * delta
+      S4 * (1/4 * beta * infected_total / population) +
+      c(0, 1/365 / head(age_window, -1) * head(I4, -1)) -
+      c(1/365 / head(age_window, -1) * head(I4, -1), 0) -
+      I4 * gamma -
+      I4 * delta
     
     dR4 <- 
-      I4 * gamma  
-      + (1/365) * (1/age_window) * c(0, head(R4, -1))
-      - (1/365) * (1/age_window) * c(head(R4, - 1), 0)
-      - R4 * (delta) 
+      I4 * gamma +
+      c(0, 1/365 / head(age_window, -1) * head(R4, -1)) -
+      c(1/365 / head(age_window, -1) * head(R4, -1), 0) -
+      R4 * delta 
     
   list(c(dS1, dI1, dR1,
          dS2, dI2, dR2,
@@ -188,13 +208,13 @@ population <- sum(y)
 ```{r Vaccination Model}
 model_vac <- function(t, y, parms){
 
-beta <- parms[1]
-gamma <- parms[2]
+beta <- parms_vac[1]
+gamma <- parms_vac[2]
 sigma <- parms[3]
 mu <- parms[4]
-delta <- parms[5]
-age_window <- parms[6:33]
-vac <- parms[34:61]
+delta <- parms[5:32]
+age_window <- parms[33:60]
+vac <- parms_vac[61:88]
 
 S1 <- y[1:28]
 I1 <- y[29:56]
@@ -214,87 +234,102 @@ population <- sum(y)
 
     #first infection
     dS1 <-  
-      -S1 * (beta * infected_total / population) - S1 * delta 
-      + mu * c(population, rep(0,27)) 
-      + c(0, (1/365) * (1/(head(age_window, -1)))) * c(0, head(S1, -1))
-      - (1/365) * c((1/c(head(age_window, -1))), 0) * c(head(S1, - 1), 0)
-      - vac * S1
+      mu * c(population, rep(0,27)) +
+      c(0, 1/365 / head(age_window, -1) * head(S1, -1)) -
+      c(1/365 / head(age_window, -1) * head(S1, -1), 0) -
+      S1 * (beta * infected_total / population) -
+      S1 * delta - 
+      S1 * vac
     
     dI1 <- 
-      S1 * (beta * infected_total / population)
-      + (1/365) * (1/age_window) * c(0, head(I1, -1))
-      - (1/365) * (1/age_window) * c(head(I1, - 1), 0)
-      - I1 * gamma - I1 * delta
+      S1 * (beta * infected_total / population) +
+      c(0, 1/365 / head(age_window, -1) * head(I1, -1)) -
+      c(1/365 / head(age_window, -1) * head(I1, -1), 0) -
+      I1 * gamma -
+      I1 * delta
     
     dR1 <-
-      I1  * gamma 
-      + vac * S1
-      + (1/365) * (1/age_window) * c(0, head(R1, -1))
-      - (1/365) * (1/age_window) * c(head(R1, - 1), 0)
-      - R1 * sigma - R1 * delta - R1 * vac
+      I1  * gamma +
+      c(0, 1/365 / head(age_window, -1) * head(R1, -1)) -
+      c(1/365 / head(age_window, -1) * head(R1, -1), 0) -
+      R1 * sigma -
+      R1 * delta + 
+      S1 * vac + - R1 * vac
+      
     
     #second infection
     dS2 <- 
-      S2 * ((-3/4) * beta * infected_total / population - delta) 
-      + (1/365) * (1/age_window) * c(0, head(S2, -1))
-      - (1/365) * (1/age_window) *c(head(S2, - 1), 0)
-      + sigma * R1 
-      - S2 * vac
+      R1 * sigma +
+      c(0, 1/365 / head(age_window, -1) * head(S2, -1)) -
+      c(1/365 / head(age_window, -1) * head(S2, -1), 0) -
+      S2 * (3/4 * beta * infected_total / population) -
+      S2 * delta -
+      S2 * vac
     
     dI2 <- 
-      S2 * ((3/4) * beta * infected_total / population)
-      + (1/365) * (1/age_window) * c(0, head(I2, -1))
-      - (1/365) * (1/age_window) * c(head(I2, - 1), 0)
-      - I2  * gamma - I2 * delta
+      S2 * (3/4 * beta * infected_total / population) +
+      c(0, 1/365 / head(age_window, -1) * head(I2, -1)) -
+      c(1/365 / head(age_window, -1) * head(I2, -1), 0) -
+      I2 * gamma -
+      I2 * delta
     
     dR2 <-  
-      I2  * gamma  
-      + R1 * vac + S2 * vac - R2 * vac
-      + (1/365) * (1/age_window) * c(0, head(I2, -1))
-      - (1/365) * (1/age_window) * c(head(R2, - 1), 0)
-      - R2  * sigma - R2 * delta 
+      I2 * gamma +  
+      c(0, 1/365 / head(age_window, -1) * head(R2, -1)) -
+      c(1/365 / head(age_window, -1) * head(R2, -1), 0) -
+      R2 * sigma -
+      R2 * delta +
+      R1 * vac + 
+      S2 * vac - 
+      R2 * vac 
     
     #third infection
     dS3 <- 
-      S3 * ((-2/4) * beta * infected_total / population - delta) 
-      + (1/365) * (1/age_window) * c(0, head(S3, -1))
-      - (1/365) * (1/age_window) * c(head(S3, - 1), 0) 
-      + sigma * R2 
-      - S3 * vac
+      R2 * sigma + 
+      c(0, 1/365 / head(age_window, -1) * head(S3, -1)) -
+      c(1/365 / head(age_window, -1) * head(S3, -1), 0) -
+      S3 * (2/4 * beta * infected_total / population) -
+      S3 * delta -
+      S3 * vac
     
     dI3 <- 
-      S3 * ((2/4) * beta * infected_total / population) 
-      + (1/365) * (1/age_window) * c(0, head(I3, -1))
-      - (1/365) * (1/age_window) * c(head(I3, - 1), 0)
-      - I3  * gamma - I3 * delta
+      S3 * (2/4 * beta * infected_total / population) +
+      c(0, 1/365 / head(age_window, -1) * head(I3, -1)) -
+      c(1/365 / head(age_window, -1) * head(I3, -1), 0) -
+      I3 * gamma -
+      I3 * delta
     
     dR3 <- 
-      I3  * gamma  
-      + R2 * vac + S3 * vac - R3 * vac
-      + (1/365) * (1/age_window) * c(0, head(R3, -1))
-      - (1/365) * (1/age_window) * c(head(R3, - 1), 0)
-      - R3 * sigma - R3 * delta
+      I3 * gamma +
+      c(0, 1/365 / head(age_window, -1) * head(R3, -1)) -
+      c(1/365 / head(age_window, -1) * head(R3, -1), 0) -
+      R3 * sigma -
+      R3 * delta +
+      R2 * vac + S3 * vac - R3 * vac 
     
     #fourth infection
     dS4 <- 
-      S4 * ((-1/4) * beta * infected_total / population - delta) 
-      - S4 * vac
-      + (1/365)* (1/age_window) * c(0, head(S4, -1))
-      - (1/365) * (1/age_window) *c(head(S4, - 1), 0)
-      + sigma * R3 
+      R3 * sigma +
+      c(0, 1/365 / head(age_window, -1) * head(S4, -1)) -
+      c(1/365 / head(age_window, -1) * head(S4, -1), 0) -
+      S4 * (1/4 * beta * infected_total / population) -
+      S4 * delta -
+      S4 * vac 
     
     dI4 <- 
-      S4 * ((1/4) * beta * infected_total / population) 
-      + (1/365) * (1/age_window) * c(0, head(I4, -1))
-      - (1/365) * (1/age_window) * c(head(I4, - 1), 0)
-      - I4 * gamma - I4 * delta
+      S4 * (1/4 * beta * infected_total / population) +
+      c(0, 1/365 / head(age_window, -1) * head(I4, -1)) -
+      c(1/365 / head(age_window, -1) * head(I4, -1), 0) -
+      I4 * gamma -
+      I4 * delta
     
     dR4 <- 
-      I4 * gamma  
-      + R3 * vac + S4 * vac 
-      + (1/365) * (1/age_window) * c(0, head(R4, -1))
-      - (1/365) * (1/age_window) * c(head(R4, - 1), 0)
-      - R4 * (delta) 
+      I4 * gamma +
+      c(0, 1/365 / head(age_window, -1) * head(R4, -1)) -
+      c(1/365 / head(age_window, -1) * head(R4, -1), 0) -
+      R4 * delta +
+      R3 * vac + S4 * vac 
+    
     
   list(c(dS1, dI1, dR1,
          dS2, dI2, dR2,
@@ -319,21 +354,42 @@ out_vac <- ode(times = times, y = y_init, func = model_vac, parms = parms_vac)
 ```
 
 ```{r graphs}
-#plot infected, from vaccination model 
-{plot(out_vac[,1],rowSums(out_vac[,(1+(2-1)*28+1):(1+(2)*28)]),type='l', 
-      lty= 2,
-      ylim= range(0:1e6), main = "Infected, Vaccination Model")
-lines(out_vac[,1],rowSums(out_vac[,(1+(5-1)*28+1):(1+(5)*28)]),type='l', lty= 2, col ="red")
-lines(out_vac[,1],rowSums(out_vac[,(1+(8-1)*28+1):(1+(8)*28)]),type='l', lty= 2, col ="blue")
-lines(out_vac[,1],rowSums(out_vac[,(1+(11-1)*28+1):(1+(11)*28)]),type='l', lty= 2, col ="green")
-lines(out_mod[,1],rowSums(out_mod[,(1+(2-1)*28+1):(1+(2)*28)]),type='l')
-lines(out_mod[,1],rowSums(out_mod[,(1+(5-1)*28+1):(1+(5)*28)]),type='l', col ="red")
-lines(out_mod[,1],rowSums(out_mod[,(1+(8-1)*28+1):(1+(8)*28)]),type='l', col ="blue")
-lines(out_mod[,1],rowSums(out_mod[,(1+(11-1)*28+1):(1+(11)*28)]),type='l', col ="green")
-legend(600, 8.05e5, legend=c("Infected 1", "Infected 2", "Infected 3", "Infected 4"),
-       col=c("black","red", "blue","green"), lty = 2, cex=0.8)
-legend(1500, 8.05e5, legend=c("beta = 0.3", "gamma = 0.25"),  cex=0.8)
+#plot infected
+infected_names <- c("Infected 1", "Infected 2", "Infected 3", "Infected 4")
+for(i in 0:3){
+  x <- 2 + 3 * i
+  {plot(out_vac[,1],rowSums(out_vac[,(1+(x-1)*28+1):(1+(x)*28)]),type='l', 
+      lty= 2, col = "red", xlim = range(0:1300),
+      ylim= range(0:3.5e5), main = infected_names[i + 1])
+  lines(out_mod[,1],rowSums(out_mod[,(1+(x-1)*28+1):(1+(x)*28)]),type='l')
+  legend(600, 2e5, legend=c("Vaccination", "No Vaccination"),
+       col=c("red", "black"), lty = c(2,1), cex=0.8)}
 }
 
+#Plot susceptible
+susceptible_names <- c("Susceptible 1", "Susceptible 2", "Susceptible 3", "Susceptible 4")
+for(i in 0:3){
+  x <- 1 + 3 * i
+  {plot(out_vac[,1],rowSums(out_vac[,(1+(x-1)*28+1):(1+(x)*28)]),type='l', 
+      lty= 2, col = "red", xlim = range(0:1300),
+      ylim= range(0:5.5e5), main = susceptible_names[i + 1])
+  lines(out_mod[,1],rowSums(out_mod[,(1+(x-1)*28+1):(1+(x)*28)]),type='l')
+  legend(1000, 4e5, legend=c("Vaccination", "No Vaccination"),
+       col=c("red", "black"), lty = c(2,1), cex=0.8)}}
+
+#plot recovered
+recovered_names <- c("Recovered 1", "Recovered 2", "Recovered 3", "Recovered 4")
+for(i in 0:3){
+  x <- 3 + 3 * i
+  {plot(out_vac[,1],rowSums(out_vac[,(1+(x-1)*28+1):(1+(x)*28)]),type='l', 
+      lty= 2, col = "red", xlim = range(0:1300),
+      ylim= range(0:9e5), main = recovered_names [i + 1])
+  lines(out_mod[,1],rowSums(out_mod[,(1+(x-1)*28+1):(1+(x)*28)]),type='l')
+  legend(1000, 4e5, legend=c("Vaccination", "No Vaccination"),
+       col=c("red", "black"), lty = c(2,1), cex=0.8)}}
+
+
 ```
+
+
 
