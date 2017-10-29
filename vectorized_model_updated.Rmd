@@ -24,17 +24,17 @@ for(i in 1:4){
 initial_conditions[,3] <- rep(percentage_vec,4)
 
 susceptible_init_h <- cbind(initial_conditions[,1], initial_conditions[,2], rep(NA, 112))
-susceptible_init_h[,3] <- c(initial_conditions[1:28,3] * 60 *10^6, initial_conditions[29:56,3] * 0, 
+susceptible_init_h[,3] <- c(initial_conditions[1:28,3] * 6 *10^6, initial_conditions[29:56,3] * 0, 
                           initial_conditions[57:84,3] * 0, initial_conditions[85:112,3] * 0)
 susceptible_init_l <- cbind(initial_conditions[,1], initial_conditions[,2], rep(NA, 112))
-susceptible_init_l[,3] <- c(initial_conditions[1:28,3] * 60 *10^6, initial_conditions[29:56,3] * 0, 
+susceptible_init_l[,3] <- c(initial_conditions[1:28,3] * 6 *10^6, initial_conditions[29:56,3] * 0, 
                           initial_conditions[57:84,3] * 0, initial_conditions[85:112,3] * 0)
 
 infected_init_h <- cbind(initial_conditions[,1], initial_conditions[,2], rep(NA, 112))
-infected_init_h[,3] <- c(initial_conditions[1:28,3] * 100, initial_conditions[29:56,3] * 0, 
+infected_init_h[,3] <- c(initial_conditions[1:28,3] * 1, initial_conditions[29:56,3] * 0, 
                          initial_conditions[57:84,3] * 0, initial_conditions[85:112,3] * 0)
 infected_init_l <- cbind(initial_conditions[,1], initial_conditions[,2], rep(NA, 112))
-infected_init_l[,3] <- c(initial_conditions[1:28,3] * 150, initial_conditions[29:56,3] * 0, 
+infected_init_l[,3] <- c(initial_conditions[1:28,3] * 1, initial_conditions[29:56,3] * 0, 
                          initial_conditions[57:84,3] * 0, initial_conditions[85:112,3] * 0)
 
 recovered_init_h <- cbind(initial_conditions[,1], initial_conditions[,2], rep(NA, 112))
@@ -337,12 +337,59 @@ y_init <- c(susceptible_h(1), infected_h(1), recovered_h(1),
             susceptible_l(3), infected_l(3), recovered_l(3),
             susceptible_l(4), infected_l(4), recovered_l(4))
 
-times <- seq(from = 0, to = 365 * 3, by = 0.1)
+times <- seq(from = 0, to = 365 * 50, by = 0.1)
 
 out <- ode(times = times, y = y_init, func = model, parms = parms)
 
 
 ```
+
+```{r}
+#Plot susceptibles
+susceptible_names <- c("Susceptible 1", "Susceptible 2", "Susceptible 3", "Susceptible 4")
+for(i in 0:3){
+  x <- 1 + 3 * i
+  y <- x + 12
+  {plot(out[,1],rowSums(out[,(1+(x-1)*28+1):(1+(x)*28)]),type='l', 
+      lty= 2, col = "red",
+      ylim= range(0:9e6), main = susceptible_names[i + 1])
+  lines(out[,1],rowSums(out[,(1+(y-1)*28+1):(1+(y)*28)]),type='l')
+  legend(300, 7e6, legend=c("High", "Low"),
+       col=c("red", "black"), lty = c(2,1), cex=0.8)}}
+
+#Plot infecteds 
+infected_names <- c("Infected 1", "Infected 2", "Infected 3", "Infected 4")
+for(i in 0:3){
+  x <- 2 + 3 * i
+  y <- x + 12
+  {plot(out[,1],rowSums(out[,(1+(x-1)*28+1):(1+(x)*28)]),type='l', 
+      col = "red", 
+       main = infected_names[i + 1])
+  lines(out[,1],rowSums(out[,(1+(y-1)*28+1):(1+(y)*28)]),type='l')
+ # legend(10000, 3000, legend=c("High", "Low"),
+     #  col=c("red", "black"), lty = c(1,1), cex=0.8)
+}}
+
+#Plot recovered
+recovered_names <- c("Recovered 1", "Recovered 2", "Recovered 3", "Recovered 4")
+for(i in 0:3){
+  x <- 3 + 3 * i
+  y <- x + 12
+  {plot(out[,1],rowSums(out[,(1+(x-1)*28+1):(1+(x)*28)]),type='l', 
+      lty= 2, col = "red",
+      ylim= range(0:1e7), main = recovered_names[i + 1])
+  lines(out[,1],rowSums(out[,(1+(y-1)*28+1):(1+(y)*28)]),type='l')
+  legend(300, 7e6, legend=c("High", "Low"),
+       col=c("red", "black"), lty = c(1,1), cex=0.8)}}
+```
+
+
+```{r}
+matplot(sapply(1:28,function(aa)rowSums(out[,1+((1:12)-1)*28+11])),type='l',lty = 1)
+```
+
+
+
 
 
 ```{r}
@@ -394,49 +441,53 @@ legend(0, 5e5, legend=c("beta = 0.1", "gamma = 0.25"),  cex=0.8)
 i=1
 matplot(out[1:300,(1+(i-1)*28+1):(1+(i)*28)],type='l',lty=1, main = "Proportion of R1 Ages When R-nought is 2")
 
-
 ```
-
-
 ```{r}
-#Plot susceptibles
-{plot(out[,1],rowSums(out[,(1+(1-1)*28+1):(1+(1)*28)]),type='l', ylim = c(0, 1e8),main = "Susceptible", lwd = 2)
-lines(out[,1],rowSums(out[,(1+(4-1)*28+1):(1+(4)*28)]),type='l', col ="red", lwd = 2)
-lines(out[,1],rowSums(out[,(1+(7-1)*28+1):(1+(7)*28)]),type='l', col ="blue", lwd = 2)
-lines(out[,1],rowSums(out[,(1+(10-1)*28+1):(1+(10)*28)]),type='l', col ="green", lwd = 2)
-lines(out[,1],rowSums(out[,(1+(13-1)*28+1):(1+(13)*28)]),type='l', lty = 2, lwd = 0.5)
-lines(out[,1],rowSums(out[,(1+(16-1)*28+1):(1+(16)*28)]),type='l', col ="red", lty = 2, lwd = 0.5)
-lines(out[,1],rowSums(out[,(1+(19-1)*28+1):(1+(19)*28)]),type='l', col ="blue", lty = 2, lwd = 0.5)
-lines(out[,1],rowSums(out[,(1+(22-1)*28+1):(1+(22)*28)]),type='l', col ="green", lty = 2, lwd = 0.5)
-legend(600, 1e8, legend=c("Susceptible 1, High", "Susceptible 2, High", "Susceptible 3, High", "Susceptible 4, High", "Susceptible 1, Low", "Susceptible 2, Low", "Susceptible 3, Low", "Susceptible 4, Low"),
-       col=c("black","red", "blue","green","black","red", "blue","green"), lty=c(rep(1,4), rep(2,4)), cex=0.8)
+sum(out[182501,2:29])
+axis_names <- c(seq(0:19), "to 29", "to 39", "to 49", "to 59", "to 69",
+            "to 79", "to 89", "to 99")
+S1_h_prop <- rep(NA, 28)
+for(i in 1:28){
+  col <- i + 1
+  S1_h_prop[i] <- out[182501,col] / sum(out[182501,2:29])
 }
+{barplot(S1_h_prop, main = "Proportion of Ages in S1", names.arg = axis_names)}
 
-#Plot infecteds 
-{plot(out[,1],rowSums(out[,(1+(2-1)*28+1):(1+(2)*28)]),type='l', ylim= range(0:1e7), main = "Infected", lwd = 2)
-lines(out[,1],rowSums(out[,(1+(5-1)*28+1):(1+(5)*28)]),type='l', col ="red", lwd = 2)
-lines(out[,1],rowSums(out[,(1+(8-1)*28+1):(1+(8)*28)]),type='l', col ="blue", lwd = 2)
-lines(out[,1],rowSums(out[,(1+(11-1)*28+1):(1+(11)*28)]),type='l', col ="green", lwd = 2)
-lines(out[,1],rowSums(out[,(1+(14-1)*28+1):(1+(14)*28)]),type='l', lty = 2, lwd = 0.5)
-lines(out[,1],rowSums(out[,(1+(17-1)*28+1):(1+(17)*28)]),type='l', col ="red", lty = 2, lwd = 0.5)
-lines(out[,1],rowSums(out[,(1+(20-1)*28+1):(1+(20)*28)]),type='l', col ="blue", lty = 2, lwd = 0.5)
-lines(out[,1],rowSums(out[,(1+(23-1)*28+1):(1+(23)*28)]),type='l', col ="green", lty = 2, lwd = 0.5)
-legend(600, 8.05e6, legend=c("Infected 1, High", "Infected 2, High", "Infected 3, High", "Infected 4, High", "Infected 1, Low", "Infected 2, Low", "Infected 3, Low", "Infected 4, Low"),
-       col=c("black","red", "blue","green","black","red", "blue","green"), lty=c(rep(1,4), rep(2,4)), cex=0.8)
+S2_h_prop <- rep(NA, 28)
+for(i in 85:112){
+  col <- i + 1
+  S2_h_prop[i - 84] <- out[182501,col] / sum(out[182501,85:112])
 }
+{barplot(S2_h_prop, main = "Proportion of Ages in S2", names.arg = axis_names)}
 
-#Plot recovered
-{plot(out[,1],rowSums(out[,(1+(3-1)*28+1):(1+(3)*28)]),type='l',  main = "Recovered", lwd = 2, ylim = range(1:3e8))
-lines(out[,1],rowSums(out[,(1+(6-1)*28+1):(1+(6)*28)]),type='l', col ="red", lwd = 2)
-lines(out[,1],rowSums(out[,(1+(9-1)*28+1):(1+(9)*28)]),type='l', col ="blue", lwd = 2)
-lines(out[,1],rowSums(out[,(1+(12-1)*28+1):(1+(12)*28)]),type='l', col ="green", lwd = 2)
-lines(out[,1],rowSums(out[,(1+(15-1)*28+1):(1+(15)*28)]),type='l', lty = 2, lwd = 0.5)
-lines(out[,1],rowSums(out[,(1+(18-1)*28+1):(1+(18)*28)]),type='l', col ="red", lty = 2, lwd = 0.5)
-lines(out[,1],rowSums(out[,(1+(21-1)*28+1):(1+(21)*28)]),type='l', col ="blue", lty = 2, lwd = 0.5)
-lines(out[,1],rowSums(out[,(1+(24-1)*28+1):(1+(24)*28)]),type='l', col ="green", lty = 2, lwd = 0.5)
-legend(600, 2.5e8, legend=c("Recovered 1, High", "Recovered 2, High", "Recovered 3, High", "Recovered 4, High", "Recovered 1, Low", "Recovered 2, Low", "Recovered 3, Low", "Recovered 4, Low"),
-       col=c("black","red", "blue","green","black","red", "blue","green"), lty=c(rep(1,4), rep(2,4)), cex=0.8)
+S3_h_prop <- rep(NA, 28)
+for(i in 169:196){
+  col <- i + 1
+  S3_h_prop[i - 168] <- out[182501,col] / sum(out[182501,169:196])
 }
+{barplot(S3_h_prop, main = "Proportion of Ages in S3", names.arg = axis_names)}
+
+S4_h_prop <- rep(NA, 28)
+for(i in 253:280){
+  col <- i + 1
+  S4_h_prop[i - 252] <- out[182501,col] / sum(out[182501,253:280])
+}
+{barplot(S4_h_prop, main = "Proportion of Ages in S4", names.arg = axis_names)}
+
 ```
 
+```{r crude SP9 calc}
+nines <- c(1, 29, 57,
+           85, 113, 141,
+           169, 197, 225, 
+           253, 281, 309)
+blank <- rep(NA, 12)
+
+for(i in 1:12){
+  nine <- nines[i] + 10
+  blank[i] <- out[182501, nine]
+}
+
+SP9 <- 1- (blank[1] / sum(blank))
+```
 

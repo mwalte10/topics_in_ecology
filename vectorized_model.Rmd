@@ -2,7 +2,7 @@
 title: "Vectorized model"
 author: "Maggie Walters"
 date: "September 27, 2017"
-output: html_document
+output: pdf_document
 ---
 ```{r setup}
 rm(list = ls())
@@ -91,31 +91,93 @@ model <- function(t, y, parms){
 
   for(i in 1:28){
     #first infection
-    dS1[i] <-  susceptible(1)[i] * (-beta * sum(infected_total) - delta) - (1/365) * (1/age_window[i]) * c(head(susceptible(1), - 1), 0)[i] + mu * c(population, rep(0,27))[i] + c(0, (1/365) * (1/(head(age_window, -1))))[i] * c(head(susceptible(1), -1), 0)[i] -beta * susceptible(1)[i] * sum(infected_total) + mu * population - delta * susceptible(1)[i]
-    dI1[i] <- susceptible(1)[i] * (beta * sum(infected_total)) - infected(1)[i] * (gamma + delta)
-    dR1[i] <- infected(1)[i] * gamma - recovered(1)[i] * (delta + sigma)
+    dS1[i] <-  
+      #DEMO OUT: due to infection and death. E.g. move from s_1_1 to i_1_1
+      susceptible(1)[i] * (-beta * sum(infected_total) - delta) 
+      #DEMO OUT: due to aging. E.g. move from s_1_1 to s_1_2
+      - (1/365) * (1/age_window[i]) * c(head(susceptible(1), - 1), 0)[i] 
+      #DEMO IN: due to births and aging
+      + mu * c(population, rep(0,27))[i] + c(0, (1/365) * (1/(head(age_window, -1))))[i] * c(head(susceptible(1), -1), 0)[i]
+    dI1[i] <- 
+      #DEMO IN: due to infection 
+      susceptible(1)[i] * (beta * sum(infected_total))
+      #DEMO OUT: due to recovery and death
+      - infected(1)[i] * (gamma + delta)
+    dR1[i] <-
+      #DEMO IN: due to recovery
+      infected(1)[i] * gamma 
+      #DEMO OUT: due to death and loss of cross-protection
+      - recovered(1)[i] * (delta + sigma)
     
     #second infection
-    dS2[i] <- susceptible(2)[i] * ((-3/4) * beta * sum(infected_total) - delta) - (1/365) * (1/age_window[i])*c(head(susceptible(2), - 1), 0)[i] + c(0, (1/365)*(1/(head(age_window, -1))))[i] * c(head(susceptible(2), -1),0)[i] + sigma * recovered(1)[i] 
-    dI2[i] <- susceptible(2)[i] * ((3/4) * beta * sum(infected_total)) - infected(2)[i] * (gamma + delta)
-    dR2[i] <-  infected(2)[i] * gamma - recovered(2)[i] * (delta + sigma)
+    dS2[i] <- 
+      #DEMO OUT: due to infection and death
+      susceptible(2)[i] * ((-3/4) * beta * sum(infected_total) - delta) 
+      #DEMO OUT: due to aging.
+      - (1/365) * (1/age_window[i])*c(head(susceptible(2), - 1), 0)[i]
+      #DEMO IN: due to aging 
+      + c(0, (1/365)*(1/(head(age_window, -1))))[i] * c(head(susceptible(2), -1),0)[i] 
+      #DEMO IN: loss of cross-protection
+      + sigma * recovered(1)[i] 
+    dI2[i] <- 
+      #DEMO IN: due to infection
+      susceptible(2)[i] * ((3/4) * beta * sum(infected_total)) 
+      #DEMO OUT: due to recovery and death
+      - infected(2)[i] * (gamma + delta)
+    dR2[i] <-  
+      #DEMO IN: due to recovery
+      infected(2)[i] * gamma 
+      #DEMO OUT: due to death and loss of cross-protection
+      - recovered(2)[i] * (delta + sigma)
     
     #third infection
-    dS3[i] <- susceptible(3)[i] * ((-2/4) * beta * sum(infected_total) - delta) - (1/365) * (1/age_window[i])*c(head(susceptible(3), - 1), 0)[i] + c(0, (1/365)*(1/(head(age_window, -1))))[i] * c(head(susceptible(3), -1),0)[i] + sigma * recovered(2)[i] 
-    dI3[i] <- susceptible(3)[i] * ((2/4) * beta * sum(infected_total)) - infected(3)[i] * (gamma + delta)
-    dR3[i] <- infected(3)[i] * gamma - recovered(3)[i] * (delta + sigma) 
+    dS3[i] <- 
+      #DEMO OUT: due to infection and death
+      susceptible(3)[i] * ((-2/4) * beta * sum(infected_total) - delta) 
+      #DEMO OUT: due to aging.
+      - (1/365) * (1/age_window[i])*c(head(susceptible(3), - 1), 0)[i] 
+      #DEMO IN: due to aging 
+      + c(0, (1/365)*(1/(head(age_window, -1))))[i] * c(head(susceptible(3), -1),0)[i] 
+      #DEMO IN: loss of cross-protection
+      + sigma * recovered(2)[i] 
+    dI3[i] <- 
+      #DEMO IN: due to infection
+      susceptible(3)[i] * ((2/4) * beta * sum(infected_total)) 
+      #DEMO OUT: due to recovery and death
+      - infected(3)[i] * (gamma + delta)
+    dR3[i] <- 
+      #DEMO IN: due to recovery
+      infected(3)[i] * gamma 
+      #DEMO OUT: due to death and loss of cross-protection
+      - recovered(3)[i] * (delta + sigma) 
     
     #fourth infection
-    dS4[i] <- susceptible(4)[i] * ((-1/4) * beta * sum(infected_total) - delta) - (1/365) * (1/age_window[i])*c(head(susceptible(4), - 1), 0)[i] + c(0, (1/365)*(1/(head(age_window, -1))))[i] * c(head(susceptible(4), -1),0)[i] + sigma * recovered(3)[i] 
-    dI4[i] <- susceptible(4)[i] * ((1/4) * beta * sum(infected_total)) - infected(4)[i] * (gamma + delta)
-    dR4[i] <- infected(4)[i] * gamma - recovered(4)[i] * (delta) 
+    dS4[i] <- 
+      #DEMO OUT: due to infection and death
+      susceptible(4)[i] * ((-1/4) * beta * sum(infected_total) - delta) 
+      #DEMO OUT: due to aging.
+      - (1/365) * (1/age_window[i])*c(head(susceptible(4), - 1), 0)[i] 
+      #DEMO IN: due to aging 
+      + c(0, (1/365)*(1/(head(age_window, -1))))[i] * c(head(susceptible(4), -1),0)[i] 
+      #DEMO IN: loss of cross-protection
+      + sigma * recovered(3)[i] 
+    dI4[i] <- 
+      #DEMO IN: due to infection
+      susceptible(4)[i] * ((1/4) * beta * sum(infected_total)) 
+      #DEMO OUT: due to recovery and death
+      - infected(4)[i] * (gamma + delta)
+    dR4[i] <- 
+      #DEMO IN: due to recovery
+      infected(4)[i] * gamma 
+      #DEMO OUT: due to death and loss of cross-protection
+      - recovered(4)[i] * (delta) 
     
-   
+  }
       list(c(dS1, dI1, dR1,
          dS2, dI2, dR2,
          dS3, dI3, dR3,
          dS4, dI4, dR4))
-  }}
+  }
 ```
 
 
