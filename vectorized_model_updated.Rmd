@@ -81,8 +81,8 @@ recovered_total_l <- sum(recovered_l(1) + recovered_l(2) + recovered_l(3) + reco
 population_h <- sum(susceptible_total_h + infected_total_h + recovered_total_h)
 population_l <- sum(susceptible_total_l + infected_total_l + recovered_total_l)
 
-parms <- c(beta = 1,
-          beta_l = 1.5,
+parms <- c(beta = 0.75,
+          beta_l = 1.25,
           gamma = 1/4,
           sigma = 1/(365 * 1.2),
           mu = 19 / (1000 * 365),
@@ -164,10 +164,10 @@ population_l <- sum(y[337:672])
       S1_h * (beta * infected_total_h / population_h) -
       S1_h * delta
     dS1_L <-  
-      mu * c(population, rep(0,27)) +
+      mu * c(population_l, rep(0,27)) +
       c(0, 1/365 / head(age_window, -1) * head(S1_l, -1)) -
       c(1/365 / head(age_window, -1) * head(S1_l, -1), 0) -
-      S1_l * (beta_l * infected_total_h / population_h) -
+      S1_l * (beta_l * infected_total_l / population_l) -
       S1_l * delta
 
     dI1 <- 
@@ -327,7 +327,7 @@ population_l <- sum(y[337:672])
 ```
 
 
-```{r}
+```{r run model}
 y_init <- c(susceptible_h(1), infected_h(1), recovered_h(1),
             susceptible_h(2), infected_h(2), recovered_h(2),
             susceptible_h(3), infected_h(3), recovered_h(3),
@@ -337,37 +337,41 @@ y_init <- c(susceptible_h(1), infected_h(1), recovered_h(1),
             susceptible_l(3), infected_l(3), recovered_l(3),
             susceptible_l(4), infected_l(4), recovered_l(4))
 
-times <- seq(from = 0, to = 365 * 50, by = 0.1)
+times <- seq(from = 0, to = 365 * 30, by = 0.1)
 
 out <- ode(times = times, y = y_init, func = model, parms = parms)
 
+final <- (dim(out)[1])
 
 ```
 
-```{r}
+```{r Plot by class over time}
 #Plot susceptibles
 susceptible_names <- c("Susceptible 1", "Susceptible 2", "Susceptible 3", "Susceptible 4")
 for(i in 0:3){
   x <- 1 + 3 * i
   y <- x + 12
+  legend_y <- max(rowSums(out[,(1+(x-1)*28+1):(1+(x)*28)]))
   {plot(out[,1],rowSums(out[,(1+(x-1)*28+1):(1+(x)*28)]),type='l', 
-      lty= 2, col = "red",
-      ylim= range(0:9e6), main = susceptible_names[i + 1])
-  lines(out[,1],rowSums(out[,(1+(y-1)*28+1):(1+(y)*28)]),type='l')
-  legend(300, 7e6, legend=c("High", "Low"),
-       col=c("red", "black"), lty = c(2,1), cex=0.8)}}
+       col = "red", lwd = 2,
+       main = susceptible_names[i + 1], ylab = "total")
+  lines(out[,1],rowSums(out[,(1+(y-1)*28+1):(1+(y)*28)]),type='l', lwd = 2)
+  legend(8000, (2/3) * legend_y, legend=c("Beta = 0.75", "Beta = 1.25"), lwd = c(2,2),
+       col=c("red", "black"), cex=0.8)}
+  }
 
 #Plot infecteds 
 infected_names <- c("Infected 1", "Infected 2", "Infected 3", "Infected 4")
 for(i in 0:3){
   x <- 2 + 3 * i
   y <- x + 12
+  legend_y <- max(rowSums(out[,(1+(x-1)*28+1):(1+(x)*28)]))
   {plot(out[,1],rowSums(out[,(1+(x-1)*28+1):(1+(x)*28)]),type='l', 
-      col = "red", 
+      col = "red", lwd = 2, 
        main = infected_names[i + 1])
-  lines(out[,1],rowSums(out[,(1+(y-1)*28+1):(1+(y)*28)]),type='l')
- # legend(10000, 3000, legend=c("High", "Low"),
-     #  col=c("red", "black"), lty = c(1,1), cex=0.8)
+  lines(out[,1],rowSums(out[,(1+(y-1)*28+1):(1+(y)*28)]),type='l', lwd = 2)
+  legend(8000, (2/3) * legend_y, legend=c("Beta = 0.75", "Beta = 1.25"),
+  col=c("red", "black"), lwd = c(2,2), cex=0.8)
 }}
 
 #Plot recovered
@@ -375,106 +379,352 @@ recovered_names <- c("Recovered 1", "Recovered 2", "Recovered 3", "Recovered 4")
 for(i in 0:3){
   x <- 3 + 3 * i
   y <- x + 12
-  {plot(out[,1],rowSums(out[,(1+(x-1)*28+1):(1+(x)*28)]),type='l', 
-      lty= 2, col = "red",
-      ylim= range(0:1e7), main = recovered_names[i + 1])
-  lines(out[,1],rowSums(out[,(1+(y-1)*28+1):(1+(y)*28)]),type='l')
-  legend(300, 7e6, legend=c("High", "Low"),
-       col=c("red", "black"), lty = c(1,1), cex=0.8)}}
+  legend_y <- max(rowSums(out[,(1+(y-1)*28+1):(1+(y)*28)]))
+  {plot(out[,1],rowSums(out[,(1+(x-1)*28+1):(1+(x)*28)]), type = 'l', 
+      lwd = 2, col = "red",
+      main = recovered_names[i + 1], ylim = c(0, max(rowSums(out[,(1+(y-1)*28+1):(1+(y)*28)]))))
+  lines(out[,1],rowSums(out[,(1+(y-1)*28+1):(1+(y)*28)]), type = 'l', lwd = 2)
+  legend(8000, (2/3) * legend_y, legend=c("Beta = 0.75", "Beta = 1.25"),
+  col=c("red", "black"), lwd = c(2,2), cex=0.8)}}
 ```
 
 
-```{r}
-matplot(sapply(1:28,function(aa)rowSums(out[,1+((1:12)-1)*28+11])),type='l',lty = 1)
-```
-
-
-
-
-
-```{r}
-matplot(sapply(1:28,function(aa)rowSums(out[,1+((1:12)-1)*28+aa])),type='l',lty=1)
-
-
-sum_titles <- c("SUSCEPTIBLE(1)", "INFECTED(1)", "RECOVERED(1)",
-           "SUSCEPTIBLE(2)", "INFECTED(2)", "RECOVERED(2)", 
-          "SUSCEPTIBLE(3)", "INFECTED(3)","RECOVERED(3)", 
-         "SUSCEPTIBLE(4)", "INFECTED(4)", "RECOVERED(4)")
-
-for(i in 1:12){
-  plot(out[,1],rowSums(out[,(1+(i-1)*28+1):(1+(i)*28)]),type='l',main = sum_titles[i], ylim= range(0:1e6))
-}
-
+```{r beta  1.25}
 #Plot susceptibles
-{plot(out[,1],rowSums(out[,(1+(1-1)*28+1):(1+(1)*28)]),type='l', main = "Susceptible, High Risk")
-lines(out[,1],rowSums(out[,(1+(4-1)*28+1):(1+(4)*28)]),type='l', col ="red")
-lines(out[,1],rowSums(out[,(1+(7-1)*28+1):(1+(7)*28)]),type='l', col ="blue")
-lines(out[,1],rowSums(out[,(1+(10-1)*28+1):(1+(10)*28)]),type='l', col ="green")
-legend(800, 1.2e8, legend=c("Susceptible 1", "Susceptible 2", "Susceptible 3", "Susceptible 4"),
+{plot(out[,1],rowSums(out[,(1+(13-1)*28+1):(1+(13)*28)]),type='l', main = "Susceptible, Beta = 1.25", ylab = "Total", xlab = "Timestep")
+lines(out[,1],rowSums(out[,(1+(16-1)*28+1):(1+(16)*28)]),type='l', col ="red")
+lines(out[,1],rowSums(out[,(1+(19-1)*28+1):(1+(19)*28)]),type='l', col ="blue")
+lines(out[,1],rowSums(out[,(1+(22-1)*28+1):(1+(22)*28)]),type='l', col ="green")
+legend_y <- max(rowSums(out[,(1+(13-1)*28+1):(1+(23)*28)]))
+legend(8000, (5/6) * legend_y, legend=c("Susceptible 1", "Susceptible 2", "Susceptible 3", "Susceptible 4"),
        col=c("black","red", "blue","green"), lty=1, cex=0.8)
-legend(800, 8e7, legend=c("beta = 0.1", "gamma = 0.25"),  cex=0.8)
 }
 
 
 #Plot infected
-{plot(out[,1],rowSums(out[,(1+(2-1)*28+1):(1+(2)*28)]),type='l', ylim= range(0:1e6), main = "Infected")
-lines(out[,1],rowSums(out[,(1+(5-1)*28+1):(1+(5)*28)]),type='l', col ="red")
-lines(out[,1],rowSums(out[,(1+(8-1)*28+1):(1+(8)*28)]),type='l', col ="blue")
-lines(out[,1],rowSums(out[,(1+(11-1)*28+1):(1+(11)*28)]),type='l', col ="green")
-legend(600, 8.05e5, legend=c("Infected 1", "Infected 2", "Infected 3", "Infected 4"),
+ylim <- (0.05) * max(rowSums(out[,(1+(14-1)*28+1):(1+(14)*28)])) + (0.95) * max(rowSums(out[,(1+(5-1)*28+1):(1+(5)*28)]))
+{plot(out[,1],rowSums(out[,(1+(14-1)*28+1):(1+(14)*28)]),type='l', ylim= c(0,ylim), main = "Infected, Beta = 1.25", ylab = "Total", xlab = "Timestep")
+lines(out[,1],rowSums(out[,(1+(17-1)*28+1):(1+(17)*28)]),type='l', col ="red")
+lines(out[,1],rowSums(out[,(1+(20-1)*28+1):(1+(20)*28)]),type='l', col ="blue")
+lines(out[,1],rowSums(out[,(1+(23-1)*28+1):(1+(23)*28)]),type='l', col ="green")
+legend(8000, (5/6) * ylim, legend=c("Infected 1", "Infected 2", "Infected 3", "Infected 4"),
        col=c("black","red", "blue","green"), lty = 1, cex=0.8)
-legend(1500, 8.05e5, legend=c("beta = 0.1", "gamma = 0.25"),  cex=0.8)
 }
 
 #Plot Recovered
-{plot(out[,1],rowSums(out[,(1+(3-1)*28+1):(1+(3)*28)]),type='l',  main = "Recovered")
+{plot(out[,1],rowSums(out[,(1+(15-1)*28+1):(1+(15)*28)]),type='l',  main = "Recovered, Beta = 1.25", ylab = "Total", xlab = "Timestep")
+lines(out[,1],rowSums(out[,(1+(18-1)*28+1):(1+(18)*28)]),type='l', col ="red")
+lines(out[,1],rowSums(out[,(1+(21-1)*28+1):(1+(21)*28)]),type='l', col ="blue")
+lines(out[,1],rowSums(out[,(1+(24-1)*28+1):(1+(24)*28)]),type='l', col ="green")
+legend_y <- max(rowSums(out[,(1+(15-1)*28+1):(1+(15)*28)]))
+legend(8000, (5/6) * legend_y, legend=c("Recovered 1", "Recovered 2", "Recovered 3", "Recovered 4"),
+       col=c("black","red", "blue","green"), lty=1, cex=0.8)
+}
+```
+
+```{r  beta  0.75}
+#Plot susceptibles
+{plot(out[,1],rowSums(out[,(1+(1-1)*28+1):(1+(1)*28)]),type='l', main = "Susceptible, Beta = 0.75", ylab = "Total", xlab = "Timestep")
+lines(out[,1],rowSums(out[,(1+(4-1)*28+1):(1+(4)*28)]),type='l', col ="red")
+lines(out[,1],rowSums(out[,(1+(7-1)*28+1):(1+(7)*28)]),type='l', col ="blue")
+lines(out[,1],rowSums(out[,(1+(10-1)*28+1):(1+(10)*28)]),type='l', col ="green")
+legend_y <- max(rowSums(out[,(1+(1-1)*28+1):(1+(1)*28)]))
+legend(8000, (5/6) * legend_y, legend=c("Susceptible 1", "Susceptible 2", "Susceptible 3", "Susceptible 4"),
+       col=c("black","red", "blue","green"), lty=1, cex=0.8)
+}
+
+
+#Plot infected
+ylim <- (0.05) * max(rowSums(out[,(1+(2-1)*28+1):(1+(2)*28)])) + (0.95) * max(rowSums(out[,(1+(5-1)*28+1):(1+(5)*28)]))
+{plot(out[,1],rowSums(out[,(1+(2-1)*28+1):(1+(2)*28)]),type='l', ylim= c(0,ylim), main = "Infected, Beta = 0.75", ylab = "Total", xlab = "Timestep")
+lines(out[,1],rowSums(out[,(1+(5-1)*28+1):(1+(5)*28)]),type='l', col ="red")
+lines(out[,1],rowSums(out[,(1+(8-1)*28+1):(1+(8)*28)]),type='l', col ="blue")
+lines(out[,1],rowSums(out[,(1+(11-1)*28+1):(1+(11)*28)]),type='l', col ="green")
+legend(8000, (5/6) * ylim, legend=c("Infected 1", "Infected 2", "Infected 3", "Infected 4"),
+       col=c("black","red", "blue","green"), lty = 1, cex=0.8)
+}
+
+#Plot Recovered
+{plot(out[,1],rowSums(out[,(1+(3-1)*28+1):(1+(3)*28)]),type='l',  main = "Recovered, Beta = 0.75", ylab = "Total", xlab = "Timestep")
 lines(out[,1],rowSums(out[,(1+(6-1)*28+1):(1+(6)*28)]),type='l', col ="red")
 lines(out[,1],rowSums(out[,(1+(9-1)*28+1):(1+(9)*28)]),type='l', col ="blue")
 lines(out[,1],rowSums(out[,(1+(12-1)*28+1):(1+(12)*28)]),type='l', col ="green")
-legend(0, 8e5, legend=c("Recovered 1", "Recovered 2", "Recovered 3", "Recovered 4"),
+legend_y <- max(rowSums(out[,(1+(3-1)*28+1):(1+(3)*28)]))
+legend(8000, (5/6) * legend_y, legend=c("Recovered 1", "Recovered 2", "Recovered 3", "Recovered 4"),
        col=c("black","red", "blue","green"), lty=1, cex=0.8)
-legend(0, 5e5, legend=c("beta = 0.1", "gamma = 0.25"),  cex=0.8)
 }
+``` 
 
-
-
-i=1
-matplot(out[1:300,(1+(i-1)*28+1):(1+(i)*28)],type='l',lty=1, main = "Proportion of R1 Ages When R-nought is 2")
-
-```
-```{r}
-sum(out[182501,2:29])
+```{r stacked bar charts beta  0.75}
 axis_names <- c(seq(0:19), "to 29", "to 39", "to 49", "to 59", "to 69",
             "to 79", "to 89", "to 99")
+
 S1_h_prop <- rep(NA, 28)
 for(i in 1:28){
   col <- i + 1
-  S1_h_prop[i] <- out[182501,col] / sum(out[182501,2:29])
+  S1_h_prop[i] <- out[final,col] / sum(out[final,2:85])
 }
-{barplot(S1_h_prop, main = "Proportion of Ages in S1", names.arg = axis_names)}
+I1_h_prop <- rep(NA, 28)
+for(i in 1:28){
+  col <- i + 29 
+  I1_h_prop[i] <- out[final,col] / sum(out[final,2:85])
+}
+R1_h_prop <- rep(NA, 28)
+for(i in 1:28){
+  col <- i + 29 + 28
+  R1_h_prop[i] <- out[final,col] / sum(out[final,2:85])
+}
+first_h <- matrix(rep(NA, 28 * 3), ncol = 28)
+first_h[1,] <- S1_h_prop
+first_h[2,] <- I1_h_prop
+first_h[3,] <- R1_h_prop
+
+barplot(first_h, main="Proportion of Ages in the First Infection Cycle, Beta = 0.75",
+  xlab="Ages", col=c("aliceblue","deeppink3", "darkslategray"),
+ 	legend = c("Susceptible", "Infected", "Recovered"))
 
 S2_h_prop <- rep(NA, 28)
 for(i in 85:112){
   col <- i + 1
-  S2_h_prop[i - 84] <- out[182501,col] / sum(out[182501,85:112])
+  S2_h_prop[i - 84] <- out[final,col] / sum(out[final,86:169])
 }
-{barplot(S2_h_prop, main = "Proportion of Ages in S2", names.arg = axis_names)}
+I2_h_prop <- rep(NA, 28)
+for(i in 85:112){
+  col <- i + 28 + 1
+  I2_h_prop[i - 84] <- out[final,col] / sum(out[final,86:169])
+}
+R2_h_prop <- rep(NA, 28)
+for(i in 85:112){
+  col <- i + 28 + 28 + 1
+  R2_h_prop[i - 84] <- out[final,col] / sum(out[final,86:169])
+}
+second_h <- matrix(rep(NA, 28 * 3), ncol = 28)
+second_h[1,] <- S2_h_prop
+second_h[2,] <- I2_h_prop
+second_h[3,] <- R2_h_prop
+
+
+{barplot(second_h,
+  xlab="Ages", col=c("aliceblue","deeppink3", "darkslategray"),
+ 	legend = c("Susceptible", "Infected", "Recovered"), names.arg = axis_names)
+  title("Proportion of Ages in the Second Infection Cycle, Beta = 0.75", line = 1)
+  box()
+  axis(2,at=seq(0,0.07,0.01))}
 
 S3_h_prop <- rep(NA, 28)
 for(i in 169:196){
   col <- i + 1
-  S3_h_prop[i - 168] <- out[182501,col] / sum(out[182501,169:196])
+  S3_h_prop[i - 168] <- out[final,col] / sum(out[final,170:253])
 }
-{barplot(S3_h_prop, main = "Proportion of Ages in S3", names.arg = axis_names)}
+I3_h_prop <- rep(NA, 28)
+for(i in 169:196){
+  col <- i + 1 + 28
+  I3_h_prop[i - 168] <- out[final,col] / sum(out[final,170:253])
+}
+R3_h_prop <- rep(NA, 28)
+for(i in 169:196){
+  col <- i + 1 + 28 + 28
+  R3_h_prop[i - 168] <- out[final,col] / sum(out[final,170:253])
+}
+third_h <- matrix(rep(NA, 28 * 3), ncol = 28)
+third_h[1,] <- S3_h_prop
+third_h[2,] <- I3_h_prop
+third_h[3,] <- R3_h_prop
+
+{barplot(third_h, main="Proportion of Ages in the Third Infection Cycle, Beta = 0.75",
+  xlab="Ages", col=c("aliceblue","deeppink3", "darkslategray"),
+ 	names.arg = axis_names)
+  legend(3, 0.09, legend = c("Susceptible", "Infected", "Recovered"), col = c("aliceblue","deeppink3", "darkslategray"), lwd = rep(4, 3))
+  box()
+  axis(2,seq(0,0.1,0.01))}
+
 
 S4_h_prop <- rep(NA, 28)
 for(i in 253:280){
   col <- i + 1
-  S4_h_prop[i - 252] <- out[182501,col] / sum(out[182501,253:280])
+  S4_h_prop[i - 252] <- out[final,col] / sum(out[final,254:337])
 }
-{barplot(S4_h_prop, main = "Proportion of Ages in S4", names.arg = axis_names)}
+I4_h_prop <- rep(NA, 28)
+for(i in 253:280){
+  col <- i + 1 + 28
+  I4_h_prop[i - 252] <- out[final,col] / sum(out[final,254:337])
+}
+R4_h_prop <- rep(NA, 28)
+for(i in 253:280){
+  col <- i + 1 + 28 + 28
+  R4_h_prop[i - 252] <- out[final,col] / sum(out[final,254:337])
+}
+fourth_h <- matrix(rep(NA, 28 * 3), ncol = 28)
+fourth_h[1,] <- S4_h_prop
+fourth_h[2,] <- I4_h_prop
+fourth_h[3,] <- R4_h_prop
+
+{barplot(fourth_h, main="Proportion of Ages in the Fourth Infection Cycle, Beta = 0.75", ylim = c(0,0.25),
+  xlab="Ages", col=c("aliceblue","deeppink3", "darkslategray"), names.arg = axis_names)
+ 	legend(3, 0.20, legend = c("Susceptible", "Infected", "Recovered"), lwd = rep(5,3), col = c("aliceblue","deeppink3", "darkslategray"))
+  box()}
 
 ```
+
+```{r}
+{
+  #plot 1
+  barplot(first_h, main="Proportion of Ages in the First Infection Cycle, Beta = 0.75",
+  xlab="Ages", col=c("aliceblue","deeppink3", "darkslategray"),
+ 	legend = c("Susceptible", "Infected", "Recovered"))
+  #plot 2
+  {barplot(second_h,
+  xlab="Ages", col=c("aliceblue","deeppink3", "darkslategray"),
+ 	legend = c("Susceptible", "Infected", "Recovered"), names.arg = axis_names)
+  title("Proportion of Ages in the Second Infection Cycle, Beta = 0.75", line = 1)
+  box()
+  axis(2,at=seq(0,0.07,0.01))}
+  #plot 3
+  {barplot(third_h, main="Proportion of Ages in the Third Infection Cycle, Beta = 0.75",
+  xlab="Ages", col=c("aliceblue","deeppink3", "darkslategray"),
+ 	names.arg = axis_names)
+  legend(3, 0.09, legend = c("Susceptible", "Infected", "Recovered"), col = c("aliceblue","deeppink3", "darkslategray"), lwd = rep(4, 3))
+  box()
+  axis(2,seq(0,0.1,0.01))}
+  #plot 4
+  {barplot(fourth_h, main="Proportion of Ages in the Fourth Infection Cycle, Beta = 0.75", ylim = c(0,0.25),
+  xlab="Ages", col=c("aliceblue","deeppink3", "darkslategray"), names.arg = axis_names)
+ 	legend(3, 0.20, legend = c("Susceptible", "Infected", "Recovered"), lwd = rep(5,3), col = c("aliceblue","deeppink3", "darkslategray"))
+  box()}
+}
+```
+
+
+
+```{r stacked bar plots beta  1.25}
+S1_l_prop <- rep(NA, 28)
+for(i in 1:28){
+  col <- i + 1 + 28 * 12
+  S1_l_prop[i] <- out[final,col] / sum(out[final,338:421])
+}
+I1_l_prop <- rep(NA, 28)
+for(i in 1:28){
+  col <- i + 1 + 28 * 13 
+  I1_l_prop[i] <- out[final,col] / sum(out[final,338:421])
+}
+R1_l_prop <- rep(NA, 28)
+for(i in 1:28){
+  col <- i + 1 + 28 * 14
+  R1_l_prop[i] <- out[final,col] / sum(out[final,338:421])
+}
+first_l <- matrix(rep(NA, 28 * 3), ncol = 28)
+first_l[1,] <- S1_l_prop
+first_l[2,] <- I1_l_prop
+first_l[3,] <- R1_l_prop
+
+{barplot(first_l, main="Proportion of Ages in the First Infection Cycle, Beta = 1.25",
+  xlab="Ages", col=c("aliceblue","deeppink3", "darkslategray"), names.arg = axis_names,
+ 	legend = c("Susceptible", "Infected", "Recovered"))
+  box()}
+
+S2_l_prop <- rep(NA, 28)
+for(i in 85:112){
+  col <- i + 1 + 28 * 12
+  S2_l_prop[i - 84] <- out[final,col] / sum(out[final,422:505])
+}
+I2_l_prop <- rep(NA, 28)
+for(i in 85:112){
+  col <- i + 1 + 28 * 13
+  I2_l_prop[i - 84] <- out[final,col] / sum(out[final,422:505])
+}
+R2_l_prop <- rep(NA, 28)
+for(i in 85:112){
+  col <- i + 1 + 28 * 14
+  R2_l_prop[i - 84] <- out[final,col] / sum(out[final,422:505])
+}
+second_l <- matrix(rep(NA, 28 * 3), ncol = 28)
+second_l[1,] <- S2_l_prop
+second_l[2,] <- I2_l_prop
+second_l[3,] <- R2_l_prop
+
+{barplot(second_l, main="Proportion of Ages in the Second Infection Cycle, Beta = 1.25",
+  xlab="Ages", col=c("aliceblue","deeppink3", "darkslategray"),
+ 	legend = c("Susceptible", "Infected", "Recovered"), names.arg = axis_names)
+  box()}
+
+S3_l_prop <- rep(NA, 28)
+for(i in 169:196){
+  col <-  i + 1 + 28 * 12
+  S3_l_prop[i - 168] <- out[final,col] / sum(out[final,506:589])
+}
+I3_l_prop <- rep(NA, 28)
+for(i in 169:196){
+  col <-  i + 1 + 28 * 13
+  I3_l_prop[i - 168] <- out[final,col] / sum(out[final,506:589])
+}
+R3_l_prop <- rep(NA, 28)
+for(i in 169:196){
+  col <-  i + 1 + 28 * 14
+  R3_l_prop[i - 168] <- out[final,col] / sum(out[final,506:589])
+}
+third_l <- matrix(rep(NA, 28 * 3), ncol = 28)
+third_l[1,] <- S3_l_prop
+third_l[2,] <- I3_l_prop
+third_l[3,] <- R3_l_prop
+
+{barplot(third_h, main="Proportion of Ages in the Third Infection Cycle, Beta = 1.25",
+  xlab="Ages", col=c("aliceblue","deeppink3", "darkslategray"),names.arg = axis_names)
+ 	legend(3,0.08,legend = c("Susceptible", "Infected", "Recovered"), lwd = rep(5,3), col = c("aliceblue","deeppink3", "darkslategray"))
+  box()}
+
+
+S4_l_prop <- rep(NA, 28)
+for(i in 253:280){
+  col <-i + 1 + 28 * 12
+  S4_l_prop[i - 252] <- out[final,col] / sum(out[final,590:673])
+}
+I4_l_prop <- rep(NA, 28)
+for(i in 253:280){
+  col <- i + 1 + 28 * 13
+  I4_l_prop[i - 252] <- out[final,col] / sum(out[final,590:673])
+}
+R4_l_prop <- rep(NA, 28)
+for(i in 253:280){
+  col <- i + 1 + 28 * 14
+  R4_l_prop[i - 252] <- out[final,col] / sum(out[final,590:673])
+}
+fourth_l <- matrix(rep(NA, 28 * 3), ncol = 28)
+fourth_l[1,] <- S4_l_prop
+fourth_l[2,] <- I4_l_prop
+fourth_l[3,] <- R4_l_prop
+
+{barplot(fourth_h, main="Proportion of Ages in the Fourth Infection Cycle, Beta = 1.25", ylim = c(0,0.25),
+  xlab="Ages", col=c("aliceblue","deeppink3", "darkslategray"),names.arg = axis_names)
+ 	legend(3, 0.2,legend = c("Susceptible", "Infected", "Recovered"), lwd = rep(5, 30), col = c("aliceblue","deeppink3", "darkslategray"))
+box()}
+```
+
+```{r}
+{
+  #one
+  {barplot(first_l, main="Proportion of Ages in the First Infection Cycle, Beta = 1.25",
+  xlab="Ages", col=c("aliceblue","deeppink3", "darkslategray"), names.arg = axis_names,
+ 	legend = c("Susceptible", "Infected", "Recovered"))
+  box()}
+  #two
+  {barplot(second_l, main="Proportion of Ages in the Second Infection Cycle, Beta = 1.25",
+  xlab="Ages", col=c("aliceblue","deeppink3", "darkslategray"),
+ 	legend = c("Susceptible", "Infected", "Recovered"), names.arg = axis_names)
+  box()}
+  #three
+  {barplot(third_h, main="Proportion of Ages in the Third Infection Cycle, Beta = 1.25",
+  xlab="Ages", col=c("aliceblue","deeppink3", "darkslategray"),names.arg = axis_names)
+ 	legend(3,0.08,legend = c("Susceptible", "Infected", "Recovered"), lwd = rep(5,3), col = c("aliceblue","deeppink3", "darkslategray"))
+  box()}
+  #four
+  {barplot(fourth_h, main="Proportion of Ages in the Fourth Infection Cycle, Beta = 1.25", ylim = c(0,0.25),
+  xlab="Ages", col=c("aliceblue","deeppink3", "darkslategray"),names.arg = axis_names)
+ 	legend(3, 0.2,legend = c("Susceptible", "Infected", "Recovered"), lwd = rep(5, 30), col = c("aliceblue","deeppink3", "darkslategray"))
+box()}
+  
+}
+```
+
 
 ```{r crude SP9 calc}
 nines <- c(1, 29, 57,
@@ -485,9 +735,24 @@ blank <- rep(NA, 12)
 
 for(i in 1:12){
   nine <- nines[i] + 10
-  blank[i] <- out[182501, nine]
+  blank[i] <- out[final, nine]
 }
 
 SP9 <- 1- (blank[1] / sum(blank))
+
+#do the same for the higher beta
+nines_l <- (12 * 28) + c(1, 29, 57,
+           85, 113, 141,
+           169, 197, 225, 
+           253, 281, 309)
+blank_l  <- rep(NA, 12)
+
+for(i in 1:12){
+  nine_l <- nines[i] + 10
+  blank_l[i] <- out[final, nine]
+}
+
+SP9_l <- 1- (blank_l[1] / sum(blank_l))
+
 ```
 
