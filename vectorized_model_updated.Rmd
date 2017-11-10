@@ -11,6 +11,11 @@ library(deSolve)
 
 ```
 
+```{r travel}
+travel <- c(rep(1, 7), rep(0.86, 9), rep(0.842, 4), 0.814, 0.7676, 0.7784, rep(0.809, 5))
+```
+
+
 ```{r initial conditions}
 percentage_vec <- c(rep(1.8,5), rep(1.8,5), rep(1.84,5), rep(1.86,5),
                     17.2, 15, 12.7, 8.8, 5.5, 2.8, 1.3, 0.2)
@@ -81,8 +86,10 @@ recovered_total_l <- sum(recovered_l(1) + recovered_l(2) + recovered_l(3) + reco
 population_h <- sum(susceptible_total_h + infected_total_h + recovered_total_h)
 population_l <- sum(susceptible_total_l + infected_total_l + recovered_total_l)
 
-parms <- c(beta = 0.75,
-          beta_l = 1.25,
+
+
+parms <- c(beta = 5,
+          beta_l = 10,
           gamma = 1/4,
           sigma = 1/(365 * 1.2),
           mu = 19 / (1000 * 365),
@@ -389,7 +396,7 @@ for(i in 0:3){
 ```
 
 
-```{r beta  1.25}
+```{r beta  1.25 dynamic curve}
 #Plot susceptibles
 {plot(out[,1],rowSums(out[,(1+(13-1)*28+1):(1+(13)*28)]),type='l', main = "Susceptible, Beta = 1.25", ylab = "Total", xlab = "Timestep")
 lines(out[,1],rowSums(out[,(1+(16-1)*28+1):(1+(16)*28)]),type='l', col ="red")
@@ -422,7 +429,7 @@ legend(8000, (5/6) * legend_y, legend=c("Recovered 1", "Recovered 2", "Recovered
 }
 ```
 
-```{r  beta  0.75}
+```{r  beta  0.75 dynamic curve}
 #Plot susceptibles
 {plot(out[,1],rowSums(out[,(1+(1-1)*28+1):(1+(1)*28)]),type='l', main = "Susceptible, Beta = 0.75", ylab = "Total", xlab = "Timestep")
 lines(out[,1],rowSums(out[,(1+(4-1)*28+1):(1+(4)*28)]),type='l', col ="red")
@@ -566,7 +573,7 @@ fourth_h[3,] <- R4_h_prop
 
 ```
 
-```{r}
+```{r }
 {
   #plot 1
   barplot(first_h, main="Proportion of Ages in the First Infection Cycle, Beta = 0.75",
@@ -593,8 +600,6 @@ fourth_h[3,] <- R4_h_prop
   box()}
 }
 ```
-
-
 
 ```{r stacked bar plots beta  1.25}
 S1_l_prop <- rep(NA, 28)
@@ -725,6 +730,60 @@ box()}
 }
 ```
 
+```{r rainbow charts susceptible breakdown beta}
+total_susceptible <- sum(out[final, 2:29] + out[final, 86:113] + out[final, 170:197] + out[final, 254:281]) 
+prop_one <- out[final, 2:29] / total_susceptible
+prop_two <- out[final, 86:113] / total_susceptible
+prop_three <- out[final, 170:197] / total_susceptible
+prop_four <- out[final, 254:281] / total_susceptible
+
+susceptible_table <- matrix(NA, ncol = 4, nrow = 28)
+susceptible_table[,1] <- prop_one 
+susceptible_table[,2] <- prop_two
+susceptible_table[,3] <- prop_three
+susceptible_table[,4] <- prop_four
+
+{barplot(susceptible_table, col = rainbow(28), main = "Proportion of Susceptible Groups by Age Group, Beta = 5", ylim = c(0,0.5),
+         names.arg = c("Susceptible 1", "Susceptible 2", "Susceptible 3", "Susceptible 4"))
+  axis(2, 0:1)
+  box()}
+
+
+```
+```{r rainbow charts susceptible breakdown beta_l}
+total_susceptible <- sum(out[final, 338:365] + out[final, 422:449] + out[final, 506:533] + out[final, 590:617]) 
+prop_one <- out[final, 338:365] / total_susceptible
+prop_two <- out[final, 422:449] / total_susceptible
+prop_three <- out[final, 506:533] / total_susceptible
+prop_four <- out[final, 590:617] / total_susceptible
+
+susceptible_table <- matrix(NA, ncol = 4, nrow = 28)
+susceptible_table[,1] <- prop_one 
+susceptible_table[,2] <- prop_two
+susceptible_table[,3] <- prop_three
+susceptible_table[,4] <- prop_four
+
+{barplot(susceptible_table, col = rainbow(28), main = "Proportion of Susceptible Groups by Age Group, Beta = 10", ylim = c(0,0.5),
+         names.arg = c("Susceptible 1", "Susceptible 2", "Susceptible 3", "Susceptible 4"))
+  axis(2, 0:1)
+  box()}
+```
+
+```{r starting and final age distribution}
+ages_h <- susceptible_h(1) + infected_h(1)
+prop <- ages_h / population_h
+names(prop) <- seq(1:28)
+barplot(prop, main = "Starting Age Distribution")
+
+ages_final <- out[final, 2:29] + out[final, 30:57] + out[final, 58:85] + out[final, 86:113] + out[final, 114:141] + out[final, 142:169] +
+  out[final, 170:197] + out[final, 198:225] + out[final, 226:253] + out[final, 254:281] + out[final, 282:309] + out[final, 310:337]
+final_population <- sum(ages_final)
+prop_final <- ages_final / final_population
+barplot(prop_final, main = "Final Age Distribution")
+
+
+```
+
 
 ```{r crude SP9 calc}
 nines <- c(1, 29, 57,
@@ -748,11 +807,25 @@ nines_l <- (12 * 28) + c(1, 29, 57,
 blank_l  <- rep(NA, 12)
 
 for(i in 1:12){
-  nine_l <- nines[i] + 10
-  blank_l[i] <- out[final, nine]
+  nine_l <- nines_l[i] + 10
+  blank_l[i] <- out[final, nine_l]
 }
 
 SP9_l <- 1- (blank_l[1] / sum(blank_l))
 
 ```
+
+```{r Plotting Beta SP9}
+sp9_beta <- matrix(NA, nrow = 10, ncol = 2)
+colnames(sp9_beta) <- c("Beta", "SP9")
+
+sp9_beta[9,1:2] <- c(5, SP9)
+sp9_beta[10,1:2] <- c(10, SP9_l)
+
+sp9_beta <- as.data.frame(sp9_beta)
+
+plot(sp9_beta, type = "b", main = "SP9 and Beta Relationship")
+```
+
+
 
