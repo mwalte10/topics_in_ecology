@@ -1,8 +1,8 @@
 ############################
 #CRC info
 ############################
-args = commandArgs(TRUE)
-input = as.numeric(args[1])
+# args = commandArgs(TRUE)
+# input = as.numeric(args[1])
 df = expand.grid(beta_l = seq(0.1, 2, length.out = 20),
 				 beta_h = seq(0.1, 2, length.out = 20))
 beta_l = df[input,1]
@@ -11,7 +11,7 @@ beta_h = df[input,2]
 ############################
 #setup
 ############################
-install.packages('deSolve', dependencies = TRUE, repos='http://cran.us.r-project.org')
+# install.packages('deSolve', dependencies = TRUE, repos='http://cran.us.r-project.org')
 library(deSolve)
 
 
@@ -61,6 +61,8 @@ recovered <- function(exposure){
 recovered_total <- sum(recovered(1) + recovered(2) + recovered(3) + recovered(4))
 
 population <- sum(susceptible_total + infected_total + recovered_total)
+
+native <- c(rep(1, 7), rep(0.86, 9), rep(0.842, 4), 0.814, 0.7676, 0.7784, rep(0.809, 5))
 
 parms <- c(beta_h = beta_h,
            beta_l = beta_l,
