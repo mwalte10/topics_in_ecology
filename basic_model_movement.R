@@ -353,11 +353,11 @@ y_init <- c(susceptible_h(1), infected_h(1), recovered_h(1),
             susceptible_l(2), infected_l(2), recovered_l(2),
             susceptible_l(3), infected_l(3), recovered_l(3),
             susceptible_l(4), infected_l(4), recovered_l(4))
-times <- seq(from = 0, to = 365 * 100, by = .1)
+times <- seq(from = 0, to = 365 * 30, by = .1)
 out <- ode(times = times, y = y_init, func = model, parms = parms)
 
 
 ############################
 #OUTPUT
 ############################
-save(out, file = paste('output.movement_', input, '.RData', sep = ''))
+save(out[nrow(out),], file = paste('output.movement_', input, '.RData', sep = ''))
