@@ -1,12 +1,12 @@
 ############################
 #CRC info
 ############################
-#args = commandArgs(TRUE)
-#input = as.numeric(args[1])
-#df = expand.grid(beta_l = seq(0.1, 2, length.out = 20),
-#				 beta_h = seq(0.1, 2, length.out = 20))
-#beta_l = df[input,1]
-#beta_h = df[input,2]
+args = commandArgs(TRUE)
+input = as.numeric(args[1])
+df = expand.grid(beta_l = seq(0.1, 2, length.out = 20),
+				 beta_h = seq(0.1, 2, length.out = 20))
+beta_l = df[input,1]
+beta_h = df[input,2]
 
 ############################
 #setup
