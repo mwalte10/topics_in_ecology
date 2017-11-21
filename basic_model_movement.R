@@ -1,12 +1,12 @@
 ############################
 #CRC info
 ############################
-args = commandArgs(TRUE)
-input = as.numeric(args[1])
-df = expand.grid(beta_l = seq(0.1, 2, length.out = 20),
-				 beta_h = seq(0.1, 2, length.out = 20))
-beta_l = df[input,1]
-beta_h = df[input,2]
+#args = commandArgs(TRUE)
+#input = as.numeric(args[1])
+#df = expand.grid(beta_l = seq(0.1, 2, length.out = 20),
+#				 beta_h = seq(0.1, 2, length.out = 20))
+#beta_l = df[input,1]
+#beta_h = df[input,2]
 
 ############################
 #setup
@@ -90,6 +90,9 @@ population_l <- sum(susceptible_total_l + infected_total_l + recovered_total_l)
 
 native <- c(rep(1, 7), rep(0.86, 9), rep(0.842, 4), 0.814, 0.7676, 0.7784, rep(0.809, 5))
 
+##if just running in R
+beta_h <- 0.5
+beta_l <- 1
 parms <- c(beta_h = beta_h,
            beta_l = beta_l,
            gamma = 1/4,
@@ -195,7 +198,7 @@ model <- function(t, y, parms){
     R1_h * sigma -
     R1_h * delta
   dR1_l <-
-    I1_h * gamma +
+    I1_l * gamma +
     c(0, 1/365 / head(age_window, -1) * head(R1_l, -1)) -
     c(1/365 / head(age_window, -1) * head(R1_l, -1), 0) -
     R1_l * sigma -
@@ -355,9 +358,9 @@ y_init <- c(susceptible_h(1), infected_h(1), recovered_h(1),
             susceptible_l(4), infected_l(4), recovered_l(4))
 times <- seq(from = 0, to = 365 * 30, by = .1)
 out <- ode(times = times, y = y_init, func = model, parms = parms)
-
+out <- out[nrow(out),]
 
 ############################
 #OUTPUT
 ############################
-save(out[nrow(out),], file = paste('output.movement_', input, '.RData', sep = ''))
+save(out, file = paste('output.movement_', input, '.RData', sep = ''))
