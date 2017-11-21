@@ -1,3 +1,13 @@
+############################
+#CRC info
+############################
+args = commandArgs(TRUE)
+input = as.numeric(args[1])
+df = expand.grid(beta_l = seq(0.1, 2, length.out = 20),
+				 beta_h = seq(0.1, 2, length.out = 20))
+beta_l = df[input,1]
+beta_h = df[input,2]
+
 library(deSolve)
 
 ############################
@@ -359,9 +369,13 @@ y_init <- c(susceptible_h(1), infected_h(1), recovered_h(1),
 times <- seq(from = 0, to = 365 * 30, by = .1)
 
 out_vac <- ode(times = times, y = y_init, func = model_vac, parms = parms_vac)
+out_vac <- out_vac[nrow(out_vac),]
+
+############################
+#OUTPUT
+############################
+save(out_vac, file = paste('output.vac.movement_', input, '.RData', sep = ''))
 
 
-####output
-save(out_vac[nrow(out_vac),], file = paste('output.vac.movement_', input, '.RData', sep = ''))
 
 
