@@ -359,3 +359,9 @@ y_init <- c(susceptible_h(1), infected_h(1), recovered_h(1),
 times <- seq(from = 0, to = 365 * 30, by = .1)
 
 out_vac <- ode(times = times, y = y_init, func = model_vac, parms = parms_vac)
+
+
+####output
+save(out_vac[nrow(out_vac),], file = paste('output.vac.movement_', input, '.RData', sep = ''))
+
+
