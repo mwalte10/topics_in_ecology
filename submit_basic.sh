@@ -5,4 +5,4 @@
 
 module load bio/R/3.3.1-gcc
 
-Rscript script.R $SGE_TASK_ID
+Rscript basic_vaccination_movement.R $SGE_TASK_ID
