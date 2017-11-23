@@ -90,9 +90,6 @@ population_l <- sum(susceptible_total_l + infected_total_l + recovered_total_l)
 
 native <- c(rep(1, 7), rep(0.86, 9), rep(0.842, 4), 0.814, 0.7676, 0.7784, rep(0.809, 5))
 
-##if just running in R
-beta_h <- 0.5
-beta_l <- 1
 parms <- c(beta_h = beta_h,
            beta_l = beta_l,
            gamma = 1/4,
