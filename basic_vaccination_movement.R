@@ -83,6 +83,7 @@ population_l <- sum(susceptible_total_l + infected_total_l + recovered_total_l)
 
 native <- c(rep(0.86, 16), rep(0.842, 4), 0.814, 0.7676, 0.7784, rep(0.809, 5))
 
+
 parms_vac <- c(beta_h = 0.5,
                beta_l = 1,
                gamma = 2.5e-1,
@@ -95,7 +96,9 @@ parms_vac <- c(beta_h = 0.5,
                          0.114 / 365, 0.151 / 365),
                age_window = c(rep(1, 21), rep(10, 7)),
                vac_h = basic_vac,
-               vac_l = basic_vac)
+               vac_l = basic_vac,
+               native = c(rep(0.86, 16), rep(0.842, 4), 0.814, 0.7676, 0.7784, rep(0.809, 5)),
+               travel <- 1- native)
 
 
 
@@ -110,6 +113,8 @@ model_vac <- function(t, y, parms){
   age_window <- parms[34:61]
   vac_h <- parms_vac[62:89]
   vac_l <- parms_vac[90:117]
+  native <- parms_vac[118:145]
+  travel <- parms_vac[146:173]
   
   S1_h <- y[1:28]
   I1_h <- y[29:56]
