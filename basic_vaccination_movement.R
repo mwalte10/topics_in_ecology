@@ -3,10 +3,8 @@
 ############################
 args = commandArgs(TRUE)
 input = as.numeric(args[1])
-df = expand.grid(beta_l = seq(0.1, 2, length.out = 20),
-				 beta_h = seq(0.1, 2, length.out = 20))
-beta_l = df[input,1]
-beta_h = df[input,2]
+vac.vec = seq(0.1, 1, length.out = 50)
+basic_vac = c(rep(0, 8), vac.vec[input], rep(0,18))
 
 library(deSolve)
 
@@ -96,8 +94,8 @@ parms_vac <- c(beta_h = 0.5,
                          0.0175 / 365, 0.0425 / 365,
                          0.114 / 365, 0.151 / 365),
                age_window = c(rep(1, 21), rep(10, 7)),
-               vac_h = c(rep(0,28)),
-               vac_l = c(rep(0,8), 0.8 / 365, rep(0, 19)))
+               vac_h = basic_vac,
+               vac_l = basic_vac)
 
 
 
