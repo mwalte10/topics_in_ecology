@@ -3,13 +3,8 @@
 ############################
 args = commandArgs(TRUE)
 input = as.numeric(args[1])
-df = expand.grid(vac_l = seq(0.1, 1, length.out = 50)
-
-)
-
-vac_l = df[input,1]
-
-vac_h = vac_l
+vac.vec = seq(0.1, 1, length.out = 50)
+vac = c(rep(0,8), vac.vec[input], rep(0,19))
 
 library(deSolve)
 
@@ -101,8 +96,8 @@ parms <- c(beta_h = 0.6125551,
            age_window = c(rep(1, 21), rep(10, 7)),
            native = c(rep(1, 7), rep(0.86, 9), rep(0.842, 4), 0.814, 0.7676, 0.7784, rep(0.809, 5)),
            travel <- 1 - native,
-           vac_h = vac_h,
-           vac_l = vac_l)
+           vac_h = vac,
+           vac_l = vac)
 
 ############################
 #MODEL
