@@ -3,10 +3,9 @@
 ############################
 args = commandArgs(TRUE)
 input = as.numeric(args[1])
-df = expand.grid(beta_l = seq(0.1, 2, length.out = 20),
-				 beta_h = seq(0.1, 2, length.out = 20))
-beta_l = df[input,1]
-beta_h = df[input,2]
+beta_l = 0.9155611
+beta_h.vec = c(0.3447194, 0.4529359, 0.6125551)
+beta_h = beta_h.vec[input]
 
 ############################
 #setup
@@ -360,4 +359,4 @@ out <- out[nrow(out),]
 ############################
 #OUTPUT
 ############################
-save(out, file = paste('output.movement_', input, '.RData', sep = ''))
+save(out, file = paste('output.specific_', input, '.RData', sep = ''))
