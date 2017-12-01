@@ -7,6 +7,7 @@ vac.vec = seq(0.1, 1, length.out = 50)
 basic_vac = c(rep(0, 8), vac.vec[input], rep(0,18))
 
 library(deSolve)
+basic_vac = c(rep(0, 8), 0.8, rep(0,18))
 
 ############################
 #Initial condidtions and parameters
@@ -84,8 +85,8 @@ population_l <- sum(susceptible_total_l + infected_total_l + recovered_total_l)
 native <- c(rep(0.86, 16), rep(0.842, 4), 0.814, 0.7676, 0.7784, rep(0.809, 5))
 
 
-parms_vac <- c(beta_h = 0.5,
-               beta_l = 1,
+parms_vac <- c(beta_h = 0.6125551,
+               beta_l = 0.9155611,
                gamma = 2.5e-1,
                sigma = 1/(365 * 1.2),
                mu = 19 / (1000 * 365),
@@ -95,10 +96,10 @@ parms_vac <- c(beta_h = 0.5,
                          0.0175 / 365, 0.0425 / 365,
                          0.114 / 365, 0.151 / 365),
                age_window = c(rep(1, 21), rep(10, 7)),
-               vac_h = basic_vac,
-               vac_l = basic_vac,
                native = c(rep(0.86, 16), rep(0.842, 4), 0.814, 0.7676, 0.7784, rep(0.809, 5)),
-               travel <- 1- native)
+               travel <- 1- native,
+               vac_h = basic_vac,
+               vac_l = basic_vac)
 
 
 
@@ -107,14 +108,14 @@ model_vac <- function(t, y, parms){
   beta_h <- parms_vac[1]
   beta_l <- parms_vac[2]
   gamma <- parms_vac[3]
-  sigma <- parms[4]
-  mu <- parms[5]
-  delta <- parms[6:33]
-  age_window <- parms[34:61]
-  vac_h <- parms_vac[62:89]
-  vac_l <- parms_vac[90:117]
-  native <- parms_vac[118:145]
-  travel <- parms_vac[146:173]
+  sigma <- parms_vac[4]
+  mu <- parms_vac[5]
+  delta <- parms_vac[6:33]
+  age_window <- parms_vac[34:61]
+  native <- parms_vac[62:89]
+  travel <- parms_vac[90:117]
+  vac_h <- parms_vac[118:145]
+  vac_l <- parms_vac[146:173]
   
   S1_h <- y[1:28]
   I1_h <- y[29:56]
@@ -189,14 +190,16 @@ model_vac <- function(t, y, parms){
   
   dR1_h <-
     I1_h * gamma +
-    S1_h * vac_h + - R1_h * vac_h
+    S1_h * vac_h - 
+    R1_h * vac_h +
     c(0, 1/365 / head(age_window, -1) * head(R1_h, -1)) -
     c(1/365 / head(age_window, -1) * head(R1_h, -1), 0) -
     R1_h * sigma -
     R1_h * delta
   dR1_l <-
     I1_h * gamma +
-    S1_l * vac_l + - R1_l * vac_l
+    S1_l * vac_l - 
+    R1_l * vac_l +
     c(0, 1/365 / head(age_window, -1) * head(R1_l, -1)) -
     c(1/365 / head(age_window, -1) * head(R1_l, -1), 0) -
     R1_l * sigma -
