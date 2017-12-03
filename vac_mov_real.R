@@ -8,6 +8,7 @@ vac = c(rep(0,8), vac.vec[input], rep(0,19))
 
 library(deSolve)
 
+
 ############################
 #Initial condidtions and parameters
 ############################
