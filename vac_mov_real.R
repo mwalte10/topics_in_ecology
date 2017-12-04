@@ -386,4 +386,4 @@ out <- out[nrow(out),]
 ############################
 #OUTPUT
 ############################
-save(out, file = paste('output.vac.final_', input, '.RData', sep = ''))
+save(out, file = paste('output.vac_', input, '.RData', sep = ''))
