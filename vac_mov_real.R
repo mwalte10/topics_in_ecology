@@ -162,7 +162,7 @@ model <- function(t, y, parms){
     native * S1_h * (beta_h * infected_total_h / effective_population_h) -
     travel * S1_h * (beta_l * infected_total_l / effective_population_l) -
     S1_h * delta -
-    S1_h * if(t>365*15*10){vac_h = vac_h}else{vac_h = 0}
+    S1_h * vac_h
   dS1_l <-  
     mu * c(pop_l, rep(0,27)) +
     c(0, 1/365 / head(age_window, -1) * head(S1_l, -1)) -
@@ -170,7 +170,7 @@ model <- function(t, y, parms){
     travel * S1_l * (beta_h * infected_total_h / effective_population_h) -
     native * S1_l * (beta_l * infected_total_l / effective_population_l) -
     S1_l * delta - 
-    S1_l * if(t>365*15*10){vac_l = vac_l}else{vac_l = 0}
+    S1_l * vac_l
   
   dI1_h <- 
     native * S1_h * (beta_h * infected_total_h / effective_population_h) +
@@ -193,16 +193,16 @@ model <- function(t, y, parms){
     c(1/365 / head(age_window, -1) * head(R1_h, -1), 0) -
     R1_h * sigma -
     R1_h * delta +
-    S1_h * if(t>365*15*10){vac_h = vac_h}else{vac_h = 0} - 
-    R1_h * if(t>365*15*10){vac_h = vac_h}else{vac_h = 0}
+    S1_h * vac_h - 
+    R1_h * vac_h
   dR1_l <-
     I1_l * gamma +
     c(0, 1/365 / head(age_window, -1) * head(R1_l, -1)) -
     c(1/365 / head(age_window, -1) * head(R1_l, -1), 0) -
     R1_l * sigma -
     R1_l * delta +
-    S1_l * if(t>365*15*10){vac_l = vac_l}else{vac_l = 0} - 
-    R1_l * if(t>365*15*10){vac_l = vac_l}else{vac_l = 0}
+    S1_l * vac_l - 
+    R1_l * vac_l
   
   #second infection
   dS2_h <- 
@@ -212,7 +212,7 @@ model <- function(t, y, parms){
     native * S2_h * (0.75 * beta_h * infected_total_h / effective_population_h) -
     travel * S2_h * (0.75 * beta_l * infected_total_l / effective_population_l) -
     S2_h * delta - 
-    S2_h * if(t>365*15*10){vac_h = vac_h}else{vac_h = 0}
+    S2_h * vac_h
   dS2_l <- 
     R1_l * sigma +
     c(0, 1/365 / head(age_window, -1) * head(S2_l, -1)) -
@@ -220,7 +220,7 @@ model <- function(t, y, parms){
     travel * S2_l * (0.75 * beta_h * infected_total_h / effective_population_h) -
     native * S2_l * (0.75 * beta_l * infected_total_l / effective_population_l) -
     S2_l * delta - 
-    S2_l * if(t>365*15*10){vac_l = vac_l}else{vac_l = 0}
+    S2_l * vac_l
   
   dI2_h <- 
     native * S2_h * (0.75 * beta_h * infected_total_h / effective_population_h) +
@@ -243,18 +243,18 @@ model <- function(t, y, parms){
     c(1/365 / head(age_window, -1) * head(R2_h, -1), 0) -
     R2_h * sigma -
     R2_h * delta +
-    R1_h * if(t>365*15*10){vac_h = vac_h}else{vac_h = 0} +
-    S2_h * if(t>365*15*10){vac_h = vac_h}else{vac_h = 0} -
-    R2_h * if(t>365*15*10){vac_h = vac_h}else{vac_h = 0}
+    R1_h * vac_h +
+    S2_h * vac_h -
+    R2_h * vac_h
   dR2_l <-  
     I2_l * gamma +  
     c(0, 1/365 / head(age_window, -1) * head(R2_l, -1)) -
     c(1/365 / head(age_window, -1) * head(R2_l, -1), 0) -
     R2_l * sigma -
     R2_l * delta + 
-    R1_l * if(t>365*15*10){vac_l = vac_l}else{vac_l = 0} +
-    S2_l * if(t>365*15*10){vac_l = vac_l}else{vac_l = 0} -
-    R2_l * if(t>365*15*10){vac_l = vac_l}else{vac_l = 0}
+    R1_l * vac_l +
+    S2_l * vac_l -
+    R2_l * vac_l
   
   #third infection
   dS3_h <- 
@@ -264,7 +264,7 @@ model <- function(t, y, parms){
     native * S3_h * (0.5 * beta_h * infected_total_h / effective_population_h) -
     travel * S3_h * (0.5 * beta_l * infected_total_l / effective_population_l) -
     S3_h * delta -
-    S3_h * if(t>365*15*10){vac_h = vac_h}else{vac_h = 0}
+    S3_h * vac_h
   dS3_l <- 
     R2_l * sigma + 
     c(0, 1/365 / head(age_window, -1) * head(S3_l, -1)) -
@@ -272,7 +272,7 @@ model <- function(t, y, parms){
     travel * S3_l * (0.5 * beta_h * infected_total_h / effective_population_h) -
     native * S3_l * (0.5 * beta_l * infected_total_l / effective_population_l) -
     S3_l * delta -
-    S3_l * if(t>365*15*10){vac_l = vac_l}else{vac_l = 0}
+    S3_l * vac_l
   
   dI3_h <- 
     native * S3_h * (0.5 * beta_h * infected_total_h / effective_population_h) +
@@ -295,18 +295,18 @@ model <- function(t, y, parms){
     c(1/365 / head(age_window, -1) * head(R3_h, -1), 0) -
     R3_h * sigma -
     R3_h * delta + 
-    R2_h * if(t>365*15*10){vac_h = vac_h}else{vac_h = 0} +
-    S3_h * if(t>365*15*10){vac_h = vac_h}else{vac_h = 0} -
-    R3_h * if(t>365*15*10){vac_h = vac_h}else{vac_h = 0}
+    R2_h * vac_h +
+    S3_h * vac_h -
+    R3_h * vac_h
   dR3_l <- 
     I3_l * gamma +
     c(0, 1/365 / head(age_window, -1) * head(R3_l, -1)) -
     c(1/365 / head(age_window, -1) * head(R3_l, -1), 0) -
     R3_l * sigma -
     R3_l * delta +
-    R3_l * if(t>365*15*10){vac_l = vac_l}else{vac_l = 0} +
-    S3_l * if(t>365*15*10){vac_l = vac_l}else{vac_l = 0} - 
-    R3_l * if(t>365*15*10){vac_l = vac_l}else{vac_l = 0}
+    R3_l * vac_l +
+    S3_l * vac_l - 
+    R3_l * vac_l
   
   #fourth infection
   dS4_h <- 
@@ -316,7 +316,7 @@ model <- function(t, y, parms){
     native * S4_h * (0.25 * beta_h * infected_total_h / effective_population_h) -
     travel * S4_h * (0.25 * beta_l * infected_total_l / effective_population_l) -
     S4_h * delta - 
-    S4_h * if(t>365*15*10){vac_h = vac_h}else{vac_h = 0}
+    S4_h * vac_h
   dS4_l <- 
     R3_l * sigma +
     c(0, 1/365 / head(age_window, -1) * head(S4_l, -1)) -
@@ -324,7 +324,7 @@ model <- function(t, y, parms){
     travel * S4_l * (0.25 * beta_h * infected_total_h / effective_population_h) -
     native * S4_l * (0.25 * beta_l * infected_total_l / effective_population_l) -
     S4_l * delta - 
-    S4_l * if(t>365*15*10){vac_l = vac_l}else{vac_l = 0}
+    S4_l * vac_l
   
   dI4_h <- 
     native * S4_h * (0.25 * beta_h * infected_total_h / effective_population_h) +
@@ -346,15 +346,15 @@ model <- function(t, y, parms){
     c(0, 1/365 / head(age_window, -1) * head(R4_h, -1)) -
     c(1/365 / head(age_window, -1) * head(R4_h, -1), 0) -
     R4_h * delta +
-    R3_h * if(t>365*15*10){vac_h = vac_h}else{vac_h = 0} +
-    S4_h * if(t>365*15*10){vac_h = vac_h}else{vac_h = 0}
+    R3_h * vac_h +
+    S4_h * vac_h
   dR4_l <- 
     I4_l * gamma +
     c(0, 1/365 / head(age_window, -1) * head(R4_l, -1)) -
     c(1/365 / head(age_window, -1) * head(R4_l, -1), 0) -
     R4_l * delta + 
-    R3_l * if(t>365*15*10){vac_l = vac_l}else{vac_l = 0} +
-    S4_l * if(t>365*15*10){vac_l = vac_l}else{vac_l = 0}
+    R3_l * vac_l +
+    S4_l * vac_l
   
   list(c(dS1_h, dI1_h, dR1_h,
          dS2_h, dI2_h, dR2_h,
