@@ -8,7 +8,6 @@ vac = c(rep(0,8), vac.vec[input], rep(0,19))
 
 library(deSolve)
 
-
 ############################
 #Initial condidtions and parameters
 ############################
@@ -97,7 +96,7 @@ parms <- c(beta_h = 0.6125551,
            age_window = c(rep(1, 21), rep(10, 7)),
            native = c(rep(1, 7), rep(0.86, 9), rep(0.842, 4), 0.814, 0.7676, 0.7784, rep(0.809, 5)),
            travel <- 1 - native,
-           vac_h = vac,
+           vac_h = 0,
            vac_l = vac)
 
 ############################
@@ -382,6 +381,9 @@ y_init <- c(susceptible_h(1), infected_h(1), recovered_h(1),
 times <- seq(from = 0, to = 365 * 30, by = .1)
 out <- ode(times = times, y = y_init, func = model, parms = parms)
 out <- out[nrow(out),]
+
+setwd("~/Desktop/outputs/vaccine")
+save(out, file = 'output_0.7.RData')
 
 ############################
 #OUTPUT
