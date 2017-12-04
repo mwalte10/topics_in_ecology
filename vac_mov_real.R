@@ -382,10 +382,8 @@ times <- seq(from = 0, to = 365 * 30, by = .1)
 out <- ode(times = times, y = y_init, func = model, parms = parms)
 out <- out[nrow(out),]
 
-setwd("~/Desktop/outputs/vaccine")
-save(out, file = 'output_0.7.RData')
 
 ############################
 #OUTPUT
 ############################
-save(out, file = paste('output.vac_', input, '.RData', sep = ''))
+save(out, file = paste('output.vac.final_', input, '.RData', sep = ''))
