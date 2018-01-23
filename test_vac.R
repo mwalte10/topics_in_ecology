@@ -377,7 +377,7 @@ y_init <- c(susceptible_h(1), infected_h(1), recovered_h(1),
             susceptible_l(4), infected_l(4), recovered_l(4))
 times <- seq(from = 0, to = 365 * 50, by = .1)
 out <- ode(times = times, y = y_init, func = model, parms = parms)
-
+out <- out[nrow(out),]
 
 ############################
 #OUTPUT
