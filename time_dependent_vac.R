@@ -3,8 +3,9 @@
 ############################
 args = commandArgs(TRUE)
 input = as.numeric(args[1])
-vac.vec = seq(0.1, 1, length.out = 50)
+vac.vec = c(0.25, 0.45, 0.65, 0.85)
 vac = c(rep(0,8), vac.vec[input], rep(0,19))
+
 
 library(deSolve)
 
@@ -380,10 +381,9 @@ y_init <- c(susceptible_h(1), infected_h(1), recovered_h(1),
             susceptible_l(4), infected_l(4), recovered_l(4))
 times <- seq(from = 0, to = 365 * 50, by = .1)
 out <- ode(times = times, y = y_init, func = model, parms = parms)
-out <- out[nrow(out),]
-
+#out <- out[nrow(out),]
 
 ############################
 #OUTPUT
 ############################
-save(out, file = paste('output.time.vac_', input, '.RData', sep = ''))
+save(out, file = paste('output.vac_', input, '.RData', sep = ''))
