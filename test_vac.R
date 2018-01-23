@@ -96,7 +96,7 @@ parms <- c(beta_h = 0.9155611,
            age_window = c(rep(1, 21), rep(10, 7)),
            native = c(rep(1, 7), rep(0.86, 9), rep(0.842, 4), 0.814, 0.7676, 0.7784, rep(0.809, 5)),
            travel <- 1 - native,
-           vac_h = 0.5,
+           vac_h = c(rep(0,8), 0.5, rep(0,19)),
            vac_l = vac)
 
 ############################
