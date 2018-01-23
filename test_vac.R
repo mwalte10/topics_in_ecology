@@ -3,7 +3,7 @@
 ############################
 args = commandArgs(TRUE)
 input = as.numeric(args[1])
-vac.vec = seq(0.1, 1, length.out = 50)
+vac.vec = seq(0.1, 1, length.out = 10)
 vac = c(rep(0,8), vac.vec[input], rep(0,19))
 
 library(deSolve)
