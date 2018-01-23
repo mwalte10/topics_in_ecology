@@ -83,7 +83,7 @@ population_l <- sum(susceptible_total_l + infected_total_l + recovered_total_l)
 
 native <- c(rep(1, 7), rep(0.86, 9), rep(0.842, 4), 0.814, 0.7676, 0.7784, rep(0.809, 5))
 
-parms <- c(beta_h = 0.6125551,
+parms <- c(beta_h = 0.9155611,
            beta_l = 0.9155611,
            gamma = 1/4,
            sigma = 1/(365 * 1.2),
@@ -377,7 +377,6 @@ y_init <- c(susceptible_h(1), infected_h(1), recovered_h(1),
             susceptible_l(4), infected_l(4), recovered_l(4))
 times <- seq(from = 0, to = 365 * 50, by = .1)
 out <- ode(times = times, y = y_init, func = model, parms = parms)
-out <- out[nrow(out),]
 
 
 ############################
