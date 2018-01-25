@@ -1,0 +1,389 @@
+############################
+#CRC info
+############################
+args = commandArgs(TRUE)
+input = as.numeric(args[1])
+vac.vec = c(0.85)
+vac = c(rep(0,8), vac.vec[input], rep(0,19))
+
+
+library(deSolve)
+
+############################
+#Initial condidtions and parameters
+############################
+percentage_vec <- c(rep(1.8,5), rep(1.8,5), rep(1.84,5), rep(1.86,5),
+                    17.2, 15, 12.7, 8.8, 5.5, 2.8, 1.3, 0.2)
+percentage_vec <- percentage_vec / 100
+initial_conditions <- as.data.frame(matrix(NA, nrow = 28*4, ncol = 3))
+initial_conditions[,2] <- rep(1:28,4)
+for(i in 1:4){
+  x <- i - 1
+  initial_conditions[x*(28) + (1:28),1] <- rep(i,28)
+}
+initial_conditions[,3] <- rep(percentage_vec,4)
+
+susceptible_init_h <- cbind(initial_conditions[,1], initial_conditions[,2], rep(NA, 112))
+susceptible_init_h[,3] <- c(initial_conditions[1:28,3] * 6 *10^6, initial_conditions[29:56,3] * 0, 
+                            initial_conditions[57:84,3] * 0, initial_conditions[85:112,3] * 0)
+susceptible_init_l <- cbind(initial_conditions[,1], initial_conditions[,2], rep(NA, 112))
+susceptible_init_l[,3] <- c(initial_conditions[1:28,3] * 6 *10^6, initial_conditions[29:56,3] * 0, 
+                            initial_conditions[57:84,3] * 0, initial_conditions[85:112,3] * 0)
+
+infected_init_h <- cbind(initial_conditions[,1], initial_conditions[,2], rep(NA, 112))
+infected_init_h[,3] <- c(initial_conditions[1:28,3] * 1, initial_conditions[29:56,3] * 0, 
+                         initial_conditions[57:84,3] * 0, initial_conditions[85:112,3] * 0)
+infected_init_l <- cbind(initial_conditions[,1], initial_conditions[,2], rep(NA, 112))
+infected_init_l[,3] <- c(initial_conditions[1:28,3] * 1, initial_conditions[29:56,3] * 0, 
+                         initial_conditions[57:84,3] * 0, initial_conditions[85:112,3] * 0)
+
+recovered_init_h <- cbind(initial_conditions[,1], initial_conditions[,2], rep(NA, 112))
+recovered_init_h[,3] <- c(initial_conditions[1:28,3] * 0, initial_conditions[29:56,3] * 0, 
+                          initial_conditions[57:84,3] * 0, initial_conditions[85:112,3] * 0)
+recovered_init_l <- cbind(initial_conditions[,1], initial_conditions[,2], rep(NA, 112))
+recovered_init_l[,3] <- c(initial_conditions[1:28,3] * 0, initial_conditions[29:56,3] * 0, 
+                          initial_conditions[57:84,3] * 0, initial_conditions[85:112,3] * 0)
+
+
+susceptible_h <- function(exposure){
+  x <- exposure - 1
+  susceptible <- c(susceptible_init_h[(x * 28) + 1:28,3])
+}
+susceptible_total_h <- sum(susceptible_h(1) + susceptible_h(2) + susceptible_h(3) + susceptible_h(4))
+susceptible_l <- function(exposure){
+  x <- exposure - 1
+  susceptible <- c(susceptible_init_l[(x * 28) + 1:28,3])
+}
+susceptible_total_l <- sum(susceptible_l(1) + susceptible_l(2) + susceptible_l(3) + susceptible_l(4))
+
+infected_h <- function(exposure){
+  x <- exposure - 1
+  infected <- c(infected_init_h[(x * 28) + 1:28,3])
+} 
+infected_total_h <- sum(infected_h(1) + infected_h(2) + infected_h(3) + infected_h(4))
+infected_l <- function(exposure){
+  x <- exposure - 1
+  infected <- c(infected_init_l[(x * 28) + 1:28,3])
+} 
+infected_total_l <- sum(infected_l(1) + infected_l(2) + infected_l(3) + infected_l(4))
+
+recovered_h <- function(exposure){
+  x <- exposure - 1
+  recovered <- c(recovered_init_h[(x * 28) + 1:28,3])
+} 
+recovered_total_h <- sum(recovered_h(1) + recovered_h(2) + recovered_h(3) + recovered_h(4))
+recovered_l <- function(exposure){
+  x <- exposure - 1
+  recovered <- c(recovered_init_l[(x * 28) + 1:28,3])
+} 
+recovered_total_l <- sum(recovered_l(1) + recovered_l(2) + recovered_l(3) + recovered_l(4))
+
+population_h <- sum(susceptible_total_h + infected_total_h + recovered_total_h)
+population_l <- sum(susceptible_total_l + infected_total_l + recovered_total_l)
+
+
+native <- c(rep(1, 7), rep(0.86, 9), rep(0.842, 4), 0.814, 0.7676, 0.7784, rep(0.809, 5))
+
+parms <- c(beta_h = 0.6125551,
+           beta_l = 0.9155611,
+           gamma = 1/4,
+           sigma = 1/(365 * 1.2),
+           mu = 19 / (1000 * 365),
+           delta = c((0.013 / 365), rep(0.001 / 365, 4), rep(0, 10), rep(0.001, 5), 
+                     0.002 / 365, 0.0025 / 365, 
+                     0.004 / 365, 0.0085 / 365,
+                     0.0175 / 365, 0.0425 / 365,
+                     0.114 / 365, 0.151 / 365),
+           age_window = c(rep(1, 21), rep(10, 7)),
+           native = c(rep(1, 7), rep(0.86, 9), rep(0.842, 4), 0.814, 0.7676, 0.7784, rep(0.809, 5)),
+           travel <- 1 - native,
+           vac_h = vac,
+           vac_l = vac)
+
+############################
+#MODEL
+############################
+model <- function(t, y, parms){
+  
+  beta_h <- parms[1]
+  beta_l <- parms[2]
+  gamma <- parms[3]
+  sigma <- parms[4]
+  mu <- parms[5]
+  delta <- parms[6:33]
+  age_window <- parms[34:61]
+  native <- parms[62:89]
+  travel <- parms[90:117]
+  vac_h <- if(t>(365*30*10)){vac_h = parms[118:145]}else{vac_h = rep(0,28)}
+  vac_l <- if(t>(365*30*10)){vac_h = parms[146:173]}else{vac_h = rep(0,28)}
+  
+  S1_h <- y[1:28]
+  I1_h <- y[29:56]
+  R1_h <- y[57:84]
+  S2_h <- y[85:112]
+  I2_h <- y[113:140]
+  R2_h <- y[141:168]
+  S3_h <- y[169:196]
+  I3_h <- y[197:224]
+  R3_h <- y[225:252]
+  S4_h <- y[253:280]
+  I4_h <- y[281:308]
+  R4_h <- y[309:336]
+  
+  S1_l <- y[337:364]
+  I1_l <- y[365:392]
+  R1_l <- y[393:420]
+  S2_l <- y[421:448]
+  I2_l <- y[449:476]
+  R2_l <- y[477:504]
+  S3_l <- y[505:532]
+  I3_l <- y[533:560]
+  R3_l <- y[561:588]
+  S4_l <- y[589:616]
+  I4_l <- y[617:644]
+  R4_l <- y[645:672]
+  
+  infected_total_h <- sum(sum(I1_h), sum(I2_h), sum(I3_h), sum(I4_h))
+  population_h <- y[1:336]
+  pop_h <- sum(population_h)
+  infected_total_l <- sum(sum(I1_l), sum(I2_l), sum(I3_l), sum(I4_l))
+  population_l <- y[337:672]
+  pop_l <- sum(population_l)
+  
+  effective_population_h <- population_h + rep(travel,12) * population_l
+  effective_population_h <- sum(effective_population_h)
+  effective_population_l <- population_l + rep(travel,12) * population_h
+  effective_population_l <- sum(effective_population_l)
+  
+  #first infection
+  dS1_h <-  
+    mu * c(pop_h, rep(0,27)) +
+    c(0, 1/365 / head(age_window, -1) * head(S1_h, -1)) -
+    c(1/365 / head(age_window, -1) * head(S1_h, -1), 0) -
+    native * S1_h * (beta_h * infected_total_h / effective_population_h) -
+    travel * S1_h * (beta_l * infected_total_l / effective_population_l) -
+    S1_h * delta -
+    S1_h * vac_h
+  dS1_l <-  
+    mu * c(pop_l, rep(0,27)) +
+    c(0, 1/365 / head(age_window, -1) * head(S1_l, -1)) -
+    c(1/365 / head(age_window, -1) * head(S1_l, -1), 0) -
+    travel * S1_l * (beta_h * infected_total_h / effective_population_h) -
+    native * S1_l * (beta_l * infected_total_l / effective_population_l) -
+    S1_l * delta - 
+    S1_l * vac_l
+  
+  dI1_h <- 
+    native * S1_h * (beta_h * infected_total_h / effective_population_h) +
+    travel * S1_h * (beta_l * infected_total_l / effective_population_l) +
+    c(0, 1/365 / head(age_window, -1) * head(I1_h, -1)) -
+    c(1/365 / head(age_window, -1) * head(I1_h, -1), 0) -
+    I1_h * gamma -
+    I1_h * delta
+  dI1_l <- 
+    travel * S1_l * (beta_h * infected_total_h / effective_population_h) +
+    native * S1_l * (beta_l * infected_total_l / effective_population_l) +
+    c(0, 1/365 / head(age_window, -1) * head(I1_l, -1)) -
+    c(1/365 / head(age_window, -1) * head(I1_l, -1), 0) -
+    I1_l * gamma -
+    I1_l * delta
+  
+  dR1_h <-
+    I1_h * gamma +
+    c(0, 1/365 / head(age_window, -1) * head(R1_h, -1)) -
+    c(1/365 / head(age_window, -1) * head(R1_h, -1), 0) -
+    R1_h * sigma -
+    R1_h * delta +
+    S1_h * vac_h - 
+    R1_h * vac_h
+  dR1_l <-
+    I1_l * gamma +
+    c(0, 1/365 / head(age_window, -1) * head(R1_l, -1)) -
+    c(1/365 / head(age_window, -1) * head(R1_l, -1), 0) -
+    R1_l * sigma -
+    R1_l * delta +
+    S1_l * vac_l - 
+    R1_l * vac_l
+  
+  #second infection
+  dS2_h <- 
+    R1_h * sigma +
+    c(0, 1/365 / head(age_window, -1) * head(S2_h, -1)) -
+    c(1/365 / head(age_window, -1) * head(S2_h, -1), 0) -
+    native * S2_h * (0.75 * beta_h * infected_total_h / effective_population_h) -
+    travel * S2_h * (0.75 * beta_l * infected_total_l / effective_population_l) -
+    S2_h * delta - 
+    S2_h * vac_h
+  dS2_l <- 
+    R1_l * sigma +
+    c(0, 1/365 / head(age_window, -1) * head(S2_l, -1)) -
+    c(1/365 / head(age_window, -1) * head(S2_l, -1), 0) -
+    travel * S2_l * (0.75 * beta_h * infected_total_h / effective_population_h) -
+    native * S2_l * (0.75 * beta_l * infected_total_l / effective_population_l) -
+    S2_l * delta - 
+    S2_l * vac_l
+  
+  dI2_h <- 
+    native * S2_h * (0.75 * beta_h * infected_total_h / effective_population_h) +
+    travel * S2_h * (0.75 * beta_l * infected_total_l / effective_population_l) +
+    c(0, 1/365 / head(age_window, -1) * head(I2_h, -1)) -
+    c(1/365 / head(age_window, -1) * head(I2_h, -1), 0) -
+    I2_h * gamma -
+    I2_h * delta
+  dI2_l <- 
+    travel * S2_l * (0.75 * beta_h * infected_total_h / effective_population_h) +
+    native * S2_l * (0.75 * beta_l * infected_total_l / effective_population_l) +
+    c(0, 1/365 / head(age_window, -1) * head(I2_l, -1)) -
+    c(1/365 / head(age_window, -1) * head(I2_l, -1), 0) -
+    I2_l * gamma -
+    I2_l * delta
+  
+  dR2_h <-  
+    I2_h * gamma +  
+    c(0, 1/365 / head(age_window, -1) * head(R2_h, -1)) -
+    c(1/365 / head(age_window, -1) * head(R2_h, -1), 0) -
+    R2_h * sigma -
+    R2_h * delta +
+    R1_h * vac_h +
+    S2_h * vac_h -
+    R2_h * vac_h
+  dR2_l <-  
+    I2_l * gamma +  
+    c(0, 1/365 / head(age_window, -1) * head(R2_l, -1)) -
+    c(1/365 / head(age_window, -1) * head(R2_l, -1), 0) -
+    R2_l * sigma -
+    R2_l * delta + 
+    R1_l * vac_l +
+    S2_l * vac_l -
+    R2_l * vac_l
+  
+  #third infection
+  dS3_h <- 
+    R2_h * sigma + 
+    c(0, 1/365 / head(age_window, -1) * head(S3_h, -1)) -
+    c(1/365 / head(age_window, -1) * head(S3_h, -1), 0) -
+    native * S3_h * (0.5 * beta_h * infected_total_h / effective_population_h) -
+    travel * S3_h * (0.5 * beta_l * infected_total_l / effective_population_l) -
+    S3_h * delta -
+    S3_h * vac_h
+  dS3_l <- 
+    R2_l * sigma + 
+    c(0, 1/365 / head(age_window, -1) * head(S3_l, -1)) -
+    c(1/365 / head(age_window, -1) * head(S3_l, -1), 0) -
+    travel * S3_l * (0.5 * beta_h * infected_total_h / effective_population_h) -
+    native * S3_l * (0.5 * beta_l * infected_total_l / effective_population_l) -
+    S3_l * delta -
+    S3_l * vac_l
+  
+  dI3_h <- 
+    native * S3_h * (0.5 * beta_h * infected_total_h / effective_population_h) +
+    travel * S3_h * (0.5 * beta_l * infected_total_l / effective_population_l) +
+    c(0, 1/365 / head(age_window, -1) * head(I3_h, -1)) -
+    c(1/365 / head(age_window, -1) * head(I3_h, -1), 0) -
+    I3_h * gamma -
+    I3_h * delta
+  dI3_l <- 
+    travel * S3_l * (0.5 * beta_h * infected_total_h / effective_population_h) +
+    native * S3_l * (0.5 * beta_l * infected_total_l / effective_population_l) +
+    c(0, 1/365 / head(age_window, -1) * head(I3_l, -1)) -
+    c(1/365 / head(age_window, -1) * head(I3_l, -1), 0) -
+    I3_l * gamma -
+    I3_l * delta
+  
+  dR3_h <- 
+    I3_h * gamma +
+    c(0, 1/365 / head(age_window, -1) * head(R3_h, -1)) -
+    c(1/365 / head(age_window, -1) * head(R3_h, -1), 0) -
+    R3_h * sigma -
+    R3_h * delta + 
+    R2_h * vac_h +
+    S3_h * vac_h -
+    R3_h * vac_h
+  dR3_l <- 
+    I3_l * gamma +
+    c(0, 1/365 / head(age_window, -1) * head(R3_l, -1)) -
+    c(1/365 / head(age_window, -1) * head(R3_l, -1), 0) -
+    R3_l * sigma -
+    R3_l * delta +
+    R3_l * vac_l +
+    S3_l * vac_l - 
+    R3_l * vac_l
+  
+  #fourth infection
+  dS4_h <- 
+    R3_h * sigma +
+    c(0, 1/365 / head(age_window, -1) * head(S4_h, -1)) -
+    c(1/365 / head(age_window, -1) * head(S4_h, -1), 0) -
+    native * S4_h * (0.25 * beta_h * infected_total_h / effective_population_h) -
+    travel * S4_h * (0.25 * beta_l * infected_total_l / effective_population_l) -
+    S4_h * delta - 
+    S4_h * vac_h
+  dS4_l <- 
+    R3_l * sigma +
+    c(0, 1/365 / head(age_window, -1) * head(S4_l, -1)) -
+    c(1/365 / head(age_window, -1) * head(S4_l, -1), 0) -
+    travel * S4_l * (0.25 * beta_h * infected_total_h / effective_population_h) -
+    native * S4_l * (0.25 * beta_l * infected_total_l / effective_population_l) -
+    S4_l * delta - 
+    S4_l * vac_l
+  
+  dI4_h <- 
+    native * S4_h * (0.25 * beta_h * infected_total_h / effective_population_h) +
+    travel * S4_h * (0.25 * beta_l * infected_total_l / effective_population_l) +
+    c(0, 1/365 / head(age_window, -1) * head(I4_h, -1)) -
+    c(1/365 / head(age_window, -1) * head(I4_h, -1), 0) -
+    I4_h * gamma -
+    I4_h * delta
+  dI4_l <- 
+    travel * S4_l * (0.25 * beta_h * infected_total_h / effective_population_h) +
+    native * S4_l * (0.25 * beta_l * infected_total_l / effective_population_l) +
+    c(0, 1/365 / head(age_window, -1) * head(I4_l, -1)) -
+    c(1/365 / head(age_window, -1) * head(I4_l, -1), 0) -
+    I4_l * gamma -
+    I4_l * delta
+  
+  dR4_h <- 
+    I4_h * gamma +
+    c(0, 1/365 / head(age_window, -1) * head(R4_h, -1)) -
+    c(1/365 / head(age_window, -1) * head(R4_h, -1), 0) -
+    R4_h * delta +
+    R3_h * vac_h +
+    S4_h * vac_h
+  dR4_l <- 
+    I4_l * gamma +
+    c(0, 1/365 / head(age_window, -1) * head(R4_l, -1)) -
+    c(1/365 / head(age_window, -1) * head(R4_l, -1), 0) -
+    R4_l * delta + 
+    R3_l * vac_l +
+    S4_l * vac_l
+  
+  list(c(dS1_h, dI1_h, dR1_h,
+         dS2_h, dI2_h, dR2_h,
+         dS3_h, dI3_h, dR3_h,
+         dS4_h, dI4_h, dR4_h,
+         dS1_l, dI1_l, dR1_l,
+         dS2_l, dI2_l, dR2_l,
+         dS3_l, dI3_l, dR3_l,
+         dS4_l, dI4_l, dR4_l))
+  
+}
+
+############################
+#RUN MODEL
+############################
+y_init <- c(susceptible_h(1), infected_h(1), recovered_h(1),
+            susceptible_h(2), infected_h(2), recovered_h(2),
+            susceptible_h(3), infected_h(3), recovered_h(3),
+            susceptible_h(4), infected_h(4), recovered_h(4),
+            susceptible_l(1), infected_l(1), recovered_l(1),
+            susceptible_l(2), infected_l(2), recovered_l(2),
+            susceptible_l(3), infected_l(3), recovered_l(3),
+            susceptible_l(4), infected_l(4), recovered_l(4))
+times <- seq(from = 0, to = 365 * 50, by = .1)
+out <- ode(times = times, y = y_init, func = model, parms = parms)
+#out <- out[nrow(out),]
+
+############################
+#OUTPUT
+############################
+save(out, file = paste('output.vac.new_', input, '.RData', sep = ''))
