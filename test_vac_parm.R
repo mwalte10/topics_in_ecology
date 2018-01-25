@@ -3,9 +3,8 @@
 ############################
 args = commandArgs(TRUE)
 input = as.numeric(args[1])
-vac.vec = c(0.85)
+vac.vec = c(0.25, 0.45, 0.65, 0.85)
 vac = c(rep(0,8), vac.vec[input], rep(0,19))
-
 
 library(deSolve)
 
@@ -114,8 +113,9 @@ model <- function(t, y, parms){
   age_window <- parms[34:61]
   native <- parms[62:89]
   travel <- parms[90:117]
-  vac_h <- if(t>(365*30*10)){vac_h = parms[118:145]}else{vac_h = rep(0,28)}
-  vac_l <- if(t>(365*30*10)){vac_h = parms[146:173]}else{vac_h = rep(0,28)}
+  vac_h <- ifelse(t>(365*30*10), parms[118:145], rep(0,28))
+  vac_l <- ifelse(t>(365*30*10), parms[146:173], rep(0,28))
+  
   
   S1_h <- y[1:28]
   I1_h <- y[29:56]
@@ -142,6 +142,10 @@ model <- function(t, y, parms){
   S4_l <- y[589:616]
   I4_l <- y[617:644]
   R4_l <- y[645:672]
+  
+  FOI <- y[673]
+  FOI_h <- y[674]
+  FOI_l <- y[675]
   
   infected_total_h <- sum(sum(I1_h), sum(I2_h), sum(I3_h), sum(I4_h))
   population_h <- y[1:336]
@@ -187,6 +191,10 @@ model <- function(t, y, parms){
     c(1/365 / head(age_window, -1) * head(I1_l, -1), 0) -
     I1_l * gamma -
     I1_l * delta
+  
+  FOI <- FOI + sum(dI1_h+dI1_l)
+  FOI_h <- FOI_h + sum(dI1_h)
+  FOI_l <- FOI_l + sum(dI1_l)
   
   dR1_h <-
     I1_h * gamma +
@@ -237,6 +245,10 @@ model <- function(t, y, parms){
     c(1/365 / head(age_window, -1) * head(I2_l, -1), 0) -
     I2_l * gamma -
     I2_l * delta
+  
+  FOI <- FOI + sum(dI2_h+dI2_l)
+  FOI_h <- FOI_h + sum(dI2_h)
+  FOI_l <- FOI_l + sum(dI2_l)
   
   dR2_h <-  
     I2_h * gamma +  
@@ -290,6 +302,10 @@ model <- function(t, y, parms){
     I3_l * gamma -
     I3_l * delta
   
+  FOI <- FOI + sum(dI3_h+dI3_l)
+  FOI_h <- FOI_h + sum(dI3_h)
+  FOI_l <- FOI_l + sum(dI3_l)
+  
   dR3_h <- 
     I3_h * gamma +
     c(0, 1/365 / head(age_window, -1) * head(R3_h, -1)) -
@@ -342,6 +358,10 @@ model <- function(t, y, parms){
     I4_l * gamma -
     I4_l * delta
   
+  FOI <- FOI + sum(dI4_h+dI4_l)
+  FOI_h <- FOI_h + sum(dI4_h)
+  FOI_l <- FOI_l + sum(dI4_l)
+  
   dR4_h <- 
     I4_h * gamma +
     c(0, 1/365 / head(age_window, -1) * head(R4_h, -1)) -
@@ -364,7 +384,8 @@ model <- function(t, y, parms){
          dS1_l, dI1_l, dR1_l,
          dS2_l, dI2_l, dR2_l,
          dS3_l, dI3_l, dR3_l,
-         dS4_l, dI4_l, dR4_l))
+         dS4_l, dI4_l, dR4_l, 
+         FOI, FOI_h, FOI_l))
   
 }
 
@@ -378,12 +399,43 @@ y_init <- c(susceptible_h(1), infected_h(1), recovered_h(1),
             susceptible_l(1), infected_l(1), recovered_l(1),
             susceptible_l(2), infected_l(2), recovered_l(2),
             susceptible_l(3), infected_l(3), recovered_l(3),
-            susceptible_l(4), infected_l(4), recovered_l(4))
+            susceptible_l(4), infected_l(4), recovered_l(4),
+            0, 0, 0)
 times <- seq(from = 0, to = 365 * 50, by = .1)
 out <- ode(times = times, y = y_init, func = model, parms = parms)
-#out <- out[nrow(out),]
+
+############################
+#PROCESSING
+############################
+png(filename = paste('infections_', input, '.RData', sep = ''))
+par(mfrow = c(2,2))
+infected_names <- c("Infected 1", "Infected 2", "Infected 3", "Infected 4")
+for(i in 0:3){
+  x <- 2 + 3 * i
+  y <- x + 12
+  legend_y <- max(rowSums(out[,(1+(x-1)*28+1):(1+(x)*28)]))
+  {plot(out[,1],rowSums(out[,(1+(x-1)*28+1):(1+(x)*28)]),type='l', 
+        col = "red", lwd = 2, ylab = '',
+        main = infected_names[i + 1])
+    lines(out[,1],rowSums(out[,(1+(y-1)*28+1):(1+(y)*28)]),type='l', lwd = 2)
+    legend(8000, (2/3) * legend_y, legend=c("High SES", "Low SES"),
+           col=c("red", "black"), lwd = c(2,2), cex=0.8)
+  }}
+dev.off()
+
 
 ############################
 #OUTPUT
 ############################
-save(out, file = paste('output.vac.new_', input, '.RData', sep = ''))
+out <- out[nrow(out),]
+FOI <- out[,673]
+FOI_h <- out[,674]
+FOI_l <- out[,675]
+save(out, file = paste('output_', input, '.RData', sep = ''))
+save(FOI, file = paste('FOI_', input, '.RData', sep = ''))
+same(FOI_h, file = paste('FOI.h_', input, '.RData', sep = ''))
+same(FOI_l, file = paste('FOI.l_', input, '.RData', sep = ''))
+
+
+
+
