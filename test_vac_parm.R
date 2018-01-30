@@ -3,7 +3,7 @@
 ############################
 args = commandArgs(TRUE)
 input = as.numeric(args[1])
-vac.vec = c(0.25, 0.45, 0.65, 0.85)
+vac.vec = c(0.85)
 vac = c(rep(0,8), vac.vec[input], rep(0,19))
 
 library(deSolve)
@@ -192,10 +192,6 @@ model <- function(t, y, parms){
     I1_l * gamma -
     I1_l * delta
   
-  FOI <- FOI + sum(dI1_h+dI1_l)
-  FOI_h <- FOI_h + sum(dI1_h)
-  FOI_l <- FOI_l + sum(dI1_l)
-  
   dR1_h <-
     I1_h * gamma +
     c(0, 1/365 / head(age_window, -1) * head(R1_h, -1)) -
@@ -245,10 +241,6 @@ model <- function(t, y, parms){
     c(1/365 / head(age_window, -1) * head(I2_l, -1), 0) -
     I2_l * gamma -
     I2_l * delta
-  
-  FOI <- FOI + sum(dI2_h+dI2_l)
-  FOI_h <- FOI_h + sum(dI2_h)
-  FOI_l <- FOI_l + sum(dI2_l)
   
   dR2_h <-  
     I2_h * gamma +  
@@ -302,10 +294,6 @@ model <- function(t, y, parms){
     I3_l * gamma -
     I3_l * delta
   
-  FOI <- FOI + sum(dI3_h+dI3_l)
-  FOI_h <- FOI_h + sum(dI3_h)
-  FOI_l <- FOI_l + sum(dI3_l)
-  
   dR3_h <- 
     I3_h * gamma +
     c(0, 1/365 / head(age_window, -1) * head(R3_h, -1)) -
@@ -358,10 +346,6 @@ model <- function(t, y, parms){
     I4_l * gamma -
     I4_l * delta
   
-  FOI <- FOI + sum(dI4_h+dI4_l)
-  FOI_h <- FOI_h + sum(dI4_h)
-  FOI_l <- FOI_l + sum(dI4_l)
-  
   dR4_h <- 
     I4_h * gamma +
     c(0, 1/365 / head(age_window, -1) * head(R4_h, -1)) -
@@ -376,6 +360,10 @@ model <- function(t, y, parms){
     R4_l * delta + 
     R3_l * vac_l +
     S4_l * vac_l
+  
+  FOI <- FOI + sum(dI1_h+dI1_l+dI2_h+dI2_l+dI3_h+dI3_l+dI4_h+dI4_l)
+  FOI_h <- FOI_h + sum(dI1_h+dI2_h+dI3_h+dI4_h)
+  FOI_l <- FOI_l + sum(dI1_l+dI2_l+dI3_l+dI4_l)
   
   list(c(dS1_h, dI1_h, dR1_h,
          dS2_h, dI2_h, dR2_h,
@@ -407,7 +395,7 @@ out <- ode(times = times, y = y_init, func = model, parms = parms)
 ############################
 #PROCESSING
 ############################
-png(filename = paste('infections_', input, '.png', sep = ''))
+png(filename = paste('infections.test_', input, '.png', sep = ''))
 par(mfrow = c(2,2))
 infected_names <- c("Infected 1", "Infected 2", "Infected 3", "Infected 4")
 for(i in 0:3){
@@ -431,10 +419,10 @@ out_last <- out[nrow(out),]
 FOI <- out[,674]
 FOI_h <- out[,675]
 FOI_l <- out[,676]
-save(out_last, file = paste('output_', input, '.RData', sep = ''))
-save(FOI, file = paste('FOI_', input, '.RData', sep = ''))
-save(FOI_h, file = paste('FOI.h_', input, '.RData', sep = ''))
-save(FOI_l, file = paste('FOI.l_', input, '.RData', sep = ''))
+save(out_last, file = paste('output.test_', input, '.RData', sep = ''))
+save(FOI, file = paste('FOI.test_', input, '.RData', sep = ''))
+save(FOI_h, file = paste('FOI.test.h_', input, '.RData', sep = ''))
+save(FOI_l, file = paste('FOI.test.l_', input, '.RData', sep = ''))
 
 
 
