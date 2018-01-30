@@ -407,31 +407,31 @@ out <- ode(times = times, y = y_init, func = model, parms = parms)
 ############################
 #PROCESSING
 ############################
-png(filename = paste('infections_', input, '.RData', sep = ''))
-par(mfrow = c(2,2))
-infected_names <- c("Infected 1", "Infected 2", "Infected 3", "Infected 4")
-for(i in 0:3){
-  x <- 2 + 3 * i
-  y <- x + 12
-  legend_y <- max(rowSums(out[,(1+(x-1)*28+1):(1+(x)*28)]))
-  {plot(out[,1],rowSums(out[,(1+(x-1)*28+1):(1+(x)*28)]),type='l', 
-        col = "red", lwd = 2, ylab = '',
-        main = infected_names[i + 1])
-    lines(out[,1],rowSums(out[,(1+(y-1)*28+1):(1+(y)*28)]),type='l', lwd = 2)
-    legend(8000, (2/3) * legend_y, legend=c("High SES", "Low SES"),
-           col=c("red", "black"), lwd = c(2,2), cex=0.8)
-  }}
-dev.off()
+#png(filename = paste('infections_', input, '.RData', sep = ''))
+#par(mfrow = c(2,2))
+#infected_names <- c("Infected 1", "Infected 2", "Infected 3", "Infected 4")
+#for(i in 0:3){
+#  x <- 2 + 3 * i
+#  y <- x + 12
+#  legend_y <- max(rowSums(out[,(1+(x-1)*28+1):(1+(x)*28)]))
+#  {plot(out[,1],rowSums(out[,(1+(x-1)*28+1):(1+(x)*28)]),type='l', 
+#        col = "red", lwd = 2, ylab = '',
+#        main = infected_names[i + 1])
+#    lines(out[,1],rowSums(out[,(1+(y-1)*28+1):(1+(y)*28)]),type='l', lwd = 2)
+#    legend(8000, (2/3) * legend_y, legend=c("High SES", "Low SES"),
+#           col=c("red", "black"), lwd = c(2,2), cex=0.8)
+#  }}
+#dev.off()
 
 
 ############################
 #OUTPUT
 ############################
-out <- out[nrow(out),]
+out_last <- out[nrow(out),]
 FOI <- out[,673]
 FOI_h <- out[,674]
 FOI_l <- out[,675]
-save(out, file = paste('output_', input, '.RData', sep = ''))
+save(out_last, file = paste('output_', input, '.RData', sep = ''))
 save(FOI, file = paste('FOI_', input, '.RData', sep = ''))
 same(FOI_h, file = paste('FOI.h_', input, '.RData', sep = ''))
 same(FOI_l, file = paste('FOI.l_', input, '.RData', sep = ''))
