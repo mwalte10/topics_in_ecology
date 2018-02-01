@@ -113,8 +113,8 @@ model <- function(t, y, parms){
   age_window <- parms[34:61]
   native <- parms[62:89]
   travel <- parms[90:117]
-  vac_h <- ifelse(t>(365*1), parms[118:145], rep(0,28))
-  vac_l <- ifelse(t>(365*1), parms[146:173], rep(0,28))
+  vac_h <- ifelse(t>(365*30), parms[118:145], rep(0,28))
+  vac_l <- ifelse(t>(365*30), parms[146:173], rep(0,28))
   
   
   S1_h <- y[1:28]
@@ -402,7 +402,7 @@ y_init <- c(susceptible_h(1), infected_h(1), recovered_h(1),
             susceptible_l(3), infected_l(3), recovered_l(3),
             susceptible_l(4), infected_l(4), recovered_l(4),
             0, 0, 0)
-times <- seq(from = 0, to = 365 * 2, by = .1)
+times <- seq(from = 0, to = 365 * 50, by = .1)
 out <- ode(times = times, y = y_init, func = model, parms = parms)
 
 ############################
