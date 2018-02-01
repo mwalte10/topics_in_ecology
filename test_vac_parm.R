@@ -3,7 +3,7 @@
 ############################
 args = commandArgs(TRUE)
 input = as.numeric(args[1])
-vac.vec = c(0, 1, 2, 5)
+vac.vec = seq(from = 0, to = 2, by = .1)
 vac = c(rep(0,8), vac.vec[input], rep(0,19))
 
 library(deSolve)
@@ -83,8 +83,8 @@ population_l <- sum(susceptible_total_l + infected_total_l + recovered_total_l)
 
 native <- c(rep(1, 7), rep(0.86, 9), rep(0.842, 4), 0.814, 0.7676, 0.7784, rep(0.809, 5))
 
-parms <- c(beta_h = 0.6125551,
-           beta_l = 0.9155611,
+parms <- c(beta_h = 0.3447,
+           beta_l = 0.4529,
            gamma = 1/4,
            sigma = 1/(365 * 1.2),
            mu = 19 / (1000 * 365),
