@@ -1,7 +1,7 @@
 #!/bin/csh
 
 #$ -N vac_
-#$ -t 1
+#$ -t 4
 
 module load bio/R/3.3.1-gcc
 
