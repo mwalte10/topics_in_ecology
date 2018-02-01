@@ -113,8 +113,8 @@ model <- function(t, y, parms){
   age_window <- parms[34:61]
   native <- parms[62:89]
   travel <- parms[90:117]
-  vac_h <- ifelse(t>(365*5), parms[118:145], rep(0,28))
-  vac_l <- ifelse(t>(365*5), parms[146:173], rep(0,28))
+  vac_h <- ifelse(t>(365*1), parms[118:145], rep(0,28))
+  vac_l <- ifelse(t>(365*1), parms[146:173], rep(0,28))
   
   
   S1_h <- y[1:28]
@@ -192,9 +192,9 @@ model <- function(t, y, parms){
     I1_l * gamma -
     I1_l * delta
   
-  FOI <- FOI + (sum(dI1_h+dI1_l) / sum(dS1_h+dS1_l))
-  FOI_h <- FOI_h + (sum(dI1_h) / sum(dS1_h))
-  FOI_l <- FOI_l + (sum(dI1_l) / sum(dS1_l))
+  FOI <- FOI + (sum(dI1_h+dI1_l) / (sum(dS1_h+dS1_l) + 1))
+  FOI_h <- FOI_h + (sum(dI1_h) / (sum(dS1_h)+1))
+  FOI_l <- FOI_l + (sum(dI1_l) / (sum(dS1_l)+1))
   
   dR1_h <-
     I1_h * gamma +
@@ -246,9 +246,9 @@ model <- function(t, y, parms){
     I2_l * gamma -
     I2_l * delta
   
-  FOI <- FOI + (sum(dI2_h+dI2_l) / sum(dS2_h+dS2_l))
-  FOI_h <- FOI_h + (sum(dI2_h) / sum(dS2_h))
-  FOI_l <- FOI_l + (sum(dI2_l) / sum(dS2_l))
+  FOI <- FOI + (sum(dI2_h+dI2_l) / (sum(dS2_h+dS2_l) + 1))
+  FOI_h <- FOI_h + (sum(dI2_h) / (sum(dS2_h)+1))
+  FOI_l <- FOI_l + (sum(dI2_l) / (sum(dS2_l)+1))
   
   dR2_h <-  
     I2_h * gamma +  
@@ -302,9 +302,9 @@ model <- function(t, y, parms){
     I3_l * gamma -
     I3_l * delta
   
-  FOI <- FOI + (sum(dI3_h+dI3_l) / sum(dS3_h+dS3_l))
-  FOI_h <- FOI_h + (sum(dI3_h) / sum(dS3_h))
-  FOI_l <- FOI_l + (sum(dI3_l) / sum(dS3_l))
+  FOI <- FOI + (sum(dI3_h+dI1_l) / (sum(dS3_h+dS3_l) + 1))
+  FOI_h <- FOI_h + (sum(dI3_h) / (sum(dS3_h)+1))
+  FOI_l <- FOI_l + (sum(dI3_l) / (sum(dS3_l)+1))
   
   dR3_h <- 
     I3_h * gamma +
@@ -358,9 +358,9 @@ model <- function(t, y, parms){
     I4_l * gamma -
     I4_l * delta
   
-  FOI <- FOI + (sum(dI4_h+dI4_l) / sum(dS4_h+dS4_l))
-  FOI_h <- FOI_h + (sum(dI4_h) / sum(dS4_h))
-  FOI_l <- FOI_l + (sum(dI4_l) / sum(dS4_l))
+  FOI <- FOI + (sum(dI4_h+dI4_l) / (sum(dS4_h+dS4_l) + 1))
+  FOI_h <- FOI_h + (sum(dI4_h) / (sum(dS4_h)+1))
+  FOI_l <- FOI_l + (sum(dI4_l) / (sum(dS4_l)+1))
   
   dR4_h <- 
     I4_h * gamma +
@@ -402,7 +402,7 @@ y_init <- c(susceptible_h(1), infected_h(1), recovered_h(1),
             susceptible_l(3), infected_l(3), recovered_l(3),
             susceptible_l(4), infected_l(4), recovered_l(4),
             0, 0, 0)
-times <- seq(from = 0, to = 365 * 10, by = .1)
+times <- seq(from = 0, to = 365 * 2, by = .1)
 out <- ode(times = times, y = y_init, func = model, parms = parms)
 
 ############################
