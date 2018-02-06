@@ -452,32 +452,32 @@ for(i in 0:7){
 dev.off()
 
 #Plot susceptible
-#png(filename = paste('susceptible_', input, '.png', sep = ''))
-#par(mfrow = c(2,4))
-#susceptible_names <- c("Susceptible 1, High", "Susceptible 2, High", 
-#                       "Susceptible 3, High", "Susceptible 4, High",
-#                       "Susceptible 1, Low", "Susceptible 2, Low", 
-#                       "Susceptible 3, Low", "Susceptible 4, Low")
-#for(i in 0:7){
-#  x <- 1 + 3 * i
-#  plot(out[,1],rowSums(out[,(1+(x-1)*28+1):(1+(x)*28)]),type='l', 
-#        ylim= range(0:2e6), main = susceptible_names[i + 1])
-#}
-#dev.off()
+png(filename = paste('susceptible_', input, '.png', sep = ''))
+par(mfrow = c(2,4))
+susceptible_names <- c("Susceptible 1, High", "Susceptible 2, High", 
+                       "Susceptible 3, High", "Susceptible 4, High",
+                       "Susceptible 1, Low", "Susceptible 2, Low", 
+                       "Susceptible 3, Low", "Susceptible 4, Low")
+for(i in 0:7){
+  x <- 1 + 3 * i
+  plot(out[,1],rowSums(out[,(1+(x-1)*28+1):(1+(x)*28)]),type='l', 
+         col = "black", main = susceptible_names[i + 1])
+}
+dev.off()
 
 #plot recovered
-#png(filename = paste('recovered_', input, '.png', sep = ''))
-#par(mfrow = c(2,4))
-#recovered_names <- c("Recovered 1, High", "Recovered 2, High", 
-#                     "Recovered 3, High", "Recovered 4, High",
-#                     "Recovered 1, Low", "Recovered 2, Low", 
-#                     "Recovered 3, Low", "Recovered 4, Low")
-#for(i in 0:7){
-#  x <- 3 + 3 * i
-#  plot(out[,1],rowSums(out[,(1+(x-1)*28+1):(1+(x)*28)]),type='l', 
-#        ylim= range(0:2e6), col = "black", main = recovered_names [i + 1])
-#}
-#dev.off()
+png(filename = paste('recovered_', input, '.png', sep = ''))
+par(mfrow = c(2,4))
+recovered_names <- c("Recovered 1, High", "Recovered 2, High", 
+                     "Recovered 3, High", "Recovered 4, High",
+                     "Recovered 1, Low", "Recovered 2, Low", 
+                     "Recovered 3, Low", "Recovered 4, Low")
+for(i in 0:7){
+  x <- 3 + 3 * i
+  plot(out[,1],rowSums(out[,(1+(x-1)*28+1):(1+(x)*28)]),type='l', 
+         col = "black", main = recovered_names [i + 1])
+}
+dev.off()
 
 
 
