@@ -474,7 +474,7 @@ recovered_names <- c("Recovered 1, High", "Recovered 2, High",
 for(i in 0:7){
   x <- 3 + 3 * i
   plot(out[,1],rowSums(out[,(1+(x-1)*28+1):(1+(x)*28)]),type='l', 
-        ylim= range(0:2e6), main = recovered_names [i + 1])
+        ylim= range(0:2e6), col = "black", main = recovered_names [i + 1])
 }
 dev.off()
 
