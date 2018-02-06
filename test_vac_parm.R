@@ -3,7 +3,7 @@
 ############################
 args = commandArgs(TRUE)
 input = as.numeric(args[1])
-vac.vec = seq(from = 0, to = 1, by = .05)
+vac.vec = seq(from = 0, to = 1, by = .2)
 vac = vac.vec[input]
 
 library(deSolve)
@@ -407,34 +407,79 @@ out <- ode(times = times, y = y_init, func = model, parms = parms)
 ############################
 #PROCESSING
 ############################
-png(filename = paste('infections_', input, '.png', sep = ''))
-par(mfrow = c(2,2))
-infected_names <- c("Infected 1", "Infected 2", "Infected 3", "Infected 4")
-for(i in 0:3){
-  x <- 2 + 3 * i
-  y <- x + 12
-  legend_y <- max(rowSums(out[,(1+(x-1)*28+1):(1+(x)*28)]))
-  {plot(out[,1],rowSums(out[,(1+(x-1)*28+1):(1+(x)*28)]),type='l', 
-        col = "red", lwd = 2, ylab = '',
-        main = infected_names[i + 1])
-    lines(out[,1],rowSums(out[,(1+(y-1)*28+1):(1+(y)*28)]),type='l', lwd = 2)
-    legend(8000, (2/3) * legend_y, legend=c("High SES", "Low SES"),
-           col=c("red", "black"), lwd = c(2,2), cex=0.8)
-  }}
-dev.off()
+#png(filename = paste('infections_', input, '.png', sep = ''))
+#par(mfrow = c(2,2))
+#infected_names <- c("Infected 1", "Infected 2", "Infected 3", "Infected 4")
+#for(i in 0:3){
+#  x <- 2 + 3 * i
+#  y <- x + 12
+#  legend_y <- max(rowSums(out[,(1+(x-1)*28+1):(1+(x)*28)]))
+#  {plot(out[,1],rowSums(out[,(1+(x-1)*28+1):(1+(x)*28)]),type='l', 
+#        col = "red", lwd = 2, ylab = '',
+#        main = infected_names[i + 1])
+#    lines(out[,1],rowSums(out[,(1+(y-1)*28+1):(1+(y)*28)]),type='l', lwd = 2)
+#    legend(8000, (2/3) * legend_y, legend=c("High SES", "Low SES"),
+#           col=c("red", "black"), lwd = c(2,2), cex=0.8)
+#  }}
+#dev.off()
 
 
 ############################
 #OUTPUT
 ############################
-out_last <- out[nrow(out),]
-FOI <- out[,674]
-FOI_h <- out[,675]
-FOI_l <- out[,676]
-save(out_last, file = paste('output_', input, '.RData', sep = ''))
-save(FOI, file = paste('FOI_', input, '.RData', sep = ''))
-save(FOI_h, file = paste('FOI.h_', input, '.RData', sep = ''))
-save(FOI_l, file = paste('FOI.l_', input, '.RData', sep = ''))
+#out_last <- out[nrow(out),]
+#FOI <- out[,674]
+#FOI_h <- out[,675]
+#FOI_l <- out[,676]
+#save(out_last, file = paste('output_', input, '.RData', sep = ''))
+#save(FOI, file = paste('FOI_', input, '.RData', sep = ''))
+#save(FOI_h, file = paste('FOI.h_', input, '.RData', sep = ''))
+#save(FOI_l, file = paste('FOI.l_', input, '.RData', sep = ''))
+
+#plot infected
+png(filename = paste('infected_', input, '.png', sep = ''))
+par(mfrow = c(2,4))
+infected_names <- c("Infected 1, High", "Infected 2, High", 
+                    "Infected 3, High", "Infected 4, High",
+                    "Infected 1, Low", "Infected 2, Low", 
+                    "Infected 3, Low", "Infected 4, Low")
+for(i in 0:7){
+  x <- 2 + 3 * i
+  plot(out[,1],rowSums(out[,(1+(x-1)*28+1):(1+(x)*28)]),type='l', 
+        xlim = range(0:182500),
+        ylim= range(0:2e6), main = infected_names[i + 1])
+}
+dev.off()
+
+#Plot susceptible
+png(filename = paste('susceptible_', input, '.png', sep = ''))
+par(mfrow = c(2,4))
+susceptible_names <- c("Susceptible 1, High", "Susceptible 2, High", 
+                       "Susceptible 3, High", "Susceptible 4, High",
+                       "Susceptible 1, Low", "Susceptible 2, Low", 
+                       "Susceptible 3, Low", "Susceptible 4, Low")
+for(i in 0:7){
+  x <- 1 + 3 * i
+  plot(out[,1],rowSums(out[,(1+(x-1)*28+1):(1+(x)*28)]),type='l', 
+        xlim = range(0:182500),
+        ylim= range(0:2e6), main = susceptible_names[i + 1])
+}
+dev.off()
+
+#plot recovered
+png(filename = paste('susceptible_', input, '.png', sep = ''))
+par(mfrow = c(2,4))
+recovered_names <- c("Recovered 1, High", "Recovered 2, High", 
+                     "Recovered 3, High", "Recovered 4, High",
+                     "Recovered 1, Low", "Recovered 2, Low", 
+                     "Recovered 3, Low", "Recovered 4, Low")
+for(i in 0:7){
+  x <- 3 + 3 * i
+  plot(out[,1],rowSums(out[,(1+(x-1)*28+1):(1+(x)*28)]),type='l', 
+        xlim = range(0:182500),
+        ylim= range(0:2e6), main = recovered_names [i + 1])
+}
+dev.off()
 
 
 
