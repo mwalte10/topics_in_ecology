@@ -446,7 +446,6 @@ infected_names <- c("Infected 1, High", "Infected 2, High",
 for(i in 0:7){
   x <- 2 + 3 * i
   plot(out[,1],rowSums(out[,(1+(x-1)*28+1):(1+(x)*28)]),type='l', 
-        xlim = range(0:182500),
         ylim= range(0:2e6), main = infected_names[i + 1])
 }
 dev.off()
@@ -461,13 +460,12 @@ susceptible_names <- c("Susceptible 1, High", "Susceptible 2, High",
 for(i in 0:7){
   x <- 1 + 3 * i
   plot(out[,1],rowSums(out[,(1+(x-1)*28+1):(1+(x)*28)]),type='l', 
-        xlim = range(0:182500),
         ylim= range(0:2e6), main = susceptible_names[i + 1])
 }
 dev.off()
 
 #plot recovered
-png(filename = paste('susceptible_', input, '.png', sep = ''))
+png(filename = paste('recovered_', input, '.png', sep = ''))
 par(mfrow = c(2,4))
 recovered_names <- c("Recovered 1, High", "Recovered 2, High", 
                      "Recovered 3, High", "Recovered 4, High",
@@ -476,7 +474,6 @@ recovered_names <- c("Recovered 1, High", "Recovered 2, High",
 for(i in 0:7){
   x <- 3 + 3 * i
   plot(out[,1],rowSums(out[,(1+(x-1)*28+1):(1+(x)*28)]),type='l', 
-        xlim = range(0:182500),
         ylim= range(0:2e6), main = recovered_names [i + 1])
 }
 dev.off()
