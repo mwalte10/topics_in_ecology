@@ -446,6 +446,7 @@ infected_names <- c("Infected 1, High", "Infected 2, High",
 for(i in 0:7){
   x <- 2 + 3 * i
   plot(out[,1],rowSums(out[,(1+(x-1)*28+1):(1+(x)*28)]),type='l', 
+       col = "black",
        main = infected_names[i + 1])
 }
 dev.off()
