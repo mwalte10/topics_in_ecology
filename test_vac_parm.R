@@ -4,7 +4,7 @@
 args = commandArgs(TRUE)
 input = as.numeric(args[1])
 vac.vec = seq(from = 0, to = 2, by = .1)
-vac = c(rep(0,8), vac.vec[input], rep(0,19))
+vac = vac.vec[input]
 
 library(deSolve)
 
@@ -113,9 +113,8 @@ model <- function(t, y, parms){
   age_window <- parms[34:61]
   native <- parms[62:89]
   travel <- parms[90:117]
-  vac_h <- ifelse(t>(365*30), parms[118:145], rep(0,28))
-  vac_l <- ifelse(t>(365*30), parms[146:173], rep(0,28))
-  
+  vac_h <- c(rep(0,8), ifelse((t>(365*30)), parms[118], 0), rep(0,19))
+  vac_l <- c(rep(0,8), ifelse((t>(365*30)), parms[119], 0), rep(0,19))
   
   S1_h <- y[1:28]
   I1_h <- y[29:56]
@@ -436,7 +435,6 @@ save(out_last, file = paste('output_', input, '.RData', sep = ''))
 save(FOI, file = paste('FOI_', input, '.RData', sep = ''))
 save(FOI_h, file = paste('FOI.h_', input, '.RData', sep = ''))
 save(FOI_l, file = paste('FOI.l_', input, '.RData', sep = ''))
-
 
 
 
