@@ -113,8 +113,8 @@ model <- function(t, y, parms){
   age_window <- parms[34:61]
   native <- parms[62:89]
   travel <- parms[90:117]
-  vac_h <- c(rep(0,8), ifelse((t>(365*30)), parms[118], 0), rep(0,19))
-  vac_l <- c(rep(0,8), ifelse((t>(365*30)), parms[119], 0), rep(0,19))
+  vac_h <- c(rep(0,8), ifelse((t>(365*30)), parms[118] / 365, 0), rep(0,19))
+  vac_l <- c(rep(0,8), ifelse((t>(365*30)), parms[119] / 365, 0), rep(0,19))
   
   S1_h <- y[1:28]
   I1_h <- y[29:56]
