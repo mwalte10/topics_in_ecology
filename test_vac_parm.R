@@ -401,7 +401,8 @@ y_init <- c(susceptible_h(1), infected_h(1), recovered_h(1),
             susceptible_l(3), infected_l(3), recovered_l(3),
             susceptible_l(4), infected_l(4), recovered_l(4),
             0, 0, 0)
-times <- seq(from = 0, to = 365 * 50, by = .1)
+years = 50
+times <- seq(from = 0, to = 365 * years, by = .1)
 out <- ode(times = times, y = y_init, func = model, parms = parms)
 
 ############################
@@ -428,17 +429,51 @@ out <- ode(times = times, y = y_init, func = model, parms = parms)
 #OUTPUT
 ############################
 out_last <- out[nrow(out),]
-FOI <- out[,674]
-FOI_h <- out[,675]
-FOI_l <- out[,676]
+#FOI <- out[,674]
+#FOI_h <- out[,675]
+#FOI_l <- out[,676]
 save(out_last, file = paste('output_', input, '.RData', sep = ''))
-save(FOI, file = paste('FOI_', input, '.RData', sep = ''))
-save(FOI_h, file = paste('FOI.h_', input, '.RData', sep = ''))
-save(FOI_l, file = paste('FOI.l_', input, '.RData', sep = ''))
+#save(FOI, file = paste('FOI_', input, '.RData', sep = ''))
+#save(FOI_h, file = paste('FOI.h_', input, '.RData', sep = ''))
+#save(FOI_l, file = paste('FOI.l_', input, '.RData', sep = ''))
 
 #prop infected over time
-#years = 50
-#infected <- matrix(NA, nrow = 4, ncol = years * 365 * 10)
+infected <- matrix(NA, nrow = 4, ncol = years * 365 * 10)
+for(i in 1:4){
+  for(j in 1:(years*365*10)){
+    x <- i - 1 
+    infected[i,j] <- sum(out[j,((30:57)+ 84 * x)]) / sum(out[j,2:337])
+  }
+}
+png(filename = paste('infected.prop.h_', input, '.png', sep = ''))
+{plot(infected[1,], type = 'l', main = "Proportion of infections over time, high SES")
+  lines(infected[2,], type = 'l', col = "red")
+  lines(infected[3,], type = 'l', col = "blue")
+  lines(infected[4,], type = 'l', col = "darkgreen")
+  legend(((7/8) * years * 3650), 0.04, legend=c("I1", "I2", "I3", "I4"),
+                   col=c("black", "red", "blue", "darkgreen"), lwd = c(2,2), cex=0.8)
+}
+dev.off()
+save(infected, file = paste('infected.h_', input, '.RData', sep = ''))
+
+infected_l <- matrix(NA, nrow = 4, ncol = years * 365 * 10)
+for(i in 1:4){
+  for(j in 1:(years*365*10)){
+    x <- i - 1 
+    infected_l[i,j] <- sum(out[j,((366:393)+ 84 * x)]) / sum(out[j,2:337])
+  }
+}
+png(filename = paste('infected.prop.l_', input, '.png', sep = ''))
+{plot(infected_l[1,], type = 'l', main = "Proportion of infections over time, low SES")
+  lines(infected_l[2,], type = 'l', col = "red")
+  lines(infected_l[3,], type = 'l', col = "blue")
+  lines(infected_l[4,], type = 'l', col = "darkgreen")
+  legend(((7/8) * years * 3650), 0.04, legend=c("I1", "I2", "I3", "I4"),
+         col=c("black", "red", "blue", "darkgreen"), lwd = c(2,2), cex=0.8)
+}
+dev.off()
+save(infected_l, file = paste('infected.l_', input, '.RData', sep = ''))
+
 
 #plot infected
 png(filename = paste('infected_', input, '.png', sep = ''))
@@ -485,7 +520,6 @@ dev.off()
 
 #plot proportions SIR over time 
 png(filename = paste('prop.h.SIR_', input, '.png', sep = ''))
-years = 50
 ts <- matrix(NA, nrow = 12, ncol = years * 365 * 10)
 for(j in 1:12){
   for(i in 1:(years* 365 * 10)){
@@ -506,7 +540,6 @@ legend("topright",  inset=c(-0.2,0),
 dev.off()
 
 png(filename = paste('prop.l.SIR_', input, '.png', sep = ''))
-years <- 2
 ts_l <- matrix(NA, nrow = 12, ncol = years * 365 * 10)
 for(j in 1:12){
   for(i in 1:(years* 365 * 10)){
