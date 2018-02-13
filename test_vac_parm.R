@@ -436,6 +436,10 @@ save(FOI, file = paste('FOI_', input, '.RData', sep = ''))
 save(FOI_h, file = paste('FOI.h_', input, '.RData', sep = ''))
 save(FOI_l, file = paste('FOI.l_', input, '.RData', sep = ''))
 
+#prop infected over time
+#years = 50
+#infected <- matrix(NA, nrow = 4, ncol = years * 365 * 10)
+
 #plot infected
 png(filename = paste('infected_', input, '.png', sep = ''))
 par(mfrow = c(2,4))
@@ -482,16 +486,16 @@ dev.off()
 #plot proportions SIR over time 
 png(filename = paste('prop.h.SIR_', input, '.png', sep = ''))
 years = 50
-ts <- matrix(NA, nrow = 12, ncol = years * 365)
+ts <- matrix(NA, nrow = 12, ncol = years * 365 * 10)
 for(j in 1:12){
-  for(i in 1:(years* 365)){
+  for(i in 1:(years* 365 * 10)){
     x <- j - 1
     ts[j,i] <- sum(out[i,((x * 28) + 2):((x * 28) + 29)]) / sum(out[i,2:337])
   }
 }
 par(mar=c(5.1, 4.1, 4.1, 8.1), xpd=TRUE)
 barplot(ts, col = topo.colors(12), 
-        border=topo.colors(12), space=0.04, main ="Proportion of Each Category",
+        border=topo.colors(12), space=0.04, main ="Proportion of Each Category, High SES",
         xlab = "Timestep")
 legend("topright",  inset=c(-0.2,0),
        c("S1", "I1", "R1", 
@@ -502,16 +506,17 @@ legend("topright",  inset=c(-0.2,0),
 dev.off()
 
 png(filename = paste('prop.l.SIR_', input, '.png', sep = ''))
-ts_l <- matrix(NA, nrow = 12, ncol = years * 365)
+years <- 2
+ts_l <- matrix(NA, nrow = 12, ncol = years * 365 * 10)
 for(j in 1:12){
-  for(i in 1:(years* 365)){
+  for(i in 1:(years* 365 * 10)){
     x <- j - 1
     ts_l[j,i] <- sum(out[i,((x * 28) + 2+ 336):((x * 28) + 29 + 336)]) / sum(out[i,2:337])
   }
 }
 {par(mar=c(5.1, 4.1, 4.1, 8.1), xpd=TRUE)
 barplot(ts_l, col = topo.colors(12), 
-        border=topo.colors(12), space=0.04, main ="Proportion of Each Category",
+        border=topo.colors(12), space=0.04, main ="Proportion of Each Category, Low SES",
         xlab = "Timestep")
 legend("topright",  inset=c(-0.2,0),
        c("S1", "I1", "R1", 
