@@ -113,8 +113,8 @@ model <- function(t, y, parms){
   age_window <- parms[34:61]
   native <- parms[62:89]
   travel <- parms[90:117]
-  vac_h <- c(rep(0,8), ifelse((t>(365*30)), parms[118] / 365, 0), rep(0,19))
-  vac_l <- c(rep(0,8), ifelse((t>(365*30)), parms[119] / 365, 0), rep(0,19))
+  vac_h <- c(rep(0,8), ifelse((t>(365*1)), parms[118] / 365, 0), rep(0,19))
+  vac_l <- c(rep(0,8), ifelse((t>(365*1)), parms[119] / 365, 0), rep(0,19))
   
   #Gen pop
   S1_h <- y[1:28]
@@ -547,7 +547,7 @@ y_init <- c(susceptible_h(1), infected_h(1), recovered_h(1),
             susceptible_l(3), infected_l(3), recovered_l(3),
             susceptible_l(4), infected_l(4), recovered_l(4),
             rep(0, 280))
-years = 50
+years = 2
 times <- seq(from = 0, to = 365 * years, by = .1)
 out <- ode(times = times, y = y_init, func = model, parms = parms)
 
@@ -578,6 +578,13 @@ for(i in 1:3){
   }
 }
 
+cumul_infected.h <- matrix(NA, nrow = (365 * 10 * years), ncol = 7)
+for(j in 1:(365 * 10 * years)){
+  for(k in 1:7){
+    cumul_infected.h[j,k] <- sum(infected.h[(1:j),k])
+  }
+}
+
 
 infected.l <- matrix(NA, nrow = years * 365 * 10, ncol = 7)
 col_names <- c("I1", "I2", "I3", "I4", "I2.v", "I3.v", "I4.v")
@@ -598,10 +605,15 @@ for(i in 1:3){
     infected.l[j,(i + 4)] <- ifelse(y>0, y, 0)
   }
 }
+cumul_infected.l <- matrix(NA, nrow = (365 * 10 * years), ncol = 7)
+for(j in 1:(365 * 10 * years)){
+  for(k in 1:7){
+    cumul_infected.l[j,k] <- sum(infected.l[(1:j),k])
+  }
+}
 
-
-save(infected.l, file = paste('infected.l_', input, '.RData', sep = ''))
-save(infected.h, file = paste('infected.h_', input, '.RData', sep = ''))
+save(cumul_infected.h, file = paste('infected.l_', input, '.RData', sep = ''))
+save(cumul_infected.l, file = paste('infected.h_', input, '.RData', sep = ''))
 
 ###############################
 #plot proportions SIR over time 
