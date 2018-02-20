@@ -615,6 +615,27 @@ for(j in 1:22){
     ts[j,i] <- sum(out[i,((x * 28) + 2):((x * 28) + 29)]) / sum(out[i,2:617])
   }
 }
+ts.new <- matrix(NA, nrow = 22, ncol = years * 365 * 10)
+ts.new[1:3,] <- ts[1:3,]
+ts.new[4,] <- ts[13,]
+ts.new[5,] <- ts[4,]
+ts.new[6,] <- ts[14,]
+ts.new[7,] <- ts[5,]
+ts.new[8,] <- ts[15,]
+ts.new[9,] <- ts[6,]
+ts.new[10,] <- ts[16,]
+ts.new[11,] <- ts[7,]
+ts.new[12,] <- ts[17,]
+ts.new[13,] <- ts[8,]
+ts.new[14,] <- ts[18,]
+ts.new[15,] <- ts[9,]
+ts.new[16,] <- ts[19,]
+ts.new[17,] <- ts[10,]
+ts.new[18,] <- ts[20,]
+ts.new[19,] <- ts[11,]
+ts.new[20,] <- ts[21,]
+ts.new[21,] <- ts[12,]
+ts.new[22,] <- ts[22,]
 
 par(mar=c(5.1, 4.1, 4.1, 8.1), xpd=TRUE)
 ########
@@ -628,7 +649,7 @@ colors <- c(rgb(0, 191/255, 255/255, alpha = 0.25), rgb(0, 191/255, 255/255, alp
             vac_colors)
             
 #######
-barplot(ts, col = colors, 
+barplot(ts.new, col = colors, 
         border=colors, space=0.04, main ="Proportion of Each Category, High SES", 
         xlab = "Timestep")
 legend("topright",  inset=c(-0.1,0),
@@ -653,8 +674,30 @@ for(j in 1:22){
     ts_l[j,i] <- sum(out[i,((x * 28) + 2+ 616):((x * 28) + 29 + 616)]) / sum(out[i,618:1233])
   }
 }
+
+ts.new_l <- matrix(NA, nrow = 22, ncol = years * 365 * 10)
+ts.new_l[1:3,] <- ts_l[((1:3)+22),]
+ts.new_l[4,] <- ts_l[(13+22),]
+ts.new_l[5,] <- ts_l[(4+22),]
+ts.new_l[6,] <- ts_l[(14+22),]
+ts.new_l[7,] <- ts_l[(5+22),]
+ts.new_l[8,] <- ts_l[(15+22),]
+ts.new_l[9,] <- ts_l[(6+22),]
+ts.new_l[10,] <- ts_l[(16+22),]
+ts.new_l[11,] <- ts_l[(7+22),]
+ts.new_l[12,] <- ts_l[(17+22),]
+ts.new_l[13,] <- ts_l[(8+22),]
+ts.new_l[14,] <- ts_l[(18+22),]
+ts.new_l[15,] <- ts_l[(9+22),]
+ts.new_l[16,] <- ts_l[(19+22),]
+ts.new_l[17,] <- ts_l[(10+22),]
+ts.new_l[18,] <- ts_l[(20+22),]
+ts.new_l[19,] <- ts_l[(11+22),]
+ts.new_l[20,] <- ts_l[(21+22),]
+ts.new_l[21,] <- ts_l[(12+22),]
+ts.new_l[22,] <- ts_l[(22+22),]
 {par(mar=c(5.1, 4.1, 4.1, 8.1), xpd=TRUE)
-barplot(ts_l, col = topo.colors(12), 
+barplot(ts.new_l, col = topo.colors(12), 
         border=colors, space=0.04, main ="Proportion of Each Category, Low SES",
         xlab = "Timestep")
 legend("topright",  inset=c(-0.1,0),
