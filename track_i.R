@@ -653,8 +653,12 @@ for(j in 1:(365 * 10 * years)){
   }
 }
 
+track_infected <- out[,ncol(out)]
+
 save(cumul_infected.l, file = paste('infected.l_', input, '.RData', sep = ''))
 save(cumul_infected.h, file = paste('infected.h_', input, '.RData', sep = ''))
+save(track_infected, file = paste('track.infected_', input, '.RData', sep = ''))
+
 
 ###############################
 #plot proportions SIR over time 
