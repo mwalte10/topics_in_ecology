@@ -517,12 +517,12 @@ model <- function(t, y, parms){
   I_total <- 
     native * S4_h * (0.25 * beta_h * infected_total_h / effective_population_h) +
     travel * S4_h * (0.25 * beta_l * infected_total_l / effective_population_l) +
-    native * S4_h.v * (0.5 * beta_h * infected_total_h / effective_population_h) +
-    travel * S4_h.v * (0.5 * beta_l * infected_total_l / effective_population_l) +
+    native * S4_h.v * (0.25 * beta_h * infected_total_h / effective_population_h) +
+    travel * S4_h.v * (0.25 * beta_l * infected_total_l / effective_population_l) +
     travel * S4_l * (0.25 * beta_h * infected_total_h / effective_population_h) +
     native * S4_l * (0.25 * beta_l * infected_total_l / effective_population_l) +
-    native * S4_l.v * (0.5 * beta_h * infected_total_h / effective_population_h) +
-    travel * S4_l.v * (0.5 * beta_l * infected_total_l / effective_population_l)
+    native * S4_l.v * (0.25 * beta_h * infected_total_h / effective_population_h) +
+    travel * S4_l.v * (0.25 * beta_l * infected_total_l / effective_population_l)
   
   dR4_h <- 
     I4_h * gamma +
