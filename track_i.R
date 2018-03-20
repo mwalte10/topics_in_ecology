@@ -114,8 +114,8 @@ model <- function(t, y, parms){
   age_window <- parms[34:61]
   native <- parms[62:89]
   travel <- parms[90:117]
-  vac_h <- c(rep(0,8), ifelse((t>(365*30)), parms[118] / 365, 0), rep(0,19))
-  vac_l <- c(rep(0,8), ifelse((t>(365*30)), parms[119] / 365, 0), rep(0,19))
+  vac_h <- c(rep(0,8), ifelse((t>(365*(years_vac))), parms[118] / 365, 0), rep(0,19))
+  vac_l <- c(rep(0,8), ifelse((t>(365*(years_vac))), parms[119] / 365, 0), rep(0,19))
   
   #Gen pop
   S1_h <- y[1:28]
@@ -589,6 +589,7 @@ y_init <- c(susceptible_h(1), infected_h(1), recovered_h(1),
             susceptible_l(4), infected_l(4), recovered_l(4),
             rep(0, 280), 0)
 years = 50
+years_vac = 30
 times <- seq(from = 0, to = 365 * years, by = .1)
 out <- ode(times = times, y = y_init, func = model, parms = parms)
 
@@ -672,7 +673,19 @@ for(j in 1:22){
     ts[j,i] <- sum(out[i,((x * 28) + 2):((x * 28) + 29)]) / sum(out[i,2:617])
   }
 }
+rownames(ts) <- c("dS1_h", "dI1_h", "dR1_h",
+                 "dS2_h", "dI2_h", "dR2_h",
+                 "dS3_h", "dI3_h", "dR3_h",
+                 "dS4_h", "dI4_h", "dR4_h",
+                 "dR1_h.v",
+                 "dS2_h.v", "dI2_h.v", "dR2_h.v",
+                 "dS3_h.v", "dI3_h.v", "dR3_h.v",
+                 "dS4_h.v", "dI4_h.v", "dR4_h.v")
 ts.new <- matrix(NA, nrow = 22, ncol = years * 365 * 10)
+rownames(ts.new) <- c("dS1_h", "dI1_h", "dR1_h", "dR1_h.v",
+                  "dS2_h", "dS2_h.v", "dI2_h","dI2_h.v","dR2_h", "dR2_h.v",
+                  "dS3_h", "dS3_h.v", "dI3_h", "dI3_h.v", "dR3_h", "dR3_h.v",
+                  "dS4_h", "dS4_h.v", "dI4_h", "dI4_h.v", "dR4_h", "dR4_h.v")
 ts.new[1:3,] <- ts[1:3,]
 ts.new[4,] <- ts[13,]
 ts.new[5,] <- ts[4,]
@@ -704,23 +717,32 @@ colors <- c(rgb(0, 191/255, 255/255, alpha = 0.25), rgb(0, 191/255, 255/255, alp
             rgb(0, 139/255, 0, alpha = 0.25), rgb(0, 139/255, 0, alpha = 0.5), rgb(0, 139/255, 0, alpha = 1),
             rgb(104/255, 34/255, 139/255, alpha = 0.25), rgb(104/255, 34/255, 139/255, alpha = 0.5), rgb(104/255, 34/255, 139/255, alpha = 1),
             vac_colors)
-            
+densities <- c(rep(100, 12), rep(10,10))
+colors_c <- c(rgb(0, 191/255, 255/255, alpha = 0.25), rgb(0, 191/255, 255/255, alpha = 0.5), rgb(0, 191/255, 255/255, alpha = 1),
+            rgb(0, 0, 255/255, alpha = 0.25), rgb(0, 0, 255/255, alpha = 0.5), rgb(0, 0, 255/255, alpha = 1),
+            rgb(0, 139/255, 0, alpha = 0.25), rgb(0, 139/255, 0, alpha = 0.5), rgb(0, 139/255, 0, alpha = 1),
+            rgb(104/255, 34/255, 139/255, alpha = 0.25), rgb(104/255, 34/255, 139/255, alpha = 0.5), rgb(104/255, 34/255, 139/255, alpha = 1))
+colors_f <- c(colors_c, colors_c[3:length(colors_c)])    
+angles <- rep(45, 22)
 #######
-barplot(ts.new, col = colors, 
+{par(mar=c(5.1, 4.1, 4.1, 8.1), xpd=TRUE)
+  barplot(ts.new, col = colors_f, 
         border=colors, space=0.04, main ="Proportion of Each Category, High SES", 
-        xlab = "Timestep")
+        xlab = "Timestep", angle = angles)
 legend("topright",  inset=c(-0.1,0),
        c("S1", "I1", "R1", 
          "S2", "I2", "R2",
          "S3", "I3", "R3",
          "S4", "I4", "R4"), 
-       fill=colors[1:12], horiz=FALSE, cex=0.8)
+       fill=colors_f[1:12], horiz=FALSE, cex=0.8)
 legend("topright",  inset=c(-0.25,0.083),
        c("R1.v", 
          "S2.v", "I2.v", "R2.v",
          "S3.v", "I3.v", "R3.v",
          "S4.v", "I4.v", "R4.v"), 
-       fill=colors[13:22], horiz=FALSE, cex=0.8)
+       fill=vac_colors, horiz=FALSE, cex=0.8)
+segments(x0 = (years_vac * 10 * 365), x1 = (years_vac * 10 * 365), y0 = 0, y1 = 1)
+}
 dev.off()
 
 png(filename = paste('prop.l.SIR_', input, '.png', sep = ''))
@@ -731,6 +753,14 @@ for(j in 1:22){
     ts_l[j,i] <- sum(out[i,((x * 28) + 2+ 616):((x * 28) + 29 + 616)]) / sum(out[i,618:1233])
   }
 }
+rownames(ts_l) <- c("dS1_l", "dI1_l", "dR1_l",
+                    "dS2_l", "dI2_l", "dR2_l",
+                    "dS3_l", "dI3_l", "dR3_l",
+                    "dS4_l", "dI4_l", "dR4_l",
+                    "dR1_l.v",
+                    "dS2_l.v", "dI2_l.v", "dR2_l.v",
+                    "dS3_l.v", "dI3_l.v", "dR3_l.v",
+                    "dS4_l.v", "dI4_l.v", "dR4_l.v")
 
 ts.new_l <- matrix(NA, nrow = 22, ncol = years * 365 * 10)
 ts.new_l[1:3,] <- ts_l[((1:3)+22),]
@@ -768,7 +798,8 @@ legend("topright",  inset=c(-0.25,0.083),
          "S2.v", "I2.v", "R2.v",
          "S3.v", "I3.v", "R3.v",
          "S4.v", "I4.v", "R4.v"), 
-       fill=colors[13:22], horiz=FALSE, cex=0.8)}
+       fill=colors[13:22], horiz=FALSE, cex=0.8)
+segments(x0 = (years_vac * 10 * 365), x1 = (years_vac * 10 * 365), y0 = 0, y1 = 1)}
 dev.off()
 
 
