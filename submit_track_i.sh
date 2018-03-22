@@ -1,7 +1,7 @@
 #!/bin/csh
 
-#$ -N cumul.inf_
-#$ -t 1-11
+#$ -N beta.inf_
+#$ -t 1-6
 
 module load bio/R/3.3.1-gcc
 
