@@ -389,7 +389,7 @@ out <- ode(times = times, y = y_init, func = model, parms = parms)
 #OUTPUT
 ############################
 out_last <- out[nrow(out),]
-save(out_last, file = paste('output_', input, '.RData', sep = ''))
+save(out_last, file = paste('output.nv_', input, '.RData', sep = ''))
 
 infected.h <- matrix(NA, nrow = years * 365 * 10, ncol = 4)
 col_names <- c("I1", "I2", "I3", "I4")
@@ -435,16 +435,16 @@ for(j in 1:(365 * 10 * years)){
 
 track_infected <- out[,ncol(out)]
 
-save(cumul_infected.l, file = paste('infected.l_', input, '.RData', sep = ''))
-save(cumul_infected.h, file = paste('infected.h_', input, '.RData', sep = ''))
-save(track_infected, file = paste('track.infected_', input, '.RData', sep = ''))
+save(cumul_infected.l, file = paste('infected.l.nv_', input, '.RData', sep = ''))
+save(cumul_infected.h, file = paste('infected.h.nv_', input, '.RData', sep = ''))
+save(track_infected, file = paste('track.infected.nv_', input, '.RData', sep = ''))
 
 
 ###############################
 #plot proportions SIR over time 
 ###############################
 
-png(filename = paste('prop.h.SIR_', input, '.png', sep = ''))
+png(filename = paste('prop.h.SIR.nv_', input, '.png', sep = ''))
 ts <- matrix(NA, nrow = 12, ncol = years * 365 * 10)
 for(j in 1:12){
   for(i in 1:(years* 365 * 10)){
@@ -486,7 +486,7 @@ colors_f <- c(colors_c, colors_c[3:length(colors_c)])
 }
 dev.off()
 
-png(filename = paste('prop.l.SIR_', input, '.png', sep = ''))
+png(filename = paste('prop.l.SIR.nv_', input, '.png', sep = ''))
 ts_l <- matrix(NA, nrow = 12, ncol = years * 365 * 10)
 for(j in 1:22){
   for(i in 1:(years* 365 * 10)){
@@ -512,12 +512,12 @@ rownames(ts_l) <- c("dS1_l", "dI1_l", "dR1_l",
 dev.off()
 
 
-png(filename = paste('cumul.infected_', input, '.png', sep = ''))
+png(filename = paste('cumul.infected.nv_', input, '.png', sep = ''))
 plot(out[,ncol(out)], 
      main = "Total infected", type = 'l')
 dev.off()
 
-png(filename = paste('cumul.log10.infected_', input, '.png', sep = ''))
+png(filename = paste('cumul.log10.infected.nv_', input, '.png', sep = ''))
 plot(log10(out[,ncol(out)]), 
      main = "Total infected", type = 'l')
 dev.off()
