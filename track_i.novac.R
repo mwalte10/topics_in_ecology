@@ -470,28 +470,25 @@ save(track_infected, file = paste('track.infected.nv_', input, '.RData', sep = '
 #####################
 #SP9 over time
 #####################
-nines <- 11 + c(1, 29, 57,
+nines_h <- 11 + c(1, 29, 57,
                 85, 113, 141,
                 169, 197, 225, 
                 253, 281, 309)
+nines_l <- nines + 336
+nines <- c(nines_h, nines_l)
 #sp9 <- function(ts, low){
 #  x <- out[ts, nines[1] + low] / sum(out[ts, (nines + low)])
 #  return(1 - x)
 #} 
 
-sp9.h <- rep(NA, years * 10 * 365)
+sp9 <- rep(NA, years * 10 * 365)
 for(i in 1:(years * 10 *365)){
-  sp9.h[i] <- 1 - (out[i, nines[1]] / sum(out[i, nines]))
+  no_exposure <- out[i, nines[1]] + out[i, nines[13]]
+  sp9[i] <- 1 - (no_exposure / sum(out[i, nines]))
 }
-save(sp9.h, file = paste('sp9.h.nv_', input, '.RData', sep = ''))
+save(sp9, file = paste('sp9.nv_', input, '.RData', sep = ''))
 
 
-
-sp9.l <- rep(NA, years * 10 * 365)
-for(i in 1:(years * 10 *365)){
-  sp9.l[i] <- 1 - (out[i, (nines[1] + 336)] / sum(out[i, (nines + 336)]))
-}
-save(sp9.l, file = paste('sp9.l.nv_', input, '.RData', sep = ''))
 
 
 
