@@ -144,9 +144,6 @@ model <- function(t, y, parms){
   ###Tracking infected individuals
   I_total <- y[673]
   
-  #SP9
-  SP9 <- y[674]
-  
   
   infected_total_h <- sum(sum(I1_h), sum(I2_h), sum(I3_h), sum(I4_h))
   population_h <- y[1:336]
@@ -358,9 +355,6 @@ model <- function(t, y, parms){
     R4_l * delta 
 
   I_total <- sum(I_total)
-  SP9 <- 1 -  (sum(dI1_h[9] + dI1_l[9]) / (sum(dI2_h[9] + dI2_l[9] + 
-                                         dI3_h[9] + dI3_l[9] + 
-                                         dI4_h[9] + dI4_l[9])))
   
   list(c(dS1_h, dI1_h, dR1_h,
          dS2_h, dI2_h, dR2_h,
@@ -370,7 +364,7 @@ model <- function(t, y, parms){
          dS2_l, dI2_l, dR2_l,
          dS3_l, dI3_l, dR3_l,
          dS4_l, dI4_l, dR4_l,
-         I_total, SP9))
+         I_total))
   
 }
 
@@ -385,7 +379,7 @@ y_init <- c(susceptible_h(1), infected_h(1), recovered_h(1),
             susceptible_l(2), infected_l(2), recovered_l(2),
             susceptible_l(3), infected_l(3), recovered_l(3),
             susceptible_l(4), infected_l(4), recovered_l(4),
-            0, 0)
+            0)
 years = 50
 times <- seq(from = 0, to = 365 * years, by = .1)
 out <- ode(times = times, y = y_init, func = model, parms = parms)
@@ -398,11 +392,9 @@ out_last <- out[nrow(out),]
 save(out_last, file = paste('output.nv_', input, '.RData', sep = ''))
 
 
-track_infected <- out[,(ncol(out) - 1)]
+track_infected <- out[,ncol(out)]
 save(track_infected, file = paste('track.infected.nv_', input, '.RData', sep = ''))
 
-SP9 <- out[,ncol(out)]
-save(SP9, file = paste('sp9.nv_', input, '.RData', sep = ''))
 
 ###############################
 #plot proportions SIR over time 
@@ -474,6 +466,28 @@ save(SP9, file = paste('sp9.nv_', input, '.RData', sep = ''))
 #         fill=colors[1:12], horiz=FALSE, cex=0.8)
 #  segments(x0 = (years_vac * 10 * 365), x1 = (years_vac * 10 * 365), y0 = 0, y1 = 1)}
 #dev.off()
+
+#####################
+#SP9 over time
+#####################
+nines_h <- 11 + c(1, 29, 57,
+                85, 113, 141,
+                169, 197, 225, 
+                253, 281, 309)
+nines_l <- nines + 336
+nines <- c(nines_h, nines_l)
+#sp9 <- function(ts, low){
+#  x <- out[ts, nines[1] + low] / sum(out[ts, (nines + low)])
+#  return(1 - x)
+#} 
+
+sp9 <- rep(NA, years * 10 * 365)
+for(i in 1:(years * 10 *365)){
+  no_exposure <- out[i, nines[1]] + out[i, nines[13]]
+  sp9[i] <- 1 - (no_exposure / sum(out[i, nines]))
+}
+save(sp9, file = paste('sp9.nv_', input, '.RData', sep = ''))
+
 
 
 
