@@ -467,5 +467,30 @@ rownames(ts_l) <- c("dS1_l", "dI1_l", "dR1_l",
   segments(x0 = (years_vac * 10 * 365), x1 = (years_vac * 10 * 365), y0 = 0, y1 = 1)}
 dev.off()
 
+#####################
+#SP9 over time
+#####################
+nines <- 11 + c(1, 29, 57,
+                85, 113, 141,
+                169, 197, 225, 
+                253, 281, 309)
+sp9 <- function(ts, low){
+  x <- out[ts, nines[1] + low] / sum(out[ts, (nines + low)])
+  return(1 - x)
+} 
 
+sp9.h <- rep(NA, years * 10 * 365)
+for(i in 1:(years * 10 *365)){
+  ts <- i
+  sp9.h[i] <- sp9(ts, 0)
+}
+save(sp9.h, file = paste('sp9.h.nv_', input, '.RData', sep = ''))
+
+
+sp9.l <- rep(NA, years * 10 * 365)
+for(i in 1:(years * 10 *365)){
+  ts <- i
+  sp9.l[i] <- sp9(ts, 336)
+}
+save(sp9.l, file = paste('sp9.l.nv_', input, '.RData', sep = ''))
 
