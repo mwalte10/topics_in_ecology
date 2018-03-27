@@ -400,72 +400,72 @@ save(track_infected, file = paste('track.infected.nv_', input, '.RData', sep = '
 #plot proportions SIR over time 
 ###############################
 
-png(filename = paste('prop.h.SIR.nv_', input, '.png', sep = ''))
-ts <- matrix(NA, nrow = 12, ncol = years * 365 * 10)
-for(j in 1:12){
-  for(i in 1:(years* 365 * 10)){
-    x <- j - 1
-    ts[j,i] <- sum(out[i,((x * 28) + 2):((x * 28) + 29)]) / sum(out[i,2:337])
-  }
-}
-rownames(ts) <- c("dS1_h", "dI1_h", "dR1_h",
-                  "dS2_h", "dI2_h", "dR2_h",
-                  "dS3_h", "dI3_h", "dR3_h",
-                  "dS4_h", "dI4_h", "dR4_h")
+#png(filename = paste('prop.h.SIR.nv_', input, '.png', sep = ''))
+#ts <- matrix(NA, nrow = 12, ncol = years * 365 * 10)
+#for(j in 1:12){
+#  for(i in 1:(years* 365 * 10)){
+#    x <- j - 1
+#    ts[j,i] <- sum(out[i,((x * 28) + 2):((x * 28) + 29)]) / sum(out[i,2:337])
+#  }
+#}
+#rownames(ts) <- c("dS1_h", "dI1_h", "dR1_h",
+#                  "dS2_h", "dI2_h", "dR2_h",
+#                  "dS3_h", "dI3_h", "dR3_h",
+#                  "dS4_h", "dI4_h", "dR4_h")
 
-par(mar=c(5.1, 4.1, 4.1, 8.1), xpd=TRUE)
+#par(mar=c(5.1, 4.1, 4.1, 8.1), xpd=TRUE)
 ########
 ##set colors
 ########
-colors <- c(rgb(0, 191/255, 255/255, alpha = 0.25), rgb(0, 191/255, 255/255, alpha = 0.5), rgb(0, 191/255, 255/255, alpha = 1),
-            rgb(0, 0, 255/255, alpha = 0.25), rgb(0, 0, 255/255, alpha = 0.5), rgb(0, 0, 255/255, alpha = 1),
-            rgb(0, 139/255, 0, alpha = 0.25), rgb(0, 139/255, 0, alpha = 0.5), rgb(0, 139/255, 0, alpha = 1),
-            rgb(104/255, 34/255, 139/255, alpha = 0.25), rgb(104/255, 34/255, 139/255, alpha = 0.5), rgb(104/255, 34/255, 139/255, alpha = 1))
-densities <- c(rep(100, 12), rep(10,10))
-colors_c <- c(rgb(0, 191/255, 255/255, alpha = 0.25), rgb(0, 191/255, 255/255, alpha = 0.5), rgb(0, 191/255, 255/255, alpha = 1),
-              rgb(0, 0, 255/255, alpha = 0.25), rgb(0, 0, 255/255, alpha = 0.5), rgb(0, 0, 255/255, alpha = 1),
-              rgb(0, 139/255, 0, alpha = 0.25), rgb(0, 139/255, 0, alpha = 0.5), rgb(0, 139/255, 0, alpha = 1),
-              rgb(104/255, 34/255, 139/255, alpha = 0.25), rgb(104/255, 34/255, 139/255, alpha = 0.5), rgb(104/255, 34/255, 139/255, alpha = 1))
-colors_f <- c(colors_c, colors_c[3:length(colors_c)])    
+#colors <- c(rgb(0, 191/255, 255/255, alpha = 0.25), rgb(0, 191/255, 255/255, alpha = 0.5), rgb(0, 191/255, 255/255, alpha = 1),
+#            rgb(0, 0, 255/255, alpha = 0.25), rgb(0, 0, 255/255, alpha = 0.5), rgb(0, 0, 255/255, alpha = 1),
+#            rgb(0, 139/255, 0, alpha = 0.25), rgb(0, 139/255, 0, alpha = 0.5), rgb(0, 139/255, 0, alpha = 1),
+#            rgb(104/255, 34/255, 139/255, alpha = 0.25), rgb(104/255, 34/255, 139/255, alpha = 0.5), rgb(104/255, 34/255, 139/255, alpha = 1))
+#densities <- c(rep(100, 12), rep(10,10))
+#colors_c <- c(rgb(0, 191/255, 255/255, alpha = 0.25), rgb(0, 191/255, 255/255, alpha = 0.5), rgb(0, 191/255, 255/255, alpha = 1),
+#              rgb(0, 0, 255/255, alpha = 0.25), rgb(0, 0, 255/255, alpha = 0.5), rgb(0, 0, 255/255, alpha = 1),
+#              rgb(0, 139/255, 0, alpha = 0.25), rgb(0, 139/255, 0, alpha = 0.5), rgb(0, 139/255, 0, alpha = 1),
+#              rgb(104/255, 34/255, 139/255, alpha = 0.25), rgb(104/255, 34/255, 139/255, alpha = 0.5), rgb(104/255, 34/255, 139/255, alpha = 1))
+#colors_f <- c(colors_c, colors_c[3:length(colors_c)])    
 #######
-{par(mar=c(5.1, 4.1, 4.1, 8.1), xpd=TRUE)
-  barplot(ts.new, col = colors_f, 
-          border=colors, space=0.04, main ="Proportion of Each Category, High SES", 
-          xlab = "Timestep", angle = angles)
-  legend("topright",  inset=c(-0.1,0),
-         c("S1", "I1", "R1", 
-           "S2", "I2", "R2",
-           "S3", "I3", "R3",
-           "S4", "I4", "R4"), 
-         fill=colors_f[1:12], horiz=FALSE, cex=0.8)
-  segments(x0 = (years_vac * 10 * 365), x1 = (years_vac * 10 * 365), y0 = 0, y1 = 1)
-}
-dev.off()
+#{par(mar=c(5.1, 4.1, 4.1, 8.1), xpd=TRUE)
+#  barplot(ts.new, col = colors_f, 
+#          border=colors, space=0.04, main ="Proportion of Each Category, High SES", 
+#          xlab = "Timestep", angle = angles)
+#  legend("topright",  inset=c(-0.1,0),
+#         c("S1", "I1", "R1", 
+#           "S2", "I2", "R2",
+#           "S3", "I3", "R3",
+#           "S4", "I4", "R4"), 
+#         fill=colors_f[1:12], horiz=FALSE, cex=0.8)
+#  segments(x0 = (years_vac * 10 * 365), x1 = (years_vac * 10 * 365), y0 = 0, y1 = 1)
+#}
+#dev.off()
 
-png(filename = paste('prop.l.SIR.nv_', input, '.png', sep = ''))
-ts_l <- matrix(NA, nrow = 12, ncol = years * 365 * 10)
-for(j in 1:22){
-  for(i in 1:(years* 365 * 10)){
-    x <- j - 1
-    ts_l[j,i] <- sum(out[i,((x * 28) + 2+ 336):((x * 28) + 29 + 336)]) / sum(out[i,337:673])
-  }
-}
-rownames(ts_l) <- c("dS1_l", "dI1_l", "dR1_l",
-                    "dS2_l", "dI2_l", "dR2_l",
-                    "dS3_l", "dI3_l", "dR3_l",
-                    "dS4_l", "dI4_l", "dR4_l")
-{par(mar=c(5.1, 4.1, 4.1, 8.1), xpd=TRUE)
-  barplot(ts_l, col = topo.colors(12), 
-          border=colors, space=0.04, main ="Proportion of Each Category, Low SES",
-          xlab = "Timestep")
-  legend("topright",  inset=c(-0.1,0),
-         c("S1", "I1", "R1", 
-           "S2", "I2", "R2",
-           "S3", "I3", "R3",
-           "S4", "I4", "R4"), 
-         fill=colors[1:12], horiz=FALSE, cex=0.8)
-  segments(x0 = (years_vac * 10 * 365), x1 = (years_vac * 10 * 365), y0 = 0, y1 = 1)}
-dev.off()
+#png(filename = paste('prop.l.SIR.nv_', input, '.png', sep = ''))
+#ts_l <- matrix(NA, nrow = 12, ncol = years * 365 * 10)
+#for(j in 1:22){
+#  for(i in 1:(years* 365 * 10)){
+#    x <- j - 1
+#    ts_l[j,i] <- sum(out[i,((x * 28) + 2+ 336):((x * 28) + 29 + 336)]) / sum(out[i,337:673])
+#  }
+#}
+#rownames(ts_l) <- c("dS1_l", "dI1_l", "dR1_l",
+#                    "dS2_l", "dI2_l", "dR2_l",
+#                    "dS3_l", "dI3_l", "dR3_l",
+#                    "dS4_l", "dI4_l", "dR4_l")
+#{par(mar=c(5.1, 4.1, 4.1, 8.1), xpd=TRUE)
+#  barplot(ts_l, col = topo.colors(12), 
+#          border=colors, space=0.04, main ="Proportion of Each Category, Low SES",
+#          xlab = "Timestep")
+#  legend("topright",  inset=c(-0.1,0),
+#         c("S1", "I1", "R1", 
+#           "S2", "I2", "R2",
+#           "S3", "I3", "R3",
+#           "S4", "I4", "R4"), 
+#         fill=colors[1:12], horiz=FALSE, cex=0.8)
+#  segments(x0 = (years_vac * 10 * 365), x1 = (years_vac * 10 * 365), y0 = 0, y1 = 1)}
+#dev.off()
 
 #####################
 #SP9 over time
@@ -474,23 +474,24 @@ nines <- 11 + c(1, 29, 57,
                 85, 113, 141,
                 169, 197, 225, 
                 253, 281, 309)
-sp9 <- function(ts, low){
-  x <- out[ts, nines[1] + low] / sum(out[ts, (nines + low)])
-  return(1 - x)
-} 
+#sp9 <- function(ts, low){
+#  x <- out[ts, nines[1] + low] / sum(out[ts, (nines + low)])
+#  return(1 - x)
+#} 
 
 sp9.h <- rep(NA, years * 10 * 365)
 for(i in 1:(years * 10 *365)){
-  ts <- i
-  sp9.h[i] <- sp9(ts, 0)
+  sp9.h[i] <- 1 - (out[i, nines[1]] / sum(out[i, nines]))
 }
 save(sp9.h, file = paste('sp9.h.nv_', input, '.RData', sep = ''))
 
 
+
 sp9.l <- rep(NA, years * 10 * 365)
 for(i in 1:(years * 10 *365)){
-  ts <- i
-  sp9.l[i] <- sp9(ts, 336)
+  sp9.l[i] <- 1 - (out[i, (nines[1] + 336)] / sum(out[i, (nines + 336)]))
 }
 save(sp9.l, file = paste('sp9.l.nv_', input, '.RData', sep = ''))
+
+
 
