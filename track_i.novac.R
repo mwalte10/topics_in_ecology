@@ -391,52 +391,8 @@ out <- ode(times = times, y = y_init, func = model, parms = parms)
 out_last <- out[nrow(out),]
 save(out_last, file = paste('output.nv_', input, '.RData', sep = ''))
 
-infected.h <- matrix(NA, nrow = years * 365 * 10, ncol = 4)
-col_names <- c("I1", "I2", "I3", "I4")
-row_names <- head(seq(0, years * 365, 0.1),-1)
-colnames(infected.h) <- col_names
-row.names(infected.h) <- row_names
-for(i in 1:4){
-  for(j in 1:(years * 365 * 10)){
-    x <- i - 1 
-    y <- sum(out[j,((30:57)+ 84 * x)]) - sum(out[(j-1),((30:57)+ 84 * x)])
-    infected.h[j,i] <- ifelse(y>0, y, 0)
-  }
-}
-
-
-cumul_infected.h <- matrix(NA, nrow = (365 * 10 * years), ncol = 4)
-for(j in 1:(365 * 10 * years)){
-  for(k in 1:4){
-    cumul_infected.h[j,k] <- sum(infected.h[(1:j),k])
-  }
-}
-
-
-infected.l <- matrix(NA, nrow = years * 365 * 10, ncol = 4)
-col_names <- c("I1", "I2", "I3", "I4")
-row_names <- head(seq(0, years * 365, 0.1),-1)
-colnames(infected.l) <- col_names
-row.names(infected.l) <- row_names
-for(i in 1:4){
-  for(j in 1:(years * 365 * 10)){
-    x <- i - 1 
-    y <- sum(out[j,((646:673)+ 84 * x)]) - sum(out[(j -1),((646:673)+ 84 * x)])
-    infected.l[j,i] <- ifelse(y>0, y, 0)
-  }
-}
-
-cumul_infected.l <- matrix(NA, nrow = (365 * 10 * years), ncol = 4)
-for(j in 1:(365 * 10 * years)){
-  for(k in 1:4){
-    cumul_infected.l[j,k] <- sum(infected.l[(1:j),k])
-  }
-}
 
 track_infected <- out[,ncol(out)]
-
-save(cumul_infected.l, file = paste('infected.l.nv_', input, '.RData', sep = ''))
-save(cumul_infected.h, file = paste('infected.h.nv_', input, '.RData', sep = ''))
 save(track_infected, file = paste('track.infected.nv_', input, '.RData', sep = ''))
 
 
@@ -499,7 +455,7 @@ rownames(ts_l) <- c("dS1_l", "dI1_l", "dR1_l",
                     "dS3_l", "dI3_l", "dR3_l",
                     "dS4_l", "dI4_l", "dR4_l")
 {par(mar=c(5.1, 4.1, 4.1, 8.1), xpd=TRUE)
-  barplot(ts.new_l, col = topo.colors(12), 
+  barplot(ts_l, col = topo.colors(12), 
           border=colors, space=0.04, main ="Proportion of Each Category, Low SES",
           xlab = "Timestep")
   legend("topright",  inset=c(-0.1,0),
@@ -511,15 +467,5 @@ rownames(ts_l) <- c("dS1_l", "dI1_l", "dR1_l",
   segments(x0 = (years_vac * 10 * 365), x1 = (years_vac * 10 * 365), y0 = 0, y1 = 1)}
 dev.off()
 
-
-png(filename = paste('cumul.infected.nv_', input, '.png', sep = ''))
-plot(out[,ncol(out)], 
-     main = "Total infected", type = 'l')
-dev.off()
-
-png(filename = paste('cumul.log10.infected.nv_', input, '.png', sep = ''))
-plot(log10(out[,ncol(out)]), 
-     main = "Total infected", type = 'l')
-dev.off()
 
 
