@@ -474,7 +474,7 @@ nines_h <- 11 + c(1, 29, 57,
                 85, 113, 141,
                 169, 197, 225, 
                 253, 281, 309)
-nines_l <- nines + 336
+nines_l <- nines_h + 336
 nines <- c(nines_h, nines_l)
 #sp9 <- function(ts, low){
 #  x <- out[ts, nines[1] + low] / sum(out[ts, (nines + low)])
@@ -487,7 +487,6 @@ for(i in 1:(years * 10 *365)){
   sp9[i] <- 1 - (no_exposure / sum(out[i, nines]))
 }
 save(sp9, file = paste('sp9.nv_', input, '.RData', sep = ''))
-
 
 
 
