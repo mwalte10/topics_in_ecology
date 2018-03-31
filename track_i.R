@@ -624,7 +624,7 @@ for(i in 1:(years * 10 *365)){
   no_exposure <- out[i, nines[1]] + out[i, nines[23]]
   sp9[i] <- 1 - (no_exposure / sum(out[i, nines]))
 }
-save(sp9, file = paste('sp9.nv_', input, '.RData', sep = ''))
+save(sp9, file = paste('sp9_', input, '.RData', sep = ''))
 
 
 # infected.h <- matrix(NA, nrow = years * 365 * 10, ncol = 7)
