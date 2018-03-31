@@ -598,219 +598,243 @@ out <- ode(times = times, y = y_init, func = model, parms = parms)
 #OUTPUT
 ############################
 out_last <- out[nrow(out),]
-save(out_last, file = paste('output_', input, '.RData', sep = ''))
-
-infected.h <- matrix(NA, nrow = years * 365 * 10, ncol = 7)
-col_names <- c("I1", "I2", "I3", "I4", "I2.v", "I3.v", "I4.v")
-row_names <- head(seq(0, years * 365, 0.1),-1)
-colnames(infected.h) <- col_names
-row.names(infected.h) <- row_names
-for(i in 1:4){
-  for(j in 1:(years * 365 * 10)){
-    x <- i - 1 
-    y <- sum(out[j,((30:57)+ 84 * x)]) - sum(out[(j-1),((30:57)+ 84 * x)])
-    infected.h[j,i] <- ifelse(y>0, y, 0)
-  }
-}
-for(i in 1:3){
-  for(j in 1:(years * 365 * 10)){
-    x <- i - 1
-    y <- sum(out[j,((393:420)+ 84 * x)]) - sum(out[(j-1),((393:420)+ 84 * x)]) 
-    infected.h[j,(i + 4)] <- ifelse(y>0, y, 0)
-  }
-}
-
-cumul_infected.h <- matrix(NA, nrow = (365 * 10 * years), ncol = 7)
-for(j in 1:(365 * 10 * years)){
-  for(k in 1:7){
-    cumul_infected.h[j,k] <- sum(infected.h[(1:j),k])
-  }
-}
-
-
-infected.l <- matrix(NA, nrow = years * 365 * 10, ncol = 7)
-col_names <- c("I1", "I2", "I3", "I4", "I2.v", "I3.v", "I4.v")
-row_names <- head(seq(0, years * 365, 0.1),-1)
-colnames(infected.l) <- col_names
-row.names(infected.l) <- row_names
-for(i in 1:4){
-  for(j in 1:(years * 365 * 10)){
-    x <- i - 1 
-    y <- sum(out[j,((646:673)+ 84 * x)]) - sum(out[(j -1),((646:673)+ 84 * x)])
-    infected.l[j,i] <- ifelse(y>0, y, 0)
-  }
-}
-for(i in 1:3){
-  for(j in 1:(years * 365 * 10)){
-    x <- i - 1
-    y <- sum(out[j,((1010:1037)+ 84 * x)]) - sum(out[(j-1),((1010:1037)+ 84 * x)]) 
-    infected.l[j,(i + 4)] <- ifelse(y>0, y, 0)
-  }
-}
-cumul_infected.l <- matrix(NA, nrow = (365 * 10 * years), ncol = 7)
-for(j in 1:(365 * 10 * years)){
-  for(k in 1:7){
-    cumul_infected.l[j,k] <- sum(infected.l[(1:j),k])
-  }
-}
-
 track_infected <- out[,ncol(out)]
-
-save(cumul_infected.l, file = paste('infected.l_', input, '.RData', sep = ''))
-save(cumul_infected.h, file = paste('infected.h_', input, '.RData', sep = ''))
+save(out_last, file = paste('output_', input, '.RData', sep = ''))
 save(track_infected, file = paste('track.infected_', input, '.RData', sep = ''))
 
 
-###############################
-#plot proportions SIR over time 
-###############################
 
-png(filename = paste('prop.h.SIR_', input, '.png', sep = ''))
-ts <- matrix(NA, nrow = 22, ncol = years * 365 * 10)
-for(j in 1:22){
-  for(i in 1:(years* 365 * 10)){
-    x <- j - 1
-    ts[j,i] <- sum(out[i,((x * 28) + 2):((x * 28) + 29)]) / sum(out[i,2:617])
-  }
+nines_h <- 11 + c(1, 29, 57,
+                  85, 113, 141,
+                  169, 197, 225, 
+                  253, 281, 309, 
+                  337, 
+                  365, 393, 421,
+                  449, 477, 505,
+                  533, 561, 589)
+nines_l <- nines_h + 616
+nines <- c(nines_h, nines_l)
+#sp9 <- function(ts, low){
+#  x <- out[ts, nines[1] + low] / sum(out[ts, (nines + low)])
+#  return(1 - x)
+#} 
+
+sp9 <- rep(NA, years * 10 * 365)
+for(i in 1:(years * 10 *365)){
+  no_exposure <- out[i, nines[1]] + out[i, nines[23]]
+  sp9[i] <- 1 - (no_exposure / sum(out[i, nines]))
 }
-rownames(ts) <- c("dS1_h", "dI1_h", "dR1_h",
-                 "dS2_h", "dI2_h", "dR2_h",
-                 "dS3_h", "dI3_h", "dR3_h",
-                 "dS4_h", "dI4_h", "dR4_h",
-                 "dR1_h.v",
-                 "dS2_h.v", "dI2_h.v", "dR2_h.v",
-                 "dS3_h.v", "dI3_h.v", "dR3_h.v",
-                 "dS4_h.v", "dI4_h.v", "dR4_h.v")
-ts.new <- matrix(NA, nrow = 22, ncol = years * 365 * 10)
-rownames(ts.new) <- c("dS1_h", "dI1_h", "dR1_h", "dR1_h.v",
-                  "dS2_h", "dS2_h.v", "dI2_h","dI2_h.v","dR2_h", "dR2_h.v",
-                  "dS3_h", "dS3_h.v", "dI3_h", "dI3_h.v", "dR3_h", "dR3_h.v",
-                  "dS4_h", "dS4_h.v", "dI4_h", "dI4_h.v", "dR4_h", "dR4_h.v")
-ts.new[1:3,] <- ts[1:3,]
-ts.new[4,] <- ts[13,]
-ts.new[5,] <- ts[4,]
-ts.new[6,] <- ts[14,]
-ts.new[7,] <- ts[5,]
-ts.new[8,] <- ts[15,]
-ts.new[9,] <- ts[6,]
-ts.new[10,] <- ts[16,]
-ts.new[11,] <- ts[7,]
-ts.new[12,] <- ts[17,]
-ts.new[13,] <- ts[8,]
-ts.new[14,] <- ts[18,]
-ts.new[15,] <- ts[9,]
-ts.new[16,] <- ts[19,]
-ts.new[17,] <- ts[10,]
-ts.new[18,] <- ts[20,]
-ts.new[19,] <- ts[11,]
-ts.new[20,] <- ts[21,]
-ts.new[21,] <- ts[12,]
-ts.new[22,] <- ts[22,]
-
-par(mar=c(5.1, 4.1, 4.1, 8.1), xpd=TRUE)
-########
-##set colors
-########
-vac_colors <- gray.colors(10)
-colors <- c(rgb(0, 191/255, 255/255, alpha = 0.25), rgb(0, 191/255, 255/255, alpha = 0.5), rgb(0, 191/255, 255/255, alpha = 1),
-            rgb(0, 0, 255/255, alpha = 0.25), rgb(0, 0, 255/255, alpha = 0.5), rgb(0, 0, 255/255, alpha = 1),
-            rgb(0, 139/255, 0, alpha = 0.25), rgb(0, 139/255, 0, alpha = 0.5), rgb(0, 139/255, 0, alpha = 1),
-            rgb(104/255, 34/255, 139/255, alpha = 0.25), rgb(104/255, 34/255, 139/255, alpha = 0.5), rgb(104/255, 34/255, 139/255, alpha = 1),
-            vac_colors)
-densities <- c(rep(100, 12), rep(10,10))
-colors_c <- c(rgb(0, 191/255, 255/255, alpha = 0.25), rgb(0, 191/255, 255/255, alpha = 0.5), rgb(0, 191/255, 255/255, alpha = 1),
-            rgb(0, 0, 255/255, alpha = 0.25), rgb(0, 0, 255/255, alpha = 0.5), rgb(0, 0, 255/255, alpha = 1),
-            rgb(0, 139/255, 0, alpha = 0.25), rgb(0, 139/255, 0, alpha = 0.5), rgb(0, 139/255, 0, alpha = 1),
-            rgb(104/255, 34/255, 139/255, alpha = 0.25), rgb(104/255, 34/255, 139/255, alpha = 0.5), rgb(104/255, 34/255, 139/255, alpha = 1))
-colors_f <- c(colors_c, colors_c[3:length(colors_c)])    
-angles <- rep(45, 22)
-#######
-{par(mar=c(5.1, 4.1, 4.1, 8.1), xpd=TRUE)
-  barplot(ts.new, col = colors_f, 
-        border=colors, space=0.04, main ="Proportion of Each Category, High SES", 
-        xlab = "Timestep", angle = angles)
-legend("topright",  inset=c(-0.1,0),
-       c("S1", "I1", "R1", 
-         "S2", "I2", "R2",
-         "S3", "I3", "R3",
-         "S4", "I4", "R4"), 
-       fill=colors_f[1:12], horiz=FALSE, cex=0.8)
-legend("topright",  inset=c(-0.25,0.083),
-       c("R1.v", 
-         "S2.v", "I2.v", "R2.v",
-         "S3.v", "I3.v", "R3.v",
-         "S4.v", "I4.v", "R4.v"), 
-       fill=vac_colors, horiz=FALSE, cex=0.8)
-segments(x0 = (years_vac * 10 * 365), x1 = (years_vac * 10 * 365), y0 = 0, y1 = 1)
-}
-dev.off()
-
-png(filename = paste('prop.l.SIR_', input, '.png', sep = ''))
-ts_l <- matrix(NA, nrow = 22, ncol = years * 365 * 10)
-for(j in 1:22){
-  for(i in 1:(years* 365 * 10)){
-    x <- j - 1
-    ts_l[j,i] <- sum(out[i,((x * 28) + 2+ 616):((x * 28) + 29 + 616)]) / sum(out[i,618:1233])
-  }
-}
-rownames(ts_l) <- c("dS1_l", "dI1_l", "dR1_l",
-                    "dS2_l", "dI2_l", "dR2_l",
-                    "dS3_l", "dI3_l", "dR3_l",
-                    "dS4_l", "dI4_l", "dR4_l",
-                    "dR1_l.v",
-                    "dS2_l.v", "dI2_l.v", "dR2_l.v",
-                    "dS3_l.v", "dI3_l.v", "dR3_l.v",
-                    "dS4_l.v", "dI4_l.v", "dR4_l.v")
-
-ts.new_l <- matrix(NA, nrow = 22, ncol = years * 365 * 10)
-ts.new_l[1:3,] <- ts_l[((1:3)+22),]
-ts.new_l[4,] <- ts_l[(13+22),]
-ts.new_l[5,] <- ts_l[(4+22),]
-ts.new_l[6,] <- ts_l[(14+22),]
-ts.new_l[7,] <- ts_l[(5+22),]
-ts.new_l[8,] <- ts_l[(15+22),]
-ts.new_l[9,] <- ts_l[(6+22),]
-ts.new_l[10,] <- ts_l[(16+22),]
-ts.new_l[11,] <- ts_l[(7+22),]
-ts.new_l[12,] <- ts_l[(17+22),]
-ts.new_l[13,] <- ts_l[(8+22),]
-ts.new_l[14,] <- ts_l[(18+22),]
-ts.new_l[15,] <- ts_l[(9+22),]
-ts.new_l[16,] <- ts_l[(19+22),]
-ts.new_l[17,] <- ts_l[(10+22),]
-ts.new_l[18,] <- ts_l[(20+22),]
-ts.new_l[19,] <- ts_l[(11+22),]
-ts.new_l[20,] <- ts_l[(21+22),]
-ts.new_l[21,] <- ts_l[(12+22),]
-ts.new_l[22,] <- ts_l[(22+22),]
-{par(mar=c(5.1, 4.1, 4.1, 8.1), xpd=TRUE)
-barplot(ts.new_l, col = topo.colors(12), 
-        border=colors, space=0.04, main ="Proportion of Each Category, Low SES",
-        xlab = "Timestep")
-legend("topright",  inset=c(-0.1,0),
-       c("S1", "I1", "R1", 
-         "S2", "I2", "R2",
-         "S3", "I3", "R3",
-         "S4", "I4", "R4"), 
-       fill=colors[1:12], horiz=FALSE, cex=0.8)
-legend("topright",  inset=c(-0.25,0.083),
-       c("R1.v", 
-         "S2.v", "I2.v", "R2.v",
-         "S3.v", "I3.v", "R3.v",
-         "S4.v", "I4.v", "R4.v"), 
-       fill=colors[13:22], horiz=FALSE, cex=0.8)
-segments(x0 = (years_vac * 10 * 365), x1 = (years_vac * 10 * 365), y0 = 0, y1 = 1)}
-dev.off()
+save(sp9, file = paste('sp9.nv_', input, '.RData', sep = ''))
 
 
-png(filename = paste('cumul.infected_', input, '.png', sep = ''))
-plot(out[,ncol(out)], 
-     main = "Total infected", type = 'l')
-dev.off()
+# infected.h <- matrix(NA, nrow = years * 365 * 10, ncol = 7)
+# col_names <- c("I1", "I2", "I3", "I4", "I2.v", "I3.v", "I4.v")
+# row_names <- head(seq(0, years * 365, 0.1),-1)
+# colnames(infected.h) <- col_names
+# row.names(infected.h) <- row_names
+# for(i in 1:4){
+#   for(j in 1:(years * 365 * 10)){
+#     x <- i - 1 
+#     y <- sum(out[j,((30:57)+ 84 * x)]) - sum(out[(j-1),((30:57)+ 84 * x)])
+#     infected.h[j,i] <- ifelse(y>0, y, 0)
+#   }
+# }
+# for(i in 1:3){
+#   for(j in 1:(years * 365 * 10)){
+#     x <- i - 1
+#     y <- sum(out[j,((393:420)+ 84 * x)]) - sum(out[(j-1),((393:420)+ 84 * x)]) 
+#     infected.h[j,(i + 4)] <- ifelse(y>0, y, 0)
+#   }
+# }
+# 
+# cumul_infected.h <- matrix(NA, nrow = (365 * 10 * years), ncol = 7)
+# for(j in 1:(365 * 10 * years)){
+#   for(k in 1:7){
+#     cumul_infected.h[j,k] <- sum(infected.h[(1:j),k])
+#   }
+# }
+# 
+# 
+# infected.l <- matrix(NA, nrow = years * 365 * 10, ncol = 7)
+# col_names <- c("I1", "I2", "I3", "I4", "I2.v", "I3.v", "I4.v")
+# row_names <- head(seq(0, years * 365, 0.1),-1)
+# colnames(infected.l) <- col_names
+# row.names(infected.l) <- row_names
+# for(i in 1:4){
+#   for(j in 1:(years * 365 * 10)){
+#     x <- i - 1 
+#     y <- sum(out[j,((646:673)+ 84 * x)]) - sum(out[(j -1),((646:673)+ 84 * x)])
+#     infected.l[j,i] <- ifelse(y>0, y, 0)
+#   }
+# }
+# for(i in 1:3){
+#   for(j in 1:(years * 365 * 10)){
+#     x <- i - 1
+#     y <- sum(out[j,((1010:1037)+ 84 * x)]) - sum(out[(j-1),((1010:1037)+ 84 * x)]) 
+#     infected.l[j,(i + 4)] <- ifelse(y>0, y, 0)
+#   }
+# }
+# cumul_infected.l <- matrix(NA, nrow = (365 * 10 * years), ncol = 7)
+# for(j in 1:(365 * 10 * years)){
+#   for(k in 1:7){
+#     cumul_infected.l[j,k] <- sum(infected.l[(1:j),k])
+#   }
+# }
 
-png(filename = paste('cumul.log10.infected_', input, '.png', sep = ''))
-plot(log10(out[,ncol(out)]), 
-     main = "Total infected", type = 'l')
-dev.off()
+#save(cumul_infected.l, file = paste('infected.l_', input, '.RData', sep = ''))
+#save(cumul_infected.h, file = paste('infected.h_', input, '.RData', sep = ''))
+
+# 
+# ###############################
+# #plot proportions SIR over time 
+# ###############################
+# 
+# png(filename = paste('prop.h.SIR_', input, '.png', sep = ''))
+# ts <- matrix(NA, nrow = 22, ncol = years * 365 * 10)
+# for(j in 1:22){
+#   for(i in 1:(years* 365 * 10)){
+#     x <- j - 1
+#     ts[j,i] <- sum(out[i,((x * 28) + 2):((x * 28) + 29)]) / sum(out[i,2:617])
+#   }
+# }
+# rownames(ts) <- c("dS1_h", "dI1_h", "dR1_h",
+#                  "dS2_h", "dI2_h", "dR2_h",
+#                  "dS3_h", "dI3_h", "dR3_h",
+#                  "dS4_h", "dI4_h", "dR4_h",
+#                  "dR1_h.v",
+#                  "dS2_h.v", "dI2_h.v", "dR2_h.v",
+#                  "dS3_h.v", "dI3_h.v", "dR3_h.v",
+#                  "dS4_h.v", "dI4_h.v", "dR4_h.v")
+# ts.new <- matrix(NA, nrow = 22, ncol = years * 365 * 10)
+# rownames(ts.new) <- c("dS1_h", "dI1_h", "dR1_h", "dR1_h.v",
+#                   "dS2_h", "dS2_h.v", "dI2_h","dI2_h.v","dR2_h", "dR2_h.v",
+#                   "dS3_h", "dS3_h.v", "dI3_h", "dI3_h.v", "dR3_h", "dR3_h.v",
+#                   "dS4_h", "dS4_h.v", "dI4_h", "dI4_h.v", "dR4_h", "dR4_h.v")
+# ts.new[1:3,] <- ts[1:3,]
+# ts.new[4,] <- ts[13,]
+# ts.new[5,] <- ts[4,]
+# ts.new[6,] <- ts[14,]
+# ts.new[7,] <- ts[5,]
+# ts.new[8,] <- ts[15,]
+# ts.new[9,] <- ts[6,]
+# ts.new[10,] <- ts[16,]
+# ts.new[11,] <- ts[7,]
+# ts.new[12,] <- ts[17,]
+# ts.new[13,] <- ts[8,]
+# ts.new[14,] <- ts[18,]
+# ts.new[15,] <- ts[9,]
+# ts.new[16,] <- ts[19,]
+# ts.new[17,] <- ts[10,]
+# ts.new[18,] <- ts[20,]
+# ts.new[19,] <- ts[11,]
+# ts.new[20,] <- ts[21,]
+# ts.new[21,] <- ts[12,]
+# ts.new[22,] <- ts[22,]
+# 
+# par(mar=c(5.1, 4.1, 4.1, 8.1), xpd=TRUE)
+# ########
+# ##set colors
+# ########
+# vac_colors <- gray.colors(10)
+# colors <- c(rgb(0, 191/255, 255/255, alpha = 0.25), rgb(0, 191/255, 255/255, alpha = 0.5), rgb(0, 191/255, 255/255, alpha = 1),
+#             rgb(0, 0, 255/255, alpha = 0.25), rgb(0, 0, 255/255, alpha = 0.5), rgb(0, 0, 255/255, alpha = 1),
+#             rgb(0, 139/255, 0, alpha = 0.25), rgb(0, 139/255, 0, alpha = 0.5), rgb(0, 139/255, 0, alpha = 1),
+#             rgb(104/255, 34/255, 139/255, alpha = 0.25), rgb(104/255, 34/255, 139/255, alpha = 0.5), rgb(104/255, 34/255, 139/255, alpha = 1),
+#             vac_colors)
+# densities <- c(rep(100, 12), rep(10,10))
+# colors_c <- c(rgb(0, 191/255, 255/255, alpha = 0.25), rgb(0, 191/255, 255/255, alpha = 0.5), rgb(0, 191/255, 255/255, alpha = 1),
+#             rgb(0, 0, 255/255, alpha = 0.25), rgb(0, 0, 255/255, alpha = 0.5), rgb(0, 0, 255/255, alpha = 1),
+#             rgb(0, 139/255, 0, alpha = 0.25), rgb(0, 139/255, 0, alpha = 0.5), rgb(0, 139/255, 0, alpha = 1),
+#             rgb(104/255, 34/255, 139/255, alpha = 0.25), rgb(104/255, 34/255, 139/255, alpha = 0.5), rgb(104/255, 34/255, 139/255, alpha = 1))
+# colors_f <- c(colors_c, colors_c[3:length(colors_c)])    
+# angles <- rep(45, 22)
+# #######
+# {par(mar=c(5.1, 4.1, 4.1, 8.1), xpd=TRUE)
+#   barplot(ts.new, col = colors_f, 
+#         border=colors, space=0.04, main ="Proportion of Each Category, High SES", 
+#         xlab = "Timestep", angle = angles)
+# legend("topright",  inset=c(-0.1,0),
+#        c("S1", "I1", "R1", 
+#          "S2", "I2", "R2",
+#          "S3", "I3", "R3",
+#          "S4", "I4", "R4"), 
+#        fill=colors_f[1:12], horiz=FALSE, cex=0.8)
+# legend("topright",  inset=c(-0.25,0.083),
+#        c("R1.v", 
+#          "S2.v", "I2.v", "R2.v",
+#          "S3.v", "I3.v", "R3.v",
+#          "S4.v", "I4.v", "R4.v"), 
+#        fill=vac_colors, horiz=FALSE, cex=0.8)
+# segments(x0 = (years_vac * 10 * 365), x1 = (years_vac * 10 * 365), y0 = 0, y1 = 1)
+# }
+# dev.off()
+# 
+# png(filename = paste('prop.l.SIR_', input, '.png', sep = ''))
+# ts_l <- matrix(NA, nrow = 22, ncol = years * 365 * 10)
+# for(j in 1:22){
+#   for(i in 1:(years* 365 * 10)){
+#     x <- j - 1
+#     ts_l[j,i] <- sum(out[i,((x * 28) + 2+ 616):((x * 28) + 29 + 616)]) / sum(out[i,618:1233])
+#   }
+# }
+# rownames(ts_l) <- c("dS1_l", "dI1_l", "dR1_l",
+#                     "dS2_l", "dI2_l", "dR2_l",
+#                     "dS3_l", "dI3_l", "dR3_l",
+#                     "dS4_l", "dI4_l", "dR4_l",
+#                     "dR1_l.v",
+#                     "dS2_l.v", "dI2_l.v", "dR2_l.v",
+#                     "dS3_l.v", "dI3_l.v", "dR3_l.v",
+#                     "dS4_l.v", "dI4_l.v", "dR4_l.v")
+# 
+# ts.new_l <- matrix(NA, nrow = 22, ncol = years * 365 * 10)
+# ts.new_l[1:3,] <- ts_l[((1:3)+22),]
+# ts.new_l[4,] <- ts_l[(13+22),]
+# ts.new_l[5,] <- ts_l[(4+22),]
+# ts.new_l[6,] <- ts_l[(14+22),]
+# ts.new_l[7,] <- ts_l[(5+22),]
+# ts.new_l[8,] <- ts_l[(15+22),]
+# ts.new_l[9,] <- ts_l[(6+22),]
+# ts.new_l[10,] <- ts_l[(16+22),]
+# ts.new_l[11,] <- ts_l[(7+22),]
+# ts.new_l[12,] <- ts_l[(17+22),]
+# ts.new_l[13,] <- ts_l[(8+22),]
+# ts.new_l[14,] <- ts_l[(18+22),]
+# ts.new_l[15,] <- ts_l[(9+22),]
+# ts.new_l[16,] <- ts_l[(19+22),]
+# ts.new_l[17,] <- ts_l[(10+22),]
+# ts.new_l[18,] <- ts_l[(20+22),]
+# ts.new_l[19,] <- ts_l[(11+22),]
+# ts.new_l[20,] <- ts_l[(21+22),]
+# ts.new_l[21,] <- ts_l[(12+22),]
+# ts.new_l[22,] <- ts_l[(22+22),]
+# {par(mar=c(5.1, 4.1, 4.1, 8.1), xpd=TRUE)
+# barplot(ts.new_l, col = topo.colors(12), 
+#         border=colors, space=0.04, main ="Proportion of Each Category, Low SES",
+#         xlab = "Timestep")
+# legend("topright",  inset=c(-0.1,0),
+#        c("S1", "I1", "R1", 
+#          "S2", "I2", "R2",
+#          "S3", "I3", "R3",
+#          "S4", "I4", "R4"), 
+#        fill=colors[1:12], horiz=FALSE, cex=0.8)
+# legend("topright",  inset=c(-0.25,0.083),
+#        c("R1.v", 
+#          "S2.v", "I2.v", "R2.v",
+#          "S3.v", "I3.v", "R3.v",
+#          "S4.v", "I4.v", "R4.v"), 
+#        fill=colors[13:22], horiz=FALSE, cex=0.8)
+# segments(x0 = (years_vac * 10 * 365), x1 = (years_vac * 10 * 365), y0 = 0, y1 = 1)}
+# dev.off()
+# 
+# 
+# png(filename = paste('cumul.infected_', input, '.png', sep = ''))
+# plot(out[,ncol(out)], 
+#      main = "Total infected", type = 'l')
+# dev.off()
+
+# png(filename = paste('cumul.log10.infected_', input, '.png', sep = ''))
+# plot(log10(out[,ncol(out)]), 
+#      main = "Total infected", type = 'l')
+# dev.off()
 
 
