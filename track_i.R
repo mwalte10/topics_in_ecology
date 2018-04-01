@@ -607,11 +607,7 @@ save(track_infected, file = paste('track.infected_', input, '.RData', sep = ''))
 nines_h <- 11 + c(1, 29, 57,
                   85, 113, 141,
                   169, 197, 225, 
-                  253, 281, 309, 
-                  337, 
-                  365, 393, 421,
-                  449, 477, 505,
-                  533, 561, 589)
+                  253, 281, 309)
 nines_l <- nines_h + 616
 nines <- c(nines_h, nines_l)
 #sp9 <- function(ts, low){
