@@ -130,7 +130,7 @@ model <- function(t, y, parms){
   S4_h <- y[253:280]
   I4_h <- y[281:308]
   R4_h <- y[309:336]
-
+  
   #Vaccinated
   R1_h.v <- y[337:364]
   S2_h.v <- y[365:392]
@@ -169,7 +169,7 @@ model <- function(t, y, parms){
   
   ###Tracking infected individuals
   I_total <- y[1233]
-
+  
   
   infected_total_h <- sum(sum(I1_h), sum(I2_h), sum(I3_h), sum(I4_h), sum(I2_h.v), sum(I3_h.v), sum(I4_h.v))
   population_h <- y[1:616]
@@ -280,7 +280,7 @@ model <- function(t, y, parms){
     native * S2_l.v * (0.75 * beta_h * infected_total_h / effective_population_h) -
     travel * S2_l.v * (0.75 * beta_l * infected_total_l / effective_population_l) -
     S2_l.v * delta
-    
+  
   dI2_h <- 
     native * S2_h * (0.75 * beta_h * infected_total_h / effective_population_h) +
     travel * S2_h * (0.75 * beta_l * infected_total_l / effective_population_l) +
@@ -617,7 +617,7 @@ nines <- c(nines_h, nines_l)
 
 sp9 <- rep(NA, years * 10 * 365)
 for(i in 1:(years * 10 *365)){
-  no_exposure <- out[i, nines[1]] + out[i, nines[23]]
+  no_exposure <- out[i, nines[1]] + out[i, nines[13]]
   sp9[i] <- 1 - (no_exposure / sum(out[i, nines]))
 }
 save(sp9, file = paste('sp9_', input, '.RData', sep = ''))
