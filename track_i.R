@@ -12,7 +12,7 @@ vac <- 0.95
 library(deSolve)
 
 ############################
-#Initial condidtions and parameters
+#Initial conidtions and parameters
 ############################
 percentage_vec <- c(rep(1.8,5), rep(1.8,5), rep(1.84,5), rep(1.86,5),
                     17.2, 15, 12.7, 8.8, 5.5, 2.8, 1.3, 0.2)
@@ -342,8 +342,8 @@ model <- function(t, y, parms){
     c(1/365 / head(age_window, -1) * head(R2_h.v, -1), 0) -
     R2_h.v * sigma -
     R2_h.v * delta +
-    R1_h.v * vac_h +
-    S2_h.v * vac_h
+    R1_h * vac_h +
+    S2_h * vac_h
   dR2_l <-  
     I2_l * gamma +  
     c(0, 1/365 / head(age_window, -1) * head(R2_l, -1)) -
@@ -359,8 +359,8 @@ model <- function(t, y, parms){
     c(1/365 / head(age_window, -1) * head(R2_l.v, -1), 0) -
     R2_l.v * sigma -
     R2_l.v * delta +
-    R1_l.v * vac_l +
-    S2_l.v * vac_l
+    R1_l * vac_l +
+    S2_l * vac_l
   
   #third infection
   dS3_h <- 
@@ -449,8 +449,8 @@ model <- function(t, y, parms){
     c(0, 1/365 / head(age_window, -1) * head(R3_h.v, -1)) -
     c(1/365 / head(age_window, -1) * head(R3_h.v, -1), 0) -
     R3_h.v * sigma + 
-    R2_h.v * vac_h +
-    S3_h.v * vac_h
+    R2_h * vac_h +
+    S3_h * vac_h
   dR3_l <- 
     I3_l * gamma +
     c(0, 1/365 / head(age_window, -1) * head(R3_l, -1)) -
@@ -463,8 +463,8 @@ model <- function(t, y, parms){
     c(0, 1/365 / head(age_window, -1) * head(R3_l.v, -1)) -
     c(1/365 / head(age_window, -1) * head(R3_l.v, -1), 0) -
     R3_l.v * sigma + 
-    R2_l.v * vac_l +
-    S3_l.v * vac_l
+    R2_l * vac_l +
+    S3_l * vac_l
   
   #fourth infection
   dS4_h <- 
@@ -553,8 +553,8 @@ model <- function(t, y, parms){
     c(0, 1/365 / head(age_window, -1) * head(R3_h.v, -1)) -
     c(1/365 / head(age_window, -1) * head(R3_h.v, -1), 0) -
     R4_h.v * delta + 
-    R3_h.v * vac_h +
-    S4_h.v * vac_h
+    R3_h * vac_h +
+    S4_h * vac_h
   dR4_l <- 
     I4_l * gamma +
     c(0, 1/365 / head(age_window, -1) * head(R4_l, -1)) -
@@ -567,8 +567,8 @@ model <- function(t, y, parms){
     c(0, 1/365 / head(age_window, -1) * head(R3_l.v, -1)) -
     c(1/365 / head(age_window, -1) * head(R3_l.v, -1), 0) -
     R4_l.v * delta + 
-    R3_l.v * vac_l +
-    S4_l.v * vac_l
+    R3_l * vac_l +
+    S4_l * vac_l
   
   I_total <- 
     native * S1_h * (beta_h * infected_total_h / effective_population_h) +
