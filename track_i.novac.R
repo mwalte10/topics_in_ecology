@@ -3,7 +3,7 @@
 ############################
 args = commandArgs(TRUE)
 input = as.numeric(args[1])
-beta.h_vec = c(0.453)
+beta.h_vec = c(0.345)
 beta_h = beta.h_vec[input]
 beta.l_vec = c(0.916)
 beta_l = beta.l_vec[input]
