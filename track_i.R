@@ -506,8 +506,8 @@ model <- function(t, y, parms){
     I4_h * gamma -
     I4_h * delta
   dI4_h.v <-
-    native * S4_h.v * (0.5 * beta_h * infected_total_h / effective_population_h) +
-    travel * S4_h.v * (0.5 * beta_l * infected_total_l / effective_population_l) +
+    native * S4_h.v * (0.25 * beta_h * infected_total_h / effective_population_h) +
+    travel * S4_h.v * (0.25 * beta_l * infected_total_l / effective_population_l) +
     c(0, 1/365 / head(age_window, -1) * head(I4_h.v, -1)) -
     c(1/365 / head(age_window, -1) * head(I4_h.v, -1), 0) -
     I4_h.v * gamma -
@@ -520,8 +520,8 @@ model <- function(t, y, parms){
     I4_l * gamma -
     I4_l * delta
   dI4_l.v <-
-    native * S4_l.v * (0.5 * beta_h * infected_total_h / effective_population_h) +
-    travel * S4_l.v * (0.5 * beta_l * infected_total_l / effective_population_l) +
+    native * S4_l.v * (0.25 * beta_h * infected_total_h / effective_population_h) +
+    travel * S4_l.v * (0.25 * beta_l * infected_total_l / effective_population_l) +
     c(0, 1/365 / head(age_window, -1) * head(I4_l.v, -1)) -
     c(1/365 / head(age_window, -1) * head(I4_l.v, -1), 0) -
     I4_l.v * gamma -
