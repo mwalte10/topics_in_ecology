@@ -490,6 +490,21 @@ for(i in 1:(years * 10 *365)){
 }
 save(sp9, file = paste('sp9.nv_', input, '.RData', sep = ''))
 
+sp9.l <- rep(NA, years * 10 * 365)
+for(i in 1:(years * 10 *365)){
+  no_exposure <- out[i, nines_l[1]]
+  sp9.l[i] <- 1 - (no_exposure / sum(out[i, nines_l]))
+}
+save(sp9.l, file = paste('sp9.nv.l_', input, '.RData', sep = ''))
+
+sp9.h <- rep(NA, years * 10 * 365)
+for(i in 1:(years * 10 *365)){
+  no_exposure <- out[i, nines_h[1]]
+  sp9.h[i] <- 1 - (no_exposure / sum(out[i, nines_h]))
+}
+save(sp9.h, file = paste('sp9.nv.h_', input, '.RData', sep = ''))
+
+
 
 
 
