@@ -550,8 +550,8 @@ model <- function(t, y, parms){
     S4_h * vac_h
   dR4_h.v <-
     I4_h.v * gamma +
-    c(0, 1/365 / head(age_window, -1) * head(R3_h.v, -1)) -
-    c(1/365 / head(age_window, -1) * head(R3_h.v, -1), 0) -
+    c(0, 1/365 / head(age_window, -1) * head(R4_h.v, -1)) -
+    c(1/365 / head(age_window, -1) * head(R4_h.v, -1), 0) -
     R4_h.v * delta + 
     R3_h * vac_h +
     S4_h * vac_h
@@ -564,8 +564,8 @@ model <- function(t, y, parms){
     S4_l * vac_l
   dR4_l.v <-
     I4_l.v * gamma +
-    c(0, 1/365 / head(age_window, -1) * head(R3_l.v, -1)) -
-    c(1/365 / head(age_window, -1) * head(R3_l.v, -1), 0) -
+    c(0, 1/365 / head(age_window, -1) * head(R4_l.v, -1)) -
+    c(1/365 / head(age_window, -1) * head(R4_l.v, -1), 0) -
     R4_l.v * delta + 
     R3_l * vac_l +
     S4_l * vac_l
