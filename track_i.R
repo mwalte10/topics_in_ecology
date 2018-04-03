@@ -222,6 +222,8 @@ model <- function(t, y, parms){
     travel * S1_h * (beta_l * infected_total_l / effective_population_l) +
     travel * S1_l * (beta_h * infected_total_h / effective_population_h) +
     native * S1_l * (beta_l * infected_total_l / effective_population_l)
+  I_l <- travel * S1_l * (beta_h * infected_total_h / effective_population_h) +
+    native * S1_l * (beta_l * infected_total_l / effective_population_l)
   
   dR1_h <-
     I1_h * gamma +
@@ -318,6 +320,10 @@ model <- function(t, y, parms){
     native * S2_h.v * (0.75 * beta_h * infected_total_h / effective_population_h) +
     travel * S2_h.v * (0.75 * beta_l * infected_total_l / effective_population_l) +
     travel * S2_l * (0.75 * beta_h * infected_total_h / effective_population_h) +
+    native * S2_l * (0.75 * beta_l * infected_total_l / effective_population_l) +
+    native * S2_l.v * (0.75 * beta_h * infected_total_h / effective_population_h) +
+    travel * S2_l.v * (0.75 * beta_l * infected_total_l / effective_population_l) 
+  I_l <- travel * S2_l * (0.75 * beta_h * infected_total_h / effective_population_h) +
     native * S2_l * (0.75 * beta_l * infected_total_l / effective_population_l) +
     native * S2_l.v * (0.75 * beta_h * infected_total_h / effective_population_h) +
     travel * S2_l.v * (0.75 * beta_l * infected_total_l / effective_population_l) 
@@ -425,6 +431,10 @@ model <- function(t, y, parms){
     native * S3_l * (0.5 * beta_l * infected_total_l / effective_population_l) +
     native * S3_l.v * (0.5 * beta_h * infected_total_h / effective_population_h) +
     travel * S3_l.v * (0.5 * beta_l * infected_total_l / effective_population_l)
+  I_l <- travel * S3_l * (0.5 * beta_h * infected_total_h / effective_population_h) +
+    native * S3_l * (0.5 * beta_l * infected_total_l / effective_population_l) +
+    native * S3_l.v * (0.5 * beta_h * infected_total_h / effective_population_h) +
+    travel * S3_l.v * (0.5 * beta_l * infected_total_l / effective_population_l)
   
   dR3_h <- 
     I3_h * gamma +
@@ -525,6 +535,10 @@ model <- function(t, y, parms){
     native * S4_l * (0.25 * beta_l * infected_total_l / effective_population_l) +
     native * S4_l.v * (0.25 * beta_h * infected_total_h / effective_population_h) +
     travel * S4_l.v * (0.25 * beta_l * infected_total_l / effective_population_l)
+  I_l <-  travel * S4_l * (0.25 * beta_h * infected_total_h / effective_population_h) +
+    native * S4_l * (0.25 * beta_l * infected_total_l / effective_population_l) +
+    native * S4_l.v * (0.25 * beta_h * infected_total_h / effective_population_h) +
+    travel * S4_l.v * (0.25 * beta_l * infected_total_l / effective_population_l)
   
   dR4_h <- 
     I4_h * gamma +
@@ -556,6 +570,7 @@ model <- function(t, y, parms){
     S4_l.v * vac_l
   
   I_total <- sum(I_total)
+  I_l <- sum(I_l)
   
   list(c(dS1_h, dI1_h, dR1_h,
          dS2_h, dI2_h, dR2_h,
@@ -573,7 +588,7 @@ model <- function(t, y, parms){
          dS2_l.v, dI2_l.v, dR2_l.v,
          dS3_l.v, dI3_l.v, dR3_l.v,
          dS4_l.v, dI4_l.v, dR4_l.v,
-         I_total))
+         I_total, I_l))
   
 }
 
@@ -589,7 +604,7 @@ y_init <- c(susceptible_h(1), infected_h(1), recovered_h(1),
             susceptible_l(2), infected_l(2), recovered_l(2),
             susceptible_l(3), infected_l(3), recovered_l(3),
             susceptible_l(4), infected_l(4), recovered_l(4),
-            rep(0, 280), 0)
+            rep(0, 280), 0, 0)
 years = 50
 years_vac = 30
 times <- seq(from = 0, to = 365 * years, by = .1)
@@ -600,9 +615,15 @@ out <- ode(times = times, y = y_init, func = model, parms = parms)
 #OUTPUT
 ############################
 out_last <- out[nrow(out),]
-track_infected <- out[,ncol(out)]
+track_infected <- out[,(ncol(out) - 1)]
+track_l <- out[,ncol(out)]
+track_h <- track_infected - track_l
 save(out_last, file = paste('output_', input, '.RData', sep = ''))
 save(track_infected, file = paste('track.infected_', input, '.RData', sep = ''))
+save(track_l, file = paste('track.l_', input, '.RData', sep = ''))
+save(track_h, file = paste('track.h_', input, '.RData', sep = ''))
+
+
 
 
 
