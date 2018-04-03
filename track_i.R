@@ -4,9 +4,9 @@
 args = commandArgs(TRUE)
 input = as.numeric(args[1])
 beta.h_vec = c(0.453)
-beta.h = beta.h_vec[input]
+beta_h = beta.h_vec[input]
 beta.l_vec = c(0.916)
-beta.l = beta.l_vec[input]
+beta_l = beta.l_vec[input]
 vac <- 0.8
 
 library(deSolve)
@@ -86,8 +86,8 @@ population_l <- sum(susceptible_total_l + infected_total_l + recovered_total_l)
 
 native <- c(rep(1, 7), rep(0.86, 9), rep(0.842, 4), 0.814, 0.7676, 0.7784, rep(0.809, 5))
 
-parms <- c(beta_h = beta.h,
-           beta_l = beta.l,
+parms <- c(beta_h = beta_h,
+           beta_l = beta_l,
            gamma = 1/4,
            sigma = 1/(365 * 1.2),
            mu = 19 / (1000 * 365),
