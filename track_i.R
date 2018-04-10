@@ -172,6 +172,8 @@ model <- function(t, y, parms){
   ###Tracking infected individuals
   I_total <- y[1233]
   I_l <- y[1234]
+  I_total.vac <- y[1235]
+  I_l.vac <- y[1236]
   
   
   infected_total_h <- sum(sum(I1_h), sum(I2_h), sum(I3_h), sum(I4_h), sum(I2_h.v), sum(I3_h.v), sum(I4_h.v))
@@ -569,6 +571,30 @@ model <- function(t, y, parms){
     travel * S4_l.v * (0.5 * beta_l * infected_total_l / effective_population_l)
   I_l <- sum(I_l)
   
+  I_total.vac <-  
+    native * S2_h.v * (beta_h * infected_total_h / effective_population_h) +
+    travel * S2_h.v * (beta_l * infected_total_l / effective_population_l) +
+    native * S2_l.v * (beta_h * infected_total_h / effective_population_h) +
+    travel * S2_l.v * (beta_l * infected_total_l / effective_population_l) +
+    native * S3_h.v * (0.75 * beta_h * infected_total_h / effective_population_h) +
+    travel * S3_h.v * (0.75 * beta_l * infected_total_l / effective_population_l) +
+    native * S3_l.v * (0.75 * beta_h * infected_total_h / effective_population_h) +
+    travel * S3_l.v * (0.75 * beta_l * infected_total_l / effective_population_l) +
+    native * S4_h.v * (0.5 * beta_h * infected_total_h / effective_population_h) +
+    travel * S4_h.v * (0.5 * beta_l * infected_total_l / effective_population_l) +
+    native * S4_l.v * (0.5 * beta_h * infected_total_h / effective_population_h) +
+    travel * S4_l.v * (0.5 * beta_l * infected_total_l / effective_population_l)
+  I_total.vac <- sum(I_total.vac)
+  
+  I_l.vac <- 
+    native * S2_l.v * (beta_h * infected_total_h / effective_population_h) +
+    travel * S2_l.v * (beta_l * infected_total_l / effective_population_l) +
+    native * S3_l.v * (0.75 * beta_h * infected_total_h / effective_population_h) +
+    travel * S3_l.v * (0.75 * beta_l * infected_total_l / effective_population_l) +
+    native * S4_l.v * (0.5 * beta_h * infected_total_h / effective_population_h) +
+    travel * S4_l.v * (0.5 * beta_l * infected_total_l / effective_population_l)
+  I_l.vac <- sum(I_l.vac)
+  
   list(c(dS1_h, dI1_h, dR1_h,
          dS2_h, dI2_h, dR2_h,
          dS3_h, dI3_h, dR3_h,
@@ -585,7 +611,8 @@ model <- function(t, y, parms){
          dS2_l.v, dI2_l.v, dR2_l.v,
          dS3_l.v, dI3_l.v, dR3_l.v,
          dS4_l.v, dI4_l.v, dR4_l.v,
-         I_total, I_l))
+         I_total, I_l,
+         I_total.vac, I_l.vac))
   
 }
 
@@ -601,8 +628,8 @@ y_init <- c(susceptible_h(1), infected_h(1), recovered_h(1),
             susceptible_l(2), infected_l(2), recovered_l(2),
             susceptible_l(3), infected_l(3), recovered_l(3),
             susceptible_l(4), infected_l(4), recovered_l(4),
-            rep(0, 280), 0, 0)
-years = 50
+            rep(0, 280), 0, 0, 0, 0)
+years = 80
 years_vac = 30
 times <- seq(from = 0, to = 365 * years, by = .1)
 out <- ode(times = times, y = y_init, func = model, parms = parms)
@@ -610,17 +637,20 @@ out <- ode(times = times, y = y_init, func = model, parms = parms)
 ############################
 #OUTPUT
 ############################
-out_last <- out[nrow(out),(2:(ncol(out) - 2))] 
-track_infected <- out[,(ncol(out) - 1)]
-track_l <- out[,ncol(out)]
+out_last <- out[nrow(out),(2:(ncol(out) - 4))] 
+track_infected <- out[,(ncol(out) - 3)]
+track_l <- out[,(ncol(out)- 2)]
 track_h <- track_infected - track_l
+track.vac <- out[,(ncol(out)- 1)]
+track_l.vac <- out[,ncol(out)]
+track_h.vac <- track.vac - track_l.vac
 save(out_last, file = paste('output_', input, '.RData', sep = ''))
 save(track_infected, file = paste('track.infected_', input, '.RData', sep = ''))
 save(track_l, file = paste('track.l_', input, '.RData', sep = ''))
 save(track_h, file = paste('track.h_', input, '.RData', sep = ''))
-
-
-
+save(track.vac, file = paste('track.vac_', input, '.RData', sep = ''))
+save(track_l.vac, file = paste('track.l.vac_', input, '.RData', sep = ''))
+save(track_h.vac, file = paste('track.h.vac_', input, '.RData', sep = ''))
 
 
 nines_h <- 11 + c(1, 29, 57,
