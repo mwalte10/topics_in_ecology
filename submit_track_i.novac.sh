@@ -1,7 +1,7 @@
 #!/bin/csh
 
-#$ -N beta.nv.inf_
-#$ -t 1
+#$ -N beta.nv.inf,var_
+#$ -t 1-11
 
 module load bio/R/3.3.1-gcc
 
