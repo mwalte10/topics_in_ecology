@@ -7,7 +7,7 @@ beta.h_vec = c(0.916)
 beta_h = beta.h_vec[input]
 beta.l_vec = c(0.916)
 beta_l = beta.l_vec[input]
-vac <- 0.9
+vac <- 0.95
 
 library(deSolve)
 
