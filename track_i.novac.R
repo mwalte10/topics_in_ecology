@@ -3,7 +3,7 @@
 ############################
 args = commandArgs(TRUE)
 input = as.numeric(args[1])
-beta.h_vec = c(0.4529)
+beta.h_vec = c(0.916)
 beta_h = beta.h_vec[input]
 beta.l_vec = c(0.916)
 beta_l = beta.l_vec[input]
@@ -370,52 +370,53 @@ model <- function(t, y, parms){
     travel * S1_h * (beta_l * infected_total_l / effective_population_l) +
     travel * S1_l * (beta_h * infected_total_h / effective_population_h) +
     native * S1_l * (beta_l * infected_total_l / effective_population_l) 
-  primary <- sum(primary) * XXXX
+  primary <- sum(primary) * 0.18
   
   secondary <- 
     native * S2_h * (0.75 * beta_h * infected_total_h / effective_population_h) +
     travel * S2_h * (0.75 * beta_l * infected_total_l / effective_population_l) +
     travel * S2_l * (0.75 * beta_h * infected_total_h / effective_population_h) +
     native * S2_l * (0.75 * beta_l * infected_total_l / effective_population_l) 
-  secondary <- sum(secondary) * XXXX
+  secondary <- sum(secondary) * 0.41
   
-  tertiary <- 
-    native * S3_h * (0.5 * beta_h * infected_total_h / effective_population_h) +
-    travel * S3_h * (0.5 * beta_l * infected_total_l / effective_population_l) +
-    travel * S3_l * (0.5 * beta_h * infected_total_h / effective_population_h) +
-    native * S3_l * (0.5 * beta_l * infected_total_l / effective_population_l) 
-  tertiary <- sum(tertiary) * XXXX
+  # tertiary <- 
+  #   native * S3_h * (0.5 * beta_h * infected_total_h / effective_population_h) +
+  #   travel * S3_h * (0.5 * beta_l * infected_total_l / effective_population_l) +
+  #   travel * S3_l * (0.5 * beta_h * infected_total_h / effective_population_h) +
+  #   native * S3_l * (0.5 * beta_l * infected_total_l / effective_population_l) 
+  # tertiary <- sum(tertiary) * XXXX
+  # 
+  # quaternary <- 
+  #   native * S4_h * (0.25 * beta_h * infected_total_h / effective_population_h) +
+  #   travel * S4_h * (0.25 * beta_l * infected_total_l / effective_population_l) +
+  #   travel * S4_l * (0.25 * beta_h * infected_total_h / effective_population_h) +
+  #   native * S4_l * (0.25 * beta_l * infected_total_l / effective_population_l)
+  # quaternary <- sum(quaternary) * XXXX
   
-  quaternary <- 
-    native * S4_h * (0.25 * beta_h * infected_total_h / effective_population_h) +
-    travel * S4_h * (0.25 * beta_l * infected_total_l / effective_population_l) +
-    travel * S4_l * (0.25 * beta_h * infected_total_h / effective_population_h) +
-    native * S4_l * (0.25 * beta_l * infected_total_l / effective_population_l)
-  quaternary <- sum(quaternary) * XXXX
-  
-  cases <- primary + secondary + tertiary + quaternary 
+  cases <- primary + secondary 
+  # + tertiary + quaternary 
   
   primary.l <- 
     travel * S1_l * (beta_h * infected_total_h / effective_population_h) +
     native * S1_l * (beta_l * infected_total_l / effective_population_l) 
-  primary.l <- sum(primary.l) * XXXX
+  primary.l <- sum(primary.l) * 0.18
   
   secondary.l <- 
     travel * S2_l * (0.75 * beta_h * infected_total_h / effective_population_h) +
     native * S2_l * (0.75 * beta_l * infected_total_l / effective_population_l) 
-  secondary.l <- sum(secondary.l) * XXXX
+  secondary.l <- sum(secondary.l) * 0.41
+  # tertiary.l <- 
+  #   travel * S3_l * (0.5 * beta_h * infected_total_h / effective_population_h) +
+  #   native * S3_l * (0.5 * beta_l * infected_total_l / effective_population_l) 
+  # tertiary.l <- sum(tertiar.l) * XXXX
+  # 
+  # quaternary.l <- 
+  #   travel * S4_l * (0.25 * beta_h * infected_total_h / effective_population_h) +
+  #   native * S4_l * (0.25 * beta_l * infected_total_l / effective_population_l)
+  # quaternary.l <- sum(quaternary.l) * XXXXX
   
-  tertiary.l <- 
-    travel * S3_l * (0.5 * beta_h * infected_total_h / effective_population_h) +
-    native * S3_l * (0.5 * beta_l * infected_total_l / effective_population_l) 
-  tertiary.l <- sum(tertiar.l) * XXXX
-  
-  quaternary.l <- 
-    travel * S4_l * (0.25 * beta_h * infected_total_h / effective_population_h) +
-    native * S4_l * (0.25 * beta_l * infected_total_l / effective_population_l)
-  quaternary.l <- sum(quaternary.l) * XXXXX
-  
-  cases.l <- primary.l + secondary.l + tertiary.l + quaternary.l 
+  cases.l <- primary.l + secondary.l 
+  # + tertiary.l + quaternary.l 
   
   list(c(dS1_h, dI1_h, dR1_h,
          dS2_h, dI2_h, dR2_h,
