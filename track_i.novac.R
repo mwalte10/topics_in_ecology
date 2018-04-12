@@ -457,15 +457,15 @@ save(out_last, file = paste('output.nv_', input, '.RData', sep = ''))
 track_infected <- out[,(ncol(out) - 3)]
 track_l <- out[,(ncol(out) - 2)]
 track_h <- track_infected - track_l
-cases <- out[,(ncol(out) - 1)]
-cases.l <- out[,(ncol(out))]
-cases.h <- cases - cases.l
+cases.nv <- out[,(ncol(out) - 1)]
+cases.l.nv <- out[,(ncol(out))]
+cases.h.nv <- cases - cases.l
 save(track_infected, file = paste('track.infected.nv_', input, '.RData', sep = ''))
 save(track_l, file = paste('track.l.nv_', input, '.RData', sep = ''))
 save(track_h, file = paste('track.h.nv_', input, '.RData', sep = ''))
-save(cases, file = paste('cases.nv_', input, '.RData', sep = ''))
-save(cases.l, file = paste('cases.l.nv_', input, '.RData', sep = ''))
-save(cases.h, file = paste('cases.h.nv_', input, '.RData', sep = ''))
+save(cases.nv, file = paste('cases.nv_', input, '.RData', sep = ''))
+save(cases.l.nv, file = paste('cases.l.nv_', input, '.RData', sep = ''))
+save(cases.h.nv, file = paste('cases.h.nv_', input, '.RData', sep = ''))
 
 ###############################
 #plot proportions SIR over time 
