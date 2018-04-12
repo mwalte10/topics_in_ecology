@@ -690,16 +690,16 @@ out_last <- out[nrow(out),(2:(ncol(out) - 4))]
 track_infected <- out[,(ncol(out) - 3)]
 track_l <- out[,(ncol(out) - 2)]
 track_h <- track_infected - track_l
-cases.v <- out[,(ncol(out) - 1)]
-cases.l.v <- out[,(ncol(out))]
-cases.h.v <- cases - cases.l
+cases <- out[,(ncol(out) - 1)]
+cases.l <- out[,(ncol(out))]
+cases.h <- cases - cases.l
 save(out_last, file = paste('output_', input, '.RData', sep = ''))
 save(track_infected, file = paste('track.infected_', input, '.RData', sep = ''))
 save(track_l, file = paste('track.l_', input, '.RData', sep = ''))
 save(track_h, file = paste('track.h_', input, '.RData', sep = ''))
-save(cases.v, file = paste('cases_', input, '.RData', sep = ''))
-save(cases.l.v, file = paste('cases.l_', input, '.RData', sep = ''))
-save(cases.h.v, file = paste('cases.h_', input, '.RData', sep = ''))
+save(cases, file = paste('cases_', input, '.RData', sep = ''))
+save(cases.l, file = paste('cases.l_', input, '.RData', sep = ''))
+save(cases.h, file = paste('cases.h_', input, '.RData', sep = ''))
 
 
 nines_h <- 11 + c(1, 29, 57,
