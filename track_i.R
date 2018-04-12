@@ -705,7 +705,11 @@ save(cases.h, file = paste('cases.h_', input, '.RData', sep = ''))
 nines_h <- 11 + c(1, 29, 57,
                   85, 113, 141,
                   169, 197, 225, 
-                  253, 281, 309)
+                  253, 281, 309, 
+                  337, 
+                  365, 393, 421, 
+                  449, 477, 505, 
+                  533, 561, 589)
 nines_l <- nines_h + 616
 nines <- c(nines_h, nines_l)
 #sp9 <- function(ts, low){
@@ -715,21 +719,22 @@ nines <- c(nines_h, nines_l)
 
 sp9 <- rep(NA, years * 10 * 365)
 for(i in 1:(years * 10 *365)){
-  no_exposure <- out[i, nines[1]] + out[i, nines[13]]
+  no_exposure <- out[i, nines[1]] + out[i, nines[13]] + out[i, nines[14]] + 
+                 out[i, nines[23]] + out[i, nines[35]] + out[i, nines[36]]
   sp9[i] <- 1 - (no_exposure / sum(out[i, nines]))
 }
 save(sp9, file = paste('sp9_', input, '.RData', sep = ''))
 
 sp9.l <- rep(NA, years * 10 * 365)
 for(i in 1:(years * 10 *365)){
-  no_exposure <- out[i, nines_l[1]]
+  no_exposure <- out[i, nines_l[1]] + out[i, nines_l[13]] + out[i, nines_l[14]]
   sp9.l[i] <- 1 - (no_exposure / sum(out[i, nines_l]))
 }
 save(sp9.l, file = paste('sp9.l_', input, '.RData', sep = ''))
 
 sp9.h <- rep(NA, years * 10 * 365)
 for(i in 1:(years * 10 *365)){
-  no_exposure <- out[i, nines_h[1]]
+  no_exposure <- out[i, nines_h[1]] + out[i, nines_l[13]] + out[i, nines_l[14]]
   sp9.h[i] <- 1 - (no_exposure / sum(out[i, nines_h]))
 }
 save(sp9.h, file = paste('sp9.h_', input, '.RData', sep = ''))
