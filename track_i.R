@@ -241,8 +241,7 @@ model <- function(t, y, parms){
     c(0, 1/365 / head(age_window, -1) * head(R1_l, -1)) -
     c(1/365 / head(age_window, -1) * head(R1_l, -1), 0) -
     R1_l * sigma -
-    R1_l * delta +
-    S1_l * vac_l - 
+    R1_l * delta - 
     R1_l * vac_l
   dR1_l.v <- 
     S1_l * vac_l +
@@ -332,9 +331,7 @@ model <- function(t, y, parms){
     c(0, 1/365 / head(age_window, -1) * head(R2_l, -1)) -
     c(1/365 / head(age_window, -1) * head(R2_l, -1), 0) -
     R2_l * sigma -
-    R2_l * delta + 
-    R1_l * vac_l +
-    S2_l * vac_l -
+    R2_l * delta -
     R2_l * vac_l
   dR2_l.v <-
     I2_l.v * gamma +  

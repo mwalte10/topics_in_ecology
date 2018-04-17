@@ -146,6 +146,7 @@ model <- function(t, y, parms){
   
   ###Tracking infected individuals
   I_total <- y[673]
+  I_l <- y[674]
   
   
   infected_total_h <- sum(sum(I1_h), sum(I2_h), sum(I3_h), sum(I4_h))
