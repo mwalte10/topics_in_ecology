@@ -4,9 +4,9 @@
 ############################
 args = commandArgs(TRUE)
 input = as.numeric(args[1])
-beta.h_vec = c(0.4529)
+beta.h_vec = c(0.9156)
 beta_h = beta.h_vec[input]
-beta.l_vec = c(0.4529)
+beta.l_vec = c(0.9156)
 beta_l = beta.l_vec[input]
 
 library(deSolve)
