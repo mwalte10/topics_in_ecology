@@ -409,7 +409,7 @@ model <- function(t, y, parms){
   tertiary.l <-
     travel * S3_l * (0.5 * beta_h * infected_total_h / effective_population_h) +
     native * S3_l * (0.5 * beta_l * infected_total_l / effective_population_l)
-  tertiary.l <- sum(tertiar.l) * 0.063425
+  tertiary.l <- sum(tertiary.l) * 0.063425
 
   quaternary.l <-
     travel * S4_l * (0.25 * beta_h * infected_total_h / effective_population_h) +
