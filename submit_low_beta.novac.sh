@@ -1,7 +1,7 @@
 #!/bin/csh
 
-#$ -N low_beta.novac
-#$ -t 1-100
+#$ -N low_beta.novac.rf
+#$ -t 1-101
 
 module load bio/R/3.3.1-gcc
 
