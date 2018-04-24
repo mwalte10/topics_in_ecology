@@ -6,8 +6,8 @@ args = commandArgs(TRUE)
 input = as.numeric(args[1])
 beta.h_vec = seq(0.05, 0.5, length.out = 10)
 beta_h = beta.h_vec[input]
-beta.l_vec = seq(0.05, 0.5, length.out = 10)
-beta_l = beta.l_vec[input]
+#beta.l_vec = seq(0.05, 0.5, length.out = 10)
+beta_l = beta_h
 vac <- 0.8
 
 library(deSolve)
