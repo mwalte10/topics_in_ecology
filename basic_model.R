@@ -3,7 +3,7 @@
 ############################
 args = commandArgs(TRUE)
 input = as.numeric(args[1])
-beta.vec = seq(0.1, 2, length.out = 100)
+beta.vec = seq(0.01, 0.5, length.out = 100)
 beta = beta.vec[input]
 
 ############################
