@@ -201,7 +201,7 @@ y_init <- c(susceptible(1), infected(1), recovered(1),
             susceptible(2), infected(2), recovered(2),
             susceptible(3), infected(3), recovered(3),
             susceptible(4), infected(4), recovered(4))
-times <- seq(from = 0, to = 365 * 30, by = .1)
+times <- seq(from = 0, to = 365 * 100, by = .1)
 out <- ode(times = times, y = y_init, func = model, parms = parms)
 out <- out[nrow(out),]
 
