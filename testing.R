@@ -4,6 +4,7 @@ beta.h_vec = c(0.4529)
 beta_h = beta.h_vec[input]
 beta.l_vec = c(0.9156)
 beta_l = beta.l_vec[input]
+vac = 0.8
 
 library(deSolve)
 
@@ -112,8 +113,8 @@ model <- function(t, y, parms){
   age_window <- parms[34:61]
   native <- parms[62:89]
   travel <- parms[90:117]
-  vac_h <- c(rep(0,8), ifelse((t>(365*(years_vac))), parms[118] / 365, 0) rep(0,19))
-  vac_l <- c(rep(0,8), ifelse((t>(365*(years_vac))), parms[119] / 365, 0) rep(0,19))
+  vac_h <- c(rep(0,8), ifelse((t>(365*(years_vac))), parms[118] / 365, 0), rep(0,19))
+  vac_l <- c(rep(0,8), ifelse((t>(365*(years_vac))), parms[119] / 365, 0), rep(0,19))
   
   #Gen pop
   S1_h <- y[1:28]
@@ -181,9 +182,9 @@ model <- function(t, y, parms){
   population_l <- y[617:1232]
   pop_l <- sum(population_l)
   
-  effective_population_h <- population_h + rep(travel,12) * population_l
+  effective_population_h <- population_h + (rep(travel,22) * population_l)
   effective_population_h <- sum(effective_population_h)
-  effective_population_l <- population_l + rep(travel,12) * population_h
+  effective_population_l <- population_l + rep(travel,22) * population_h
   effective_population_l <- sum(effective_population_l)
   
   #first infection
@@ -640,7 +641,7 @@ model <- function(t, y, parms){
          dS2_h, dI2_h, dR2_h,
          dS3_h, dI3_h, dR3_h,
          dS4_h, dI4_h, dR4_h,
-         dR_h.v,
+         dR1_h.v,
          dS2_h.v, dI2_h.v, dR2_h.v,
          dS3_h.v, dI3_h.v, dR3_h.v,
          dS4_h.v, dI4_h.v, dR4_h.v,
