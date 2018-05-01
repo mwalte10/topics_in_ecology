@@ -374,50 +374,50 @@ model <- function(t, y, parms){
     travel * S1_h * (beta_l * infected_total_l / effective_population_l) +
     travel * S1_l * (beta_h * infected_total_h / effective_population_h) +
     native * S1_l * (beta_l * infected_total_l / effective_population_l) 
-  primary <- sum(primary) * 0.18
+  primary <- sum(primary) * 0.1792125
   
   secondary <- 
     native * S2_h * (0.75 * beta_h * infected_total_h / effective_population_h) +
     travel * S2_h * (0.75 * beta_l * infected_total_l / effective_population_l) +
     travel * S2_l * (0.75 * beta_h * infected_total_h / effective_population_h) +
     native * S2_l * (0.75 * beta_l * infected_total_l / effective_population_l) 
-  secondary <- sum(secondary) * 0.41
+  secondary <- sum(secondary) * 0.1792125
   
   tertiary <-
     native * S3_h * (0.5 * beta_h * infected_total_h / effective_population_h) +
     travel * S3_h * (0.5 * beta_l * infected_total_l / effective_population_l) +
     travel * S3_l * (0.5 * beta_h * infected_total_h / effective_population_h) +
     native * S3_l * (0.5 * beta_l * infected_total_l / effective_population_l)
-  tertiary <- sum(tertiary) * 0.063425
+  tertiary <- sum(tertiary) * 0.1792125
 
   quaternary <-
     native * S4_h * (0.25 * beta_h * infected_total_h / effective_population_h) +
     travel * S4_h * (0.25 * beta_l * infected_total_l / effective_population_l) +
     travel * S4_l * (0.25 * beta_h * infected_total_h / effective_population_h) +
     native * S4_l * (0.25 * beta_l * infected_total_l / effective_population_l)
-  quaternary <- sum(quaternary) * 0.063425
+  quaternary <- sum(quaternary) * 0.1792125
   
   cases <- primary + secondary + tertiary + quaternary 
   
   primary.l <- 
     travel * S1_l * (beta_h * infected_total_h / effective_population_h) +
     native * S1_l * (beta_l * infected_total_l / effective_population_l) 
-  primary.l <- sum(primary.l) * 0.18
+  primary.l <- sum(primary.l) * 0.1792125
   
   secondary.l <- 
     travel * S2_l * (0.75 * beta_h * infected_total_h / effective_population_h) +
     native * S2_l * (0.75 * beta_l * infected_total_l / effective_population_l) 
-  secondary.l <- sum(secondary.l) * 0.41
+  secondary.l <- sum(secondary.l) * 0.1792125
   
   tertiary.l <- 
     travel * S3_l * (0.5 * beta_h * infected_total_h / effective_population_h) +
     native * S3_l * (0.5 * beta_l * infected_total_l / effective_population_l)
-  tertiary.l <- sum(tertiary.l) * 0.063425
+  tertiary.l <- sum(tertiary.l) * 0.1792125
 
   quaternary.l <-
     travel * S4_l * (0.25 * beta_h * infected_total_h / effective_population_h) +
     native * S4_l * (0.25 * beta_l * infected_total_l / effective_population_l)
-  quaternary.l <- sum(quaternary.l) * 0.063425
+  quaternary.l <- sum(quaternary.l) * 0.1792125
   
   cases.l <- primary.l + secondary.l + tertiary.l + quaternary.l 
   
@@ -463,13 +463,13 @@ cases.l <- out[,(ncol(out))]
 cases.h <- cases - cases.l}
 
 #SAVED FILES
-{save(track_infected, file = paste('track.infected.nv_', input, '.RData', sep = ''))
-save(track_l, file = paste('track.l.nv_', input, '.RData', sep = ''))
-save(track_h, file = paste('track.h.nv_', input, '.RData', sep = ''))
-save(cases, file = paste('cases.nv_', input, '.RData', sep = ''))
-save(cases.l, file = paste('cases.l.nv_', input, '.RData', sep = ''))
-save(cases.h, file = paste('cases.h.nv_', input, '.RData', sep = ''))
-save(out_last, file = paste('output.nv_', input, '.RData', sep = ''))}
+{save(track_infected, file = paste('track.infected.tinv_', input, '.RData', sep = ''))
+save(track_l, file = paste('track.l.tinv_', input, '.RData', sep = ''))
+save(track_h, file = paste('track.h.tinv_', input, '.RData', sep = ''))
+save(cases, file = paste('cases.tinv_', input, '.RData', sep = ''))
+save(cases.l, file = paste('cases.l.tinv_', input, '.RData', sep = ''))
+save(cases.h, file = paste('cases.h.tinv_', input, '.RData', sep = ''))
+save(out_last, file = paste('output.tinv_', input, '.RData', sep = ''))}
 
 #SP9 CALCS
 {nines_h <- 11 + c(1, 29, 57,
@@ -484,21 +484,21 @@ for(i in 1:(years * 10 *365)){
   no_exposure <- out[i, nines[1]] + out[i, nines[13]]
   sp9[i] <- 1 - (no_exposure / sum(out[i, nines]))
 }
-save(sp9, file = paste('sp9.nv_', input, '.RData', sep = ''))
+save(sp9, file = paste('sp9.tinv_', input, '.RData', sep = ''))
 
 sp9.l <- rep(NA, years * 10 * 365)
 for(i in 1:(years * 10 *365)){
   no_exposure <- out[i, nines_l[1]]
   sp9.l[i] <- 1 - (no_exposure / sum(out[i, nines_l]))
 }
-save(sp9.l, file = paste('sp9.nv.l_', input, '.RData', sep = ''))
+save(sp9.l, file = paste('sp9.tinv.l_', input, '.RData', sep = ''))
 
 sp9.h <- rep(NA, years * 10 * 365)
 for(i in 1:(years * 10 *365)){
   no_exposure <- out[i, nines_h[1]]
   sp9.h[i] <- 1 - (no_exposure / sum(out[i, nines_h]))
 }
-save(sp9.h, file = paste('sp9.nv.h_', input, '.RData', sep = ''))}
+save(sp9.h, file = paste('sp9.tinv.h_', input, '.RData', sep = ''))}
 
 
 
