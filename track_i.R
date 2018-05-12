@@ -4,10 +4,18 @@
 ############################
 args = commandArgs(TRUE)
 input = as.numeric(args[1])
-beta.h_vec = seq(0.25, 0.95, length.out = 20)
-beta_h = beta.h_vec[input]
-beta.l_vec = seq(0.25, 0.95, length.out = 20)
-beta_l = beta.l_vec[input]
+beta_h <- seq(0.25, 0.95, length.out = 20)
+beta_l <- seq(0.25, 0.95, length.out = 20)
+beta_h.new <- rep(beta_h, 20)
+beta_l.new <- rep(NA, 400)
+for(i in 1:20){
+  j <- 20* (i - 1)
+  beta_l.new[(1:20) + j] <- rep(beta_l[i], 20)
+}
+beta_mat <- cbind(beta_h.new, beta_l.new)
+beta_h <- beta_mat[input,1]
+beta_l <- beta_mat[input,2]
+
 vac <- 0
 
 library(deSolve)
