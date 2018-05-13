@@ -6,10 +6,12 @@ args = commandArgs(TRUE)
 input = as.numeric(args[1])
 beta_h <- 0.3236842
 beta_l <- 0.95
-vac_h.vec <- seq(0.1, 0.9, length.out = 20)
-vac_l.vec <- seq(0.1, 0.9, length.out = 20)
-vac_h <- vac_h.vec[input]
-vac_l <- vac_l.vec[input]
+# vac_h.vec <- seq(0.1, 0.9, length.out = 20)
+# vac_l.vec <- seq(0.1, 0.9, length.out = 20)
+# vac_h <- vac_h.vec[input]
+# vac_l <- vac_l.vec[input]
+vac_h <- 0
+vac_l <- 0
 
 library(deSolve)
 
@@ -694,13 +696,13 @@ cases.h <- cases - cases.l}
 
 #SAVED FILES
 {
-save(out_last, file = paste('output.ti_', input, '.RData', sep = ''))
-save(track_infected, file = paste('track.infected.ti_', input, '.RData', sep = ''))
-save(track_l, file = paste('track.l.ti_', input, '.RData', sep = ''))
-save(track_h, file = paste('track.h.ti_', input, '.RData', sep = ''))
-save(cases, file = paste('cases.ti_', input, '.RData', sep = ''))
-save(cases.l, file = paste('cases.l.ti_', input, '.RData', sep = ''))
-save(cases.h, file = paste('cases.h.ti_', input, '.RData', sep = ''))}
+save(out_last, file = paste('output.nv_', input, '.RData', sep = ''))
+save(track_infected, file = paste('track.infected.nv_', input, '.RData', sep = ''))
+save(track_l, file = paste('track.nv.l_', input, '.RData', sep = ''))
+save(track_h, file = paste('track.nv.h_', input, '.RData', sep = ''))
+save(cases, file = paste('cases.nv_', input, '.RData', sep = ''))
+save(cases.l, file = paste('cases.nv.l_', input, '.RData', sep = ''))
+save(cases.h, file = paste('cases.nv.h_', input, '.RData', sep = ''))}
 
 #SP9
 {nines_h <- 11 + c(1, 29, 57,
@@ -745,4 +747,4 @@ sp9.h <- 1 - (no_exposure / sum(out[i, nines_h]))
 #save(sp9.h, file = paste('sp9.h.ti_', input, '.RData', sep = ''))
 
 sp9 <- c(sp9, sp9.l, sp9.h)
-save(sp9, file = paste('sp9_', input, '.RData', sep = ''))
+save(sp9, file = paste('sp9.nv_', input, '.RData', sep = ''))
