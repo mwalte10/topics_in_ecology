@@ -4,8 +4,8 @@
 ############################
 args = commandArgs(TRUE)
 input = as.numeric(args[1])
-beta_h <- seq(0.25, 1, length.out = 20)
-beta_l <- seq(0.25, 1, length.out = 20)
+beta_h <- seq(0.3, 1.1, length.out = 20)
+beta_l <- seq(0.3, 1.1, length.out = 20)
 beta_h.new <- rep(beta_h, 20)
 beta_l.new <- rep(NA, 400)
 for(i in 1:20){
