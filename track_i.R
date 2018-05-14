@@ -747,7 +747,7 @@ save(cases.h, file = paste('cases.h.ti_', input, '.RData', sep = ''))}
 # #   no_exposure <- out[i, nines_h[1]] + out[i, nines_h[13]] + out[i, nines_h[14]]
 # #   sp9.h[i] <- 1 - (no_exposure / sum(out[i, nines_h]))
 # # }
-# no_exposure <- out[i, nines_h[1]] + out[i, nines_h[13]] + out[i, nines_h[14]] 
+no_exposure <- out[i, nines_h[1]] + out[i, nines_h[13]] + out[i, nines_h[14]]
 # sp9.h <- 1 - (no_exposure / sum(out[i, nines_h]))
 # #save(sp9.h, file = paste('sp9.h.ti_', input, '.RData', sep = ''))
 # 
