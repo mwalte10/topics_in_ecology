@@ -1,6 +1,6 @@
 #!/bin/csh
 
-#$ -N vac_zero_
+#$ -N vac_zilch_
 #$ -t 1
 
 module load bio/R/3.3.1-gcc
