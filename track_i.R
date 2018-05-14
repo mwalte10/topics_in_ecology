@@ -6,8 +6,8 @@ args = commandArgs(TRUE)
 input = as.numeric(args[1])
 beta_h <- 0.3236842
 beta_l <- 0.95
-vac_h.vec <- seq(0.1, 0.9, length.out = 20)
-vac_l.vec <- seq(0.1, 0.9, length.out = 20)
+#vac_h.vec <- seq(0.1, 0.9, length.out = 20)
+#vac_l.vec <- seq(0.1, 0.9, length.out = 20)
 vac_h <- vac_h.vec[input]
 vac_l <- vac_l.vec[input]
 
