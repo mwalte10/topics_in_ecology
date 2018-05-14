@@ -692,7 +692,7 @@ out <- ode(times = times, y = y_init, func = model, parms = parms)
 ############################
 #OUTPUT FILES
 {
-out_last <- out[nrow(out),(2:(ncol(out) - 4))]
+#out_last <- out[nrow(out),(2:(ncol(out) - 4))]
 track_infected <- out[,(ncol(out) - 3)]
 track_infected <- track_infected[length(track_infected)]
 track_l <- out[,(ncol(out) - 2)]
@@ -706,7 +706,7 @@ cases.h <- cases - cases.l}
 
 #SAVED FILES
 {
-save(out_last, file = paste('output.ti_', input, '.RData', sep = ''))
+#save(out_last, file = paste('output.ti_', input, '.RData', sep = ''))
 save(track_infected, file = paste('track.infected.ti_', input, '.RData', sep = ''))
 save(track_l, file = paste('track.l.ti_', input, '.RData', sep = ''))
 save(track_h, file = paste('track.h.ti_', input, '.RData', sep = ''))
