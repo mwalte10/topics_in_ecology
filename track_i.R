@@ -6,12 +6,17 @@ args = commandArgs(TRUE)
 input = as.numeric(args[1])
 beta_h <- 0.3236842
 beta_l <- 0.95
-#vac_h.vec <- seq(0.1, 0.9, length.out = 20)
-#vac_l.vec <- seq(0.1, 0.9, length.out = 20)
-vac_h.vec <- c(0.8)
-vac_l.vec <- c(0.8)
-vac_h <- vac_h.vec[input]
-vac_l <- vac_l.vec[input]
+vac_h <- seq(0.1, 0.9, length.out = 20)
+vac_l <- seq(0.1, 0.9, length.out = 20)
+vac_h.new <- rep(vac_h, 20)
+vac_l.new <- rep(NA, 400)
+for(i in 1:20){
+  j <- 20 * (i - 1)
+  vac_l.new[(1:20) + j] <- rep(vac_l[i], 20)
+}
+vac_mat <- cbind(vac_h.new, vac_l.new)
+vac_h <- vac_mat[input,1]
+vac_l <- vac_mat[input,2]
 
 library(deSolve)
 
@@ -747,7 +752,7 @@ save(cases.h, file = paste('cases.h.ti_', input, '.RData', sep = ''))}
 # #   no_exposure <- out[i, nines_h[1]] + out[i, nines_h[13]] + out[i, nines_h[14]]
 # #   sp9.h[i] <- 1 - (no_exposure / sum(out[i, nines_h]))
 # # }
-no_exposure <- out[i, nines_h[1]] + out[i, nines_h[13]] + out[i, nines_h[14]]
+# no_exposure <- out[i, nines_h[1]] + out[i, nines_h[13]] + out[i, nines_h[14]]
 # sp9.h <- 1 - (no_exposure / sum(out[i, nines_h]))
 # #save(sp9.h, file = paste('sp9.h.ti_', input, '.RData', sep = ''))
 # 
