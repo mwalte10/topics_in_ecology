@@ -707,12 +707,12 @@ cases.h <- cases - cases.l}
 #SAVED FILES
 {
 #save(out_last, file = paste('output.ti_', input, '.RData', sep = ''))
-save(track_infected, file = paste('track.infected.ti_', input, '.RData', sep = ''))
-save(track_l, file = paste('track.l.ti_', input, '.RData', sep = ''))
-save(track_h, file = paste('track.h.ti_', input, '.RData', sep = ''))
-save(cases, file = paste('cases.ti_', input, '.RData', sep = ''))
-save(cases.l, file = paste('cases.l.ti_', input, '.RData', sep = ''))
-save(cases.h, file = paste('cases.h.ti_', input, '.RData', sep = ''))}
+save(track_infected, file = paste('track.infected_', input, '.RData', sep = ''))
+save(track_l, file = paste('track.l_', input, '.RData', sep = ''))
+save(track_h, file = paste('track.h_', input, '.RData', sep = ''))
+save(cases, file = paste('cases_', input, '.RData', sep = ''))
+save(cases.l, file = paste('cases.l_', input, '.RData', sep = ''))
+save(cases.h, file = paste('cases.h_', input, '.RData', sep = ''))}
 
 # #SP9
 # {nines_h <- 11 + c(1, 29, 57,
