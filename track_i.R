@@ -24,7 +24,7 @@ library(deSolve)
 #Initial conidtions and parameters
 ############################
 percentage_vec <- c(rep(1.8,5), rep(1.8,5), rep(1.84,5), rep(1.86,5),
-                    17.2, 15, 12.7, 8.8, 5.5, 2.8, 1.3, 0.2)
+                    17.2, 15, 12.7, 8.8, 5.5, 2.8, 1.3, 0.20)
 percentage_vec <- percentage_vec / 100
 initial_conditions <- as.data.frame(matrix(NA, nrow = 28*4, ncol = 3))
 initial_conditions[,2] <- rep(1:28,4)
