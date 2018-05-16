@@ -6,19 +6,13 @@ args = commandArgs(TRUE)
 input = as.numeric(args[1])
 beta_h <- 0.3236842
 beta_l <- 0.95
-# vac_h <- seq(0.1, 0.9, length.out = 20)
-# vac_l <- seq(0.1, 0.9, length.out = 20)
-# vac_h.new <- rep(vac_h, 20)
-# vac_l.new <- rep(NA, 400)
-# for(i in 1:20){
-#   j <- 20 * (i - 1)
-#   vac_l.new[(1:20) + j] <- rep(vac_l[i], 20)
-# }
-# vac_mat <- cbind(vac_h.new, vac_l.new)
-# vac_h <- vac_mat[input,1]
-# vac_l <- vac_mat[input,2]
-vac_h <- 0
-vac_l <- 0
+vac_h <- 0.8
+vac_l <- 0.8
+scale_h.vec <- seq(0.1, 0.9, length.out = 20)
+scale_l.vec <- 1 - scale_h.vec
+population_total <- 12 * 10^6
+pop_scale_h <- scale_h.vec[input] * population_total
+pop_scale_l <- scale_l.vec[input] * population_total
 
 library(deSolve)
 
@@ -37,10 +31,10 @@ for(i in 1:4){
 initial_conditions[,3] <- rep(percentage_vec,4)
 
 susceptible_init_h <- cbind(initial_conditions[,1], initial_conditions[,2], rep(NA, 112))
-susceptible_init_h[,3] <- c(initial_conditions[1:28,3] * 6 *10^6, initial_conditions[29:56,3] * 0, 
+susceptible_init_h[,3] <- c(initial_conditions[1:28,3] * pop_scale_h, initial_conditions[29:56,3] * 0, 
                             initial_conditions[57:84,3] * 0, initial_conditions[85:112,3] * 0)
 susceptible_init_l <- cbind(initial_conditions[,1], initial_conditions[,2], rep(NA, 112))
-susceptible_init_l[,3] <- c(initial_conditions[1:28,3] * 6 *10^6, initial_conditions[29:56,3] * 0, 
+susceptible_init_l[,3] <- c(initial_conditions[1:28,3] * pop_scale_l, initial_conditions[29:56,3] * 0, 
                             initial_conditions[57:84,3] * 0, initial_conditions[85:112,3] * 0)
 
 infected_init_h <- cbind(initial_conditions[,1], initial_conditions[,2], rep(NA, 112))
