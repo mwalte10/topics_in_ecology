@@ -6,12 +6,17 @@ args = commandArgs(TRUE)
 input = as.numeric(args[1])
 beta_h <- 0.3236842
 beta_l <- 0.95
-#vac_h.vec <- seq(0.1, 0.9, length.out = 20)
-#vac_l.vec <- seq(0.1, 0.9, length.out = 20)
-vac_h.vec <- c(0.8)
-vac_l.vec <- c(0.8)
-vac_h <- vac_h.vec[input]
-vac_l <- vac_l.vec[input]
+vac_h <- seq(0.1, 0.9, length.out = 20)
+vac_l <- seq(0.1, 0.9, length.out = 20)
+vac_h.new <- rep(vac_h, 20)
+vac_l.new <- rep(NA, 400)
+for(i in 1:20){
+  j <- 20 * (i - 1)
+  vac_l.new[(1:20) + j] <- rep(vac_l[i], 20)
+}
+vac_mat <- cbind(vac_h.new, vac_l.new)
+vac_h <- vac_mat[input,1]
+vac_l <- vac_mat[input,2]
 
 library(deSolve)
 
@@ -19,7 +24,7 @@ library(deSolve)
 #Initial conidtions and parameters
 ############################
 percentage_vec <- c(rep(1.8,5), rep(1.8,5), rep(1.84,5), rep(1.86,5),
-                    17.2, 15, 12.7, 8.8, 5.5, 2.8, 1.3, 0.2)
+                    17.2, 15, 12.7, 8.8, 5.5, 2.8, 1.3, 0.20)
 percentage_vec <- percentage_vec / 100
 initial_conditions <- as.data.frame(matrix(NA, nrow = 28*4, ncol = 3))
 initial_conditions[,2] <- rep(1:28,4)
@@ -687,7 +692,7 @@ out <- ode(times = times, y = y_init, func = model, parms = parms)
 ############################
 #OUTPUT FILES
 {
-out_last <- out[nrow(out),(2:(ncol(out) - 4))]
+#out_last <- out[nrow(out),(2:(ncol(out) - 4))]
 track_infected <- out[,(ncol(out) - 3)]
 track_infected <- track_infected[length(track_infected)]
 track_l <- out[,(ncol(out) - 2)]
@@ -701,13 +706,13 @@ cases.h <- cases - cases.l}
 
 #SAVED FILES
 {
-save(out_last, file = paste('output.ti_', input, '.RData', sep = ''))
-save(track_infected, file = paste('track.infected.ti_', input, '.RData', sep = ''))
-save(track_l, file = paste('track.l.ti_', input, '.RData', sep = ''))
-save(track_h, file = paste('track.h.ti_', input, '.RData', sep = ''))
-save(cases, file = paste('cases.ti_', input, '.RData', sep = ''))
-save(cases.l, file = paste('cases.l.ti_', input, '.RData', sep = ''))
-save(cases.h, file = paste('cases.h.ti_', input, '.RData', sep = ''))}
+#save(out_last, file = paste('output.ti_', input, '.RData', sep = ''))
+save(track_infected, file = paste('track.infected_', input, '.RData', sep = ''))
+save(track_l, file = paste('track.l_', input, '.RData', sep = ''))
+save(track_h, file = paste('track.h_', input, '.RData', sep = ''))
+save(cases, file = paste('cases_', input, '.RData', sep = ''))
+save(cases.l, file = paste('cases.l_', input, '.RData', sep = ''))
+save(cases.h, file = paste('cases.h_', input, '.RData', sep = ''))}
 
 # #SP9
 # {nines_h <- 11 + c(1, 29, 57,
@@ -747,7 +752,7 @@ save(cases.h, file = paste('cases.h.ti_', input, '.RData', sep = ''))}
 # #   no_exposure <- out[i, nines_h[1]] + out[i, nines_h[13]] + out[i, nines_h[14]]
 # #   sp9.h[i] <- 1 - (no_exposure / sum(out[i, nines_h]))
 # # }
-no_exposure <- out[i, nines_h[1]] + out[i, nines_h[13]] + out[i, nines_h[14]]
+# no_exposure <- out[i, nines_h[1]] + out[i, nines_h[13]] + out[i, nines_h[14]]
 # sp9.h <- 1 - (no_exposure / sum(out[i, nines_h]))
 # #save(sp9.h, file = paste('sp9.h.ti_', input, '.RData', sep = ''))
 # 
