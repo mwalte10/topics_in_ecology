@@ -6,17 +6,19 @@ args = commandArgs(TRUE)
 input = as.numeric(args[1])
 beta_h <- 0.3236842
 beta_l <- 0.95
-vac_h <- seq(0.1, 0.9, length.out = 20)
-vac_l <- seq(0.1, 0.9, length.out = 20)
-vac_h.new <- rep(vac_h, 20)
-vac_l.new <- rep(NA, 400)
-for(i in 1:20){
-  j <- 20 * (i - 1)
-  vac_l.new[(1:20) + j] <- rep(vac_l[i], 20)
-}
-vac_mat <- cbind(vac_h.new, vac_l.new)
-vac_h <- vac_mat[input,1]
-vac_l <- vac_mat[input,2]
+# vac_h <- seq(0.1, 0.9, length.out = 20)
+# vac_l <- seq(0.1, 0.9, length.out = 20)
+# vac_h.new <- rep(vac_h, 20)
+# vac_l.new <- rep(NA, 400)
+# for(i in 1:20){
+#   j <- 20 * (i - 1)
+#   vac_l.new[(1:20) + j] <- rep(vac_l[i], 20)
+# }
+# vac_mat <- cbind(vac_h.new, vac_l.new)
+# vac_h <- vac_mat[input,1]
+# vac_l <- vac_mat[input,2]
+vac_h <- 0
+vac_l <- 0
 
 library(deSolve)
 
@@ -707,12 +709,12 @@ cases.h <- cases - cases.l}
 #SAVED FILES
 {
 #save(out_last, file = paste('output.ti_', input, '.RData', sep = ''))
-save(track_infected, file = paste('track.infected_', input, '.RData', sep = ''))
-save(track_l, file = paste('track.l_', input, '.RData', sep = ''))
-save(track_h, file = paste('track.h_', input, '.RData', sep = ''))
-save(cases, file = paste('cases_', input, '.RData', sep = ''))
-save(cases.l, file = paste('cases.l_', input, '.RData', sep = ''))
-save(cases.h, file = paste('cases.h_', input, '.RData', sep = ''))}
+save(track_infected, file = paste('track.infected.nv_', input, '.RData', sep = ''))
+save(track_l, file = paste('track.l.nv_', input, '.RData', sep = ''))
+save(track_h, file = paste('track.h.nv_', input, '.RData', sep = ''))
+save(cases, file = paste('cases.nv_', input, '.RData', sep = ''))
+save(cases.l, file = paste('cases.l.nv_', input, '.RData', sep = ''))
+save(cases.h, file = paste('cases.h.nv_', input, '.RData', sep = ''))}
 
 # #SP9
 # {nines_h <- 11 + c(1, 29, 57,
