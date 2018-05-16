@@ -14,6 +14,8 @@ population_total <- 12 * 10^6
 pop_scale_h <- scale_h.vec[input] * population_total
 pop_scale_l <- scale_l.vec[input] * population_total
 
+vac_null <- 0
+
 library(deSolve)
 
 ############################
@@ -106,6 +108,21 @@ parms <- c(beta_h = beta_h,
            travel <- 1 - native,
            vac_h = vac_h,
            vac_l = vac_l)
+parms_null <- c(beta_h = beta_h,
+           beta_l = beta_l,
+           gamma = 1/4,
+           sigma = 1/(365 * 1.2),
+           mu = 19 / (1000 * 365),
+           delta = c((0.013 / 365), rep(0.001 / 365, 4), rep(0, 10), rep(0.001, 5), 
+                     0.002 / 365, 0.0025 / 365, 
+                     0.004 / 365, 0.0085 / 365,
+                     0.0175 / 365, 0.0425 / 365,
+                     0.114 / 365, 0.151 / 365),
+           age_window = c(rep(1, 21), rep(10, 7)),
+           native = c(rep(1, 7), rep(0.86, 9), rep(0.842, 4), 0.814, 0.7676, 0.7784, rep(0.809, 5)),
+           travel <- 1 - native,
+           vac_h = vac_null,
+           vac_l = vac_null)
 
 ############################
 #MODEL
@@ -682,6 +699,7 @@ years = 80
 years_vac = 30
 times <- seq(from = 0, to = 365 * years, by = .1)
 out <- ode(times = times, y = y_init, func = model, parms = parms)
+out_null <- ode(times = times, y = y_init, func = model, parms = parms_null)
 
 ############################
 #OUTPUT
@@ -700,57 +718,83 @@ cases.l <- out[,(ncol(out))]
 cases.l <- cases.l[length(cases.l)]
 cases.h <- cases - cases.l}
 
-#SAVED FILES
+##Null outputs
+{track_infected.null <- out_null[,(ncol(out_null) - 3)]
+  track_infected.null <- track_infected.null[length(track_infected.null)]
+  track_l.null <- out_null[,(ncol(out_null) - 2)]
+  track_l.null <- track_l.null[length(track_l.null)]
+  track_h.null <- track_infected.null - track_l.null
+  cases.null <- out_null[,(ncol(out_null) - 1)]
+  cases.null <- cases[length(cases.null)]
+  cases.l.null <- out_null[,(ncol(out_null))]
+  cases.l.null <- cases.l.null[length(cases.l.null)]
+  cases.h.null <- cases.null - cases.l.null}
+
+#Averted calculations
 {
-#save(out_last, file = paste('output.ti_', input, '.RData', sep = ''))
-save(track_infected, file = paste('track.infected.nv_', input, '.RData', sep = ''))
-save(track_l, file = paste('track.l.nv_', input, '.RData', sep = ''))
-save(track_h, file = paste('track.h.nv_', input, '.RData', sep = ''))
-save(cases, file = paste('cases.nv_', input, '.RData', sep = ''))
-save(cases.l, file = paste('cases.l.nv_', input, '.RData', sep = ''))
-save(cases.h, file = paste('cases.h.nv_', input, '.RData', sep = ''))}
+  infections_averted <- (((track_infected.null - track_infected) / track_infected.null) * 100)
+  infections_averted.h <- (((track_h.null - track_h) / track_h.null) * 100)
+  infections_averted.l <- (((track_l.null - track_l) / track_l.null) * 100)
+  cases_averted <- (((cases.null - cases) / cases.null) * 100)
+  cases_averted.h <- (((cases.h.null - cases.h) / cases.h.null) * 100)
+  cases_averted.l <- (((cases.l.null - cases.l) / cases.l.null) * 100)
+  ouput <- cbind(infections_averted.h, infections_averted, infections_averted.l,
+                 cases_averted.h, cases_averted, cases_averted.l)
+}
+
+save(output, file = paste('output_', input, '.RData', sep = ''))
+
+#SAVED FILES
+# {
+# save(out_last, file = paste('output.ti_', input, '.RData', sep = ''))
+# save(track_infected, file = paste('track.infected.nv_', input, '.RData', sep = ''))
+# save(track_l, file = paste('track.l.nv_', input, '.RData', sep = ''))
+# save(track_h, file = paste('track.h.nv_', input, '.RData', sep = ''))
+# save(cases, file = paste('cases.nv_', input, '.RData', sep = ''))
+# save(cases.l, file = paste('cases.l.nv_', input, '.RData', sep = ''))
+# save(cases.h, file = paste('cases.h.nv_', input, '.RData', sep = ''))}
 
 # #SP9
-# {nines_h <- 11 + c(1, 29, 57,
-#                   85, 113, 141,
-#                   169, 197, 225, 
-#                   253, 281, 309, 
-#                   337, 
-#                   365, 393, 421, 
-#                   449, 477, 505, 
-#                   533, 561, 589)
-# nines_l <- nines_h + 616
-# nines <- c(nines_h, nines_l)}
-# 
-# #sp9 <- rep(NA, years * 10 * 365)
-# #for(i in 1:(years * 10 *365)){
-# #  no_exposure <- out[i, nines[1]] + out[i, nines[13]] + out[i, nines[14]] + 
-# #                 out[i, nines[23]] + out[i, nines[35]] + out[i, nines[36]]
-# #  sp9[i] <- 1 - (no_exposure / sum(out[i, nines]))
-# #}
-# i <- nrow(out)
-# no_exposure <- out[i, nines[1]] + out[i, nines[13]] + out[i, nines[14]] + 
-#                    out[i, nines[23]] + out[i, nines[35]] + out[i, nines[36]]
-# sp9 <- 1 - (no_exposure / sum(out[i, nines]))
-# #save(sp9, file = paste('sp9_', input, '.RData', sep = ''))
-# 
-# #sp9.l <- rep(NA, years * 10 * 365)
-# #for(i in 1:(years * 10 *365)){
-# #  no_exposure <- out[i, nines_l[1]] + out[i, nines_l[13]] + out[i, nines_l[14]]
-# #  sp9.l[i] <- 1 - (no_exposure / sum(out[i, nines_l]))
-# #}
-# no_exposure <- out[i, nines_l[1]] + out[i, nines_l[13]] + out[i, nines_l[14]] 
-# sp9.l <- 1 - (no_exposure / sum(out[i, nines_l]))
-# #save(sp9.l, file = paste('sp9.l.ti_', input, '.RData', sep = ''))
-# 
-# # sp9.h <- rep(NA, years * 10 * 365)
-# # for(i in 1:(years * 10 *365)){
-# #   no_exposure <- out[i, nines_h[1]] + out[i, nines_h[13]] + out[i, nines_h[14]]
-# #   sp9.h[i] <- 1 - (no_exposure / sum(out[i, nines_h]))
-# # }
-# no_exposure <- out[i, nines_h[1]] + out[i, nines_h[13]] + out[i, nines_h[14]]
-# sp9.h <- 1 - (no_exposure / sum(out[i, nines_h]))
-# #save(sp9.h, file = paste('sp9.h.ti_', input, '.RData', sep = ''))
-# 
-# sp9 <- c(sp9, sp9.l, sp9.h)
-# save(sp9, file = paste('sp9_', input, '.RData', sep = ''))
+{nines_h <- 11 + c(1, 29, 57,
+                  85, 113, 141,
+                  169, 197, 225,
+                  253, 281, 309,
+                  337,
+                  365, 393, 421,
+                  449, 477, 505,
+                  533, 561, 589)
+nines_l <- nines_h + 616
+nines <- c(nines_h, nines_l)}
+
+#sp9 <- rep(NA, years * 10 * 365)
+#for(i in 1:(years * 10 *365)){
+#  no_exposure <- out[i, nines[1]] + out[i, nines[13]] + out[i, nines[14]] +
+#                 out[i, nines[23]] + out[i, nines[35]] + out[i, nines[36]]
+#  sp9[i] <- 1 - (no_exposure / sum(out[i, nines]))
+#}
+i <- nrow(out)
+no_exposure <- out[i, nines[1]] + out[i, nines[13]] + out[i, nines[14]] +
+                   out[i, nines[23]] + out[i, nines[35]] + out[i, nines[36]]
+sp9 <- 1 - (no_exposure / sum(out[i, nines]))
+#save(sp9, file = paste('sp9_', input, '.RData', sep = ''))
+
+#sp9.l <- rep(NA, years * 10 * 365)
+#for(i in 1:(years * 10 *365)){
+#  no_exposure <- out[i, nines_l[1]] + out[i, nines_l[13]] + out[i, nines_l[14]]
+#  sp9.l[i] <- 1 - (no_exposure / sum(out[i, nines_l]))
+#}
+no_exposure <- out[i, nines_l[1]] + out[i, nines_l[13]] + out[i, nines_l[14]]
+sp9.l <- 1 - (no_exposure / sum(out[i, nines_l]))
+#save(sp9.l, file = paste('sp9.l.ti_', input, '.RData', sep = ''))
+
+# sp9.h <- rep(NA, years * 10 * 365)
+# for(i in 1:(years * 10 *365)){
+#   no_exposure <- out[i, nines_h[1]] + out[i, nines_h[13]] + out[i, nines_h[14]]
+#   sp9.h[i] <- 1 - (no_exposure / sum(out[i, nines_h]))
+# }
+no_exposure <- out[i, nines_h[1]] + out[i, nines_h[13]] + out[i, nines_h[14]]
+sp9.h <- 1 - (no_exposure / sum(out[i, nines_h]))
+#save(sp9.h, file = paste('sp9.h.ti_', input, '.RData', sep = ''))
+
+sp9 <- c(sp9, sp9.l, sp9.h)
+save(sp9, file = paste('sp9_', input, '.RData', sep = ''))
