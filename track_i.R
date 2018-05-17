@@ -738,7 +738,7 @@ cases.h <- cases - cases.l}
   cases_averted <- (((cases.null - cases) / cases.null) * 100)
   cases_averted.h <- (((cases.h.null - cases.h) / cases.h.null) * 100)
   cases_averted.l <- (((cases.l.null - cases.l) / cases.l.null) * 100)
-  ouput <- cbind(infections_averted.h, infections_averted, infections_averted.l,
+  output <- cbind(infections_averted.h, infections_averted, infections_averted.l,
                  cases_averted.h, cases_averted, cases_averted.l)
 }
 
