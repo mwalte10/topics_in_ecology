@@ -747,7 +747,7 @@ cases.h <- cases - cases.l
                  cases_averted.h, cases_averted, cases_averted.l)
 }
 
-save(output, file = paste('output_', input, '.RData', sep = ''))
+save(output, file = paste('output.high_', input, '.RData', sep = ''))
 
 #SAVED FILES
 # {
@@ -802,4 +802,4 @@ sp9.h <- 1 - (no_exposure / sum(out[i, nines_h]))
 # #save(sp9.h, file = paste('sp9.h.ti_', input, '.RData', sep = ''))
 # 
 sp9 <- c(sp9, sp9.l, sp9.h)
-save(sp9, file = paste('sp9_', input, '.RData', sep = ''))
+save(sp9, file = paste('sp9.high_', input, '.RData', sep = ''))
