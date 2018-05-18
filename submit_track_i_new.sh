@@ -1,6 +1,6 @@
 #!/bin/csh
 
-#$ -N beta.inf_
+#$ -N inf_
 #$ -t 1-400
 
 module load bio/R/3.3.1-gcc
