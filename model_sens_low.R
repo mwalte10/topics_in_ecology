@@ -726,22 +726,43 @@ y_init <- c(susceptible_h(1), infected_h(1), recovered_h(1),
 years = 80
 years_vac = 30
 times <- seq(from = 0, to = 365 * years, by = .1)
-# out <- ode(times = times, y = y_init, func = model, parms = parms)
-out_null <- ode(times = times, y = y_init, func = model, parms = parms_null)
+out <- ode(times = times, y = y_init, func = model, parms = parms)
 
 
-##Null outputs
-{track_infected.null <- out_null[,(ncol(out_null) - 3)]
-  track_infected.null <- track_infected.null[length(track_infected.null)]
-  track_l.null <- out_null[,(ncol(out_null) - 2)]
-  track_l.null <- track_l.null[length(track_l.null)]
-  track_h.null <- track_infected.null - track_l.null
-  cases.null <- out_null[,(ncol(out_null) - 1)]
-  cases.null <- cases.null[length(cases.null)]
-  cases.l.null <- out_null[,(ncol(out_null))]
-  cases.l.null <- cases.l.null[length(cases.l.null)]
-  cases.h.null <- cases.null - cases.l.null
-  output_null <- c(track_h.null, track_infected.null, track_l.null,
-                   cases.h.null, cases.null, cases.l.null)
-  save(output_null, file = paste('output_null', input, '.RData', sep = ''))}
+###############
+#OUTPUT
+###############
+
+{ track_infected <- out[,(ncol(out) - 3)]
+  track_infected <- track_infected[length(track_infected)]
+  track_l <- out[,(ncol(out) - 2)]
+  track_l <- track_l[length(track_l)]
+  track_h <- track_infected - track_l
+  cases <- out[,(ncol(out) - 1)]
+  cases <- cases[length(cases)]
+  cases.l <- out[,(ncol(out))]
+  cases.l <- cases.l[length(cases.l)]
+  cases.h <- cases - cases.l
+}
+
+track_infected.null <- 60851701.8
+  track_h.null <- 3175410.3
+  track_l.null <- 57676291.5
+  cases.null <-  12795834.7
+  cases.h.null <- 724445.7
+  cases.l.null <- 12071389.0
+  
+  #Averted calculations
+  {
+    infections_averted <- (((track_infected.null - track_infected) / track_infected.null) * 100)
+    infections_averted.h <- (((track_h.null - track_h) / track_h.null) * 100)
+    infections_averted.l <- (((track_l.null - track_l) / track_l.null) * 100)
+    cases_averted <- (((cases.null - cases) / cases.null) * 100)
+    cases_averted.h <- (((cases.h.null - cases.h) / cases.h.null) * 100)
+    cases_averted.l <- (((cases.l.null - cases.l) / cases.l.null) * 100)
+    output <- cbind(infections_averted.h, infections_averted, infections_averted.l,
+                    cases_averted.h, cases_averted, cases_averted.l)
+  }
+
+save(output, file = paste('output.low_', input, '.RData', sep = ''))
 
