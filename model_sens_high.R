@@ -132,23 +132,7 @@ parms <- c(beta_h = beta_h,
            vac_l = vac_l,
            sens = 0.85,
            spec = 0.95)
-parms_null <- c(beta_h = beta_h,
-                beta_l = beta_l,
-                gamma = 1/4,
-                sigma = 1/(365 * 1.2),
-                mu = 19 / (1000 * 365),
-                delta = c((0.013 / 365), rep(0.001 / 365, 4), rep(0, 10), rep(0.001, 5), 
-                          0.002 / 365, 0.0025 / 365, 
-                          0.004 / 365, 0.0085 / 365,
-                          0.0175 / 365, 0.0425 / 365,
-                          0.114 / 365, 0.151 / 365),
-                age_window = c(rep(1, 21), rep(10, 7)),
-                native = c(rep(1, 7), rep(0.86, 9), rep(0.842, 4), 0.814, 0.7676, 0.7784, rep(0.809, 5)),
-                travel <- 1 - native,
-                vac_h = vac_null,
-                vac_l = vac_null,
-                sens = 0.85,
-                spec = 0.95)
+
 # parms_null.more <- c(beta_h = beta_h,
 #            beta_l = beta_l,
 #            gamma = 1/4,
@@ -794,8 +778,8 @@ y_init <- c(susceptible_h(1), infected_h(1), recovered_h(1),
 years = 80
 years_vac = 30
 times <- seq(from = 0, to = 365 * years, by = .1)
-# out <- ode(times = times, y = y_init, func = model, parms = parms)
-out_null <- ode(times = times, y = y_init, func = model, parms = parms_null)
+out <- ode(times = times, y = y_init, func = model, parms = parms)
+# out_null <- ode(times = times, y = y_init, func = model, parms = parms_null)
 
 # out_null.more <- ode(times = times, y = y_init, func = model, parms = parms_null.more)
 # out_null.less <- ode(times = times, y = y_init, func = model, parms = parms_null.less)
@@ -803,48 +787,40 @@ out_null <- ode(times = times, y = y_init, func = model, parms = parms_null)
 # out.less <- ode(times = times, y = y_init, func = model, parms = parms_less)
 
 
-# {
+{
 #   #out_last <- out[nrow(out),(2:(ncol(out) - 4))]
-#   track_infected <- out[,(ncol(out) - 3)]
-#   track_infected <- track_infected[length(track_infected)]
-#   track_l <- out[,(ncol(out) - 2)]
-#   track_l <- track_l[length(track_l)]
-#   track_h <- track_infected - track_l
-#   cases <- out[,(ncol(out) - 1)]
-#   cases <- cases[length(cases)]
-#   cases.l <- out[,(ncol(out))]
-#   cases.l <- cases.l[length(cases.l)]
-#   cases.h <- cases - cases.l
-# }
+  track_infected <- out[,(ncol(out) - 3)]
+  track_infected <- track_infected[length(track_infected)]
+  track_l <- out[,(ncol(out) - 2)]
+  track_l <- track_l[length(track_l)]
+  track_h <- track_infected - track_l
+  cases <- out[,(ncol(out) - 1)]
+  cases <- cases[length(cases)]
+  cases.l <- out[,(ncol(out))]
+  cases.l <- cases.l[length(cases.l)]
+  cases.h <- cases - cases.l
+}
 
-##Null outputs
-{track_infected.null <- out_null[,(ncol(out_null) - 3)]
-  track_infected.null <- track_infected.null[length(track_infected.null)]
-  track_l.null <- out_null[,(ncol(out_null) - 2)]
-  track_l.null <- track_l.null[length(track_l.null)]
-  track_h.null <- track_infected.null - track_l.null
-  cases.null <- out_null[,(ncol(out_null) - 1)]
-  cases.null <- cases.null[length(cases.null)]
-  cases.l.null <- out_null[,(ncol(out_null))]
-  cases.l.null <- cases.l.null[length(cases.l.null)]
-  cases.h.null <- cases.null - cases.l.null
-  output_null <- c(track_h.null, track_infected.null, track_l.null,
-                   cases.h.null, cases.null, cases.l.null)
-  save(output_null, file = paste('output_null', input, '.RData', sep = ''))}
+track_infected.null <- 24149364.3
+track_h.null <- 21301953.7
+track_l.null <- 2847410.6 
+cases.null <- 5626481.0 
+cases.h.null <- 4961321.0
+cases.l.null <- 665160.1
 
 #Averted calculations
-# {
-#   infections_averted <- (((track_infected.null - track_infected) / track_infected.null) * 100)
-#   infections_averted.h <- (((track_h.null - track_h) / track_h.null) * 100)
-#   infections_averted.l <- (((track_l.null - track_l) / track_l.null) * 100)
-#   cases_averted <- (((cases.null - cases) / cases.null) * 100)
-#   cases_averted.h <- (((cases.h.null - cases.h) / cases.h.null) * 100)
-#   cases_averted.l <- (((cases.l.null - cases.l) / cases.l.null) * 100)
-#   output <- cbind(infections_averted.h, infections_averted, infections_averted.l,
-#                   cases_averted.h, cases_averted, cases_averted.l)
-# }
-# 
-# save(output, file = paste('output.high_', input, '.RData', sep = ''))
+{
+  infections_averted <- (((track_infected.null - track_infected) / track_infected.null) * 100)
+  infections_averted.h <- (((track_h.null - track_h) / track_h.null) * 100)
+  infections_averted.l <- (((track_l.null - track_l) / track_l.null) * 100)
+  cases_averted <- (((cases.null - cases) / cases.null) * 100)
+  cases_averted.h <- (((cases.h.null - cases.h) / cases.h.null) * 100)
+  cases_averted.l <- (((cases.l.null - cases.l) / cases.l.null) * 100)
+  output <- cbind(infections_averted.h, infections_averted, infections_averted.l,
+                  cases_averted.h, cases_averted, cases_averted.l)
+}
+
+save(output, file = paste('output.high_', input, '.RData', sep = ''))
 
 # #SP9
 # {nines_h <- 11 + c(1, 29, 57,
