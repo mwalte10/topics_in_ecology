@@ -3,17 +3,15 @@
 ############################
 args = commandArgs(TRUE)
 input = as.numeric(args[1])
-beta_h <- seq(0.25, 0.95, length.out = 20)
-beta_l <- seq(0.25, 0.95, length.out = 20)
-beta_h.new <- rep(beta_h, 20)
-beta_l.new <- rep(NA, 400)
-for(i in 1:20){
-    j <- 20* (i - 1)
-    beta_l.new[(1:20) + j] <- rep(beta_l[i], 20)
-  }
-beta_mat <- cbind(beta_h.new, beta_l.new)
-beta_h <- beta_mat[input,1]
-beta_l <- beta_mat[input,2]
+beta_h_more <- 0.3684211 
+beta_l_more <- 0.95
+beta_h.more <- beta_h_more[input]
+beta_l.more <- beta_l_more[input]
+
+beta_h_less <- 0.4710526 
+beta_l_less <- 0.8815789
+beta_h.less <- beta_h_less[input]
+beta_l.less <- beta_l_less[input]
 
 
 library(deSolve)
@@ -96,8 +94,8 @@ travel = 1 - native
 travel_more <- 2 * travel
 travel_less <- 0.5 * travel
 
-parms_more <- c(beta_h = beta_h,
-                beta_l = beta_l,
+parms_more <- c(beta_h = beta_h.more,
+                beta_l = beta_l.more,
                 gamma = 1/4,
                 sigma = 1/(365 * 1.2),
                 mu = 19 / (1000 * 365),
@@ -113,8 +111,8 @@ parms_more <- c(beta_h = beta_h,
                 vac_l = 0,
                 sens = 0.8,
                 spec = 0.95)
-parms_less <- c(beta_h = beta_h,
-                beta_l = beta_l,
+parms_less <- c(beta_h = beta_h.less,
+                beta_l = beta_l.less,
                 gamma = 1/4,
                 sigma = 1/(365 * 1.2),
                 mu = 19 / (1000 * 365),
@@ -708,51 +706,42 @@ years = 80
 years_vac = 30
 times <- seq(from = 0, to = 365 * years, by = .1)
 
-out.more <- ode(times = times, y = y_init, func = model, parms = parms_more)
-out.less <- ode(times = times, y = y_init, func = model, parms = parms_less)
+
+###############
+#RECORD NULL RESPONSES
+###############
+
+out.more.null <- ode(times = times, y = y_init, func = model, parms = parms_more)
+out.less.null <- ode(times = times, y = y_init, func = model, parms = parms_less)
+
+{track_infected.more <- out.more.null[,(ncol(out.more.null) - 3)]
+  track_infected.more <- track_infected.more[length(track_infected.more)]
+  track_l.more <- out.more.null[,(ncol(out.more.null) - 2)]
+  track_l.more <- track_l.more[length(track_l.more)]
+  track_h.more <- track_infected.more - track_l.more
+  cases.more <- out.more.null[,(ncol(out.more.null) - 1)]
+  cases.more <- cases.more[length(cases.more)]
+  cases.l.more <- out.more.null[,(ncol(out.more.null))]
+  cases.l.more <- cases.l.more[length(cases.l.more)]
+  cases.h.more <- cases.more - cases.l.more}
+
+output_more <- c(track_h.more, track_infected.more, track_l.more, cases.h.more, cases.more, cases.l.more)
+save(output_more, file = "output_more.RData")
+
+{track_infected.less <- out.less.null[,(ncol(out.less.null) - 3)]
+  track_infected.less <- track_infected.less[length(track_infected.less)]
+  track_l.less <- out.less.null[,(ncol(out.less.null) - 2)]
+  track_l.less <- track_l.less[length(track_l.less)]
+  track_h.less <- track_infected.less - track_l.less
+  cases.less <- out.less.null[,(ncol(out.less.null) - 1)]
+  cases.less <- cases.less[length(cases.less)]
+  cases.l.less <- out.less.null[,(ncol(out.less.null))]
+  cases.l.less <- cases.l.less[length(cases.l.less)]
+  cases.h.less <- cases.less - cases.l.less}
+
+output_less <- c(track_h.less, track_infected.less, track_l.less, cases.h.less, cases.less, cases.l.less)
+save(output_less, file = "output_less.RData")
 
 
-{nines_h <- 11 + c(1, 29, 57,
-                   85, 113, 141,
-                   169, 197, 225,
-                   253, 281, 309,
-                   337,
-                   365, 393, 421,
-                   449, 477, 505,
-                   533, 561, 589)
-  nines_l <- nines_h + 616
-  nines <- c(nines_h, nines_l)}
 
-# #############
-# #MORE MOVEMENT SP9 CALC
-# ############
-i <- nrow(out.more)
-no_exposure_more <- out.more[i, nines[1]] + out.more[i, nines[13]] + out.more[i, nines[14]] +
-                   out.more[i, nines[23]] + out.more[i, nines[35]] + out.more[i, nines[36]]
-sp9_more <- 1 - (no_exposure_more / sum(out.more[i, nines]))
 
-no_exposure_more <- out.more[i, nines_l[1]] + out.more[i, nines_l[13]] + out.more[i, nines_l[14]]
-sp9.l_more <- 1 - (no_exposure_more / sum(out.more[i, nines_l]))
-
-no_exposure_more <- out.more[i, nines_h[1]] + out.more[i, nines_h[13]] + out.more[i, nines_h[14]]
-sp9.h_more <- 1 - (no_exposure_more / sum(out.more[i, nines_h]))
-
-sp9_more <- c(sp9_more, sp9.l_more, sp9.h_more)
-save(sp9_more, file = paste('sp9.more_', input, '.RData', sep = ''))
-
-#############
-#LESS MOVEMENT SP9 CALC
-############
-i <- nrow(out.less)
-no_exposure_less <- out.less[i, nines[1]] + out.less[i, nines[13]] + out.less[i, nines[14]] +
-  out.less[i, nines[23]] + out.less[i, nines[35]] + out.less[i, nines[36]]
-sp9_less <- 1 - (no_exposure_less / sum(out.less[i, nines]))
-
-no_exposure_less <- out.less[i, nines_l[1]] + out.less[i, nines_l[13]] + out.less[i, nines_l[14]]
-sp9.l_less <- 1 - (no_exposure_less / sum(out.less[i, nines_l]))
-
-no_exposure_less <- out.less[i, nines_h[1]] + out.less[i, nines_h[13]] + out.less[i, nines_h[14]]
-sp9.h_less <- 1 - (no_exposure_less / sum(out.less[i, nines_h]))
-
-sp9_less <- c(sp9_less, sp9.l_less, sp9.h_less)
-save(sp9_less, file = paste('sp9.less_', input, '.RData', sep = ''))
