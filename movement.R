@@ -3,15 +3,19 @@
 ############################
 args = commandArgs(TRUE)
 input = as.numeric(args[1])
-beta_h_more <- 0.3684211 
-beta_l_more <- 0.95
-beta_h.more <- beta_h_more[input]
-beta_l.more <- beta_l_more[input]
-
-beta_h_less <- 0.4710526 
-beta_l_less <- 0.8815789
-beta_h.less <- beta_h_less[input]
-beta_l.less <- beta_l_less[input]
+beta_h <- 0.3236842
+beta_l <- 0.95
+vac_h <- seq(0.1, 0.9, length.out = 20)
+vac_l <- seq(0.1, 0.9, length.out = 20)
+vac_h.new <- rep(vac_h, 20)
+vac_l.new <- rep(NA, 400)
+for(i in 1:20){
+  j <- 20 * (i - 1)
+  vac_l.new[(1:20) + j] <- rep(vac_l[i], 20)
+}
+vac_mat <- cbind(vac_h.new, vac_l.new)
+vac_h <- vac_mat[input,1]
+vac_l <- vac_mat[input,2]
 
 
 library(deSolve)
@@ -94,8 +98,8 @@ travel = 1 - native
 travel_more <- 2 * travel
 travel_less <- 0.5 * travel
 
-parms_more <- c(beta_h = beta_h.more,
-                beta_l = beta_l.more,
+parms_more <- c(beta_h = 0.3684211,
+                beta_l = 0.95,
                 gamma = 1/4,
                 sigma = 1/(365 * 1.2),
                 mu = 19 / (1000 * 365),
@@ -107,12 +111,12 @@ parms_more <- c(beta_h = beta_h.more,
                 age_window = c(rep(1, 21), rep(10, 7)),
                 native_more = c(rep(1, 7), rep(0.86, 9), rep(0.842, 4), 0.814, 0.7676, 0.7784, rep(0.809, 5)),
                 travel <- travel_more,
-                vac_h = 0,
-                vac_l = 0,
+                vac_h = vac_h,
+                vac_l = vac_l,
                 sens = 0.8,
                 spec = 0.95)
-parms_less <- c(beta_h = beta_h.less,
-                beta_l = beta_l.less,
+parms_less <- c(beta_h = 0.4710526,
+                beta_l = 0.8815789,
                 gamma = 1/4,
                 sigma = 1/(365 * 1.2),
                 mu = 19 / (1000 * 365),
@@ -124,8 +128,8 @@ parms_less <- c(beta_h = beta_h.less,
                 age_window = c(rep(1, 21), rep(10, 7)),
                 native_less = c(rep(1, 7), rep(0.86, 9), rep(0.842, 4), 0.814, 0.7676, 0.7784, rep(0.809, 5)),
                 travel <- travel_less,
-                vac_h = 0,
-                vac_l = 0,
+                vac_h = vac_h,
+                vac_l = vac_l,
                 sens = 0.8,
                 spec = 0.95)
 
@@ -711,36 +715,72 @@ times <- seq(from = 0, to = 365 * years, by = .1)
 #RECORD NULL RESPONSES
 ###############
 
-out.more.null <- ode(times = times, y = y_init, func = model, parms = parms_more)
-out.less.null <- ode(times = times, y = y_init, func = model, parms = parms_less)
+out.more <- ode(times = times, y = y_init, func = model, parms = parms_more)
+out.less <- ode(times = times, y = y_init, func = model, parms = parms_less)
 
-{track_infected.more <- out.more.null[,(ncol(out.more.null) - 3)]
-  track_infected.more <- track_infected.more[length(track_infected.more)]
-  track_l.more <- out.more.null[,(ncol(out.more.null) - 2)]
-  track_l.more <- track_l.more[length(track_l.more)]
-  track_h.more <- track_infected.more - track_l.more
-  cases.more <- out.more.null[,(ncol(out.more.null) - 1)]
-  cases.more <- cases.more[length(cases.more)]
-  cases.l.more <- out.more.null[,(ncol(out.more.null))]
-  cases.l.more <- cases.l.more[length(cases.l.more)]
-  cases.h.more <- cases.more - cases.l.more}
+{{track_infected.more <- out.more[,(ncol(out.more) - 3)]
+track_infected.more <- track_infected.more[length(track_infected.more)]
+track_l.more <- out.more[,(ncol(out.more) - 2)]
+track_l.more <- track_l.more[length(track_l.more)]
+track_h.more <- track_infected.more - track_l.more
+cases.more <- out.more[,(ncol(out.more) - 1)]
+cases.more <- cases.more[length(cases.more)]
+cases.l.more <- out.more[,(ncol(out.more))]
+cases.l.more <- cases.l.more[length(cases.l.more)]
+cases.h.more <- cases.more - cases.l.more}
+  
+  track_infected.null.more <- 50854129
+  track_h.null.more <- 22107468
+  track_l.null.more <- 28746661 
+  cases.null.more <- 11033895
+  cases.h.null.more <- 4861468
+  cases.l.null.more <- 6172427
+  
+  #Averted calculations
+  {
+    infections_averted.more <- (((track_infected.null.more - track_infected.more) / track_infected.null.more) * 100)
+    infections_averted.h.more <- (((track_h.null.more - track_h.more) / track_h.null.more) * 100)
+    infections_averted.l.more <- (((track_l.null.more - track_l.more) / track_l.null.more) * 100)
+    cases_averted.more <- (((cases.null.more - cases.more) / cases.null.more) * 100)
+    cases_averted.h.more <- (((cases.h.null.more - cases.h.more) / cases.h.null.more) * 100)
+    cases_averted.l.more <- (((cases.l.null.more - cases.l.more) / cases.l.null.more) * 100)
+    output.more <- cbind(infections_averted.h.more, infections_averted.more, infections_averted.l.more,
+                         cases_averted.h.more, cases_averted.more, cases_averted.l.more)
+  }
+  
+  save(output.more, file = paste('output.more_', input, '.RData', sep = ''))}
 
-output_more <- c(track_h.more, track_infected.more, track_l.more, cases.h.more, cases.more, cases.l.more)
-save(output_more, file = "output_more.RData")
-
-{track_infected.less <- out.less.null[,(ncol(out.less.null) - 3)]
+{{track_infected.less <- out.less[,(ncol(out.less) - 3)]
   track_infected.less <- track_infected.less[length(track_infected.less)]
-  track_l.less <- out.less.null[,(ncol(out.less.null) - 2)]
+  track_l.less <- out.less[,(ncol(out.less) - 2)]
   track_l.less <- track_l.less[length(track_l.less)]
   track_h.less <- track_infected.less - track_l.less
-  cases.less <- out.less.null[,(ncol(out.less.null) - 1)]
+  cases.less <- out.less[,(ncol(out.less) - 1)]
   cases.less <- cases.less[length(cases.less)]
-  cases.l.less <- out.less.null[,(ncol(out.less.null))]
+  cases.l.less <- out.less[,(ncol(out.less))]
   cases.l.less <- cases.l.less[length(cases.l.less)]
   cases.h.less <- cases.less - cases.l.less}
 
-output_less <- c(track_h.less, track_infected.less, track_l.less, cases.h.less, cases.less, cases.l.less)
-save(output_less, file = "output_less.RData")
+track_infected.null.less <- 50524276
+track_h.null.less <- 20426126
+track_l.null.less <- 30098150
+cases.null.less <- 11050052 
+cases.h.null.less <- 4645915
+cases.l.null.less <- 6404137
+
+#Averted calculations
+{
+  infections_averted.less <- (((track_infected.null.less - track_infected.less) / track_infected.null.less) * 100)
+  infections_averted.h.less <- (((track_h.null.less - track_h.less) / track_h.null.less) * 100)
+  infections_averted.l.less <- (((track_l.null.less - track_l.less) / track_l.null.less) * 100)
+  cases_averted.less <- (((cases.null.less - cases.less) / cases.null.less) * 100)
+  cases_averted.h.less <- (((cases.h.null.less - cases.h.less) / cases.h.null.less) * 100)
+  cases_averted.l.less <- (((cases.l.null.less - cases.l.less) / cases.l.null.less) * 100)
+  output.less <- cbind(infections_averted.h.less, infections_averted.less, infections_averted.l.less,
+                       cases_averted.h.less, cases_averted.less, cases_averted.l.less)
+}
+
+save(output.less, file = paste('output.less_', input, '.RData', sep = ''))}
 
 
 
