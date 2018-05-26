@@ -788,5 +788,5 @@ out_null <- ode(times = times, y = y_init, func = model, parms = parms_null)
                   cases_averted.h, cases_averted, cases_averted.l)
 }
 
-save(output, file = paste('output.high_', input, '.RData', sep = ''))
+save(output, file = paste('output_', input, '.RData', sep = ''))
 
