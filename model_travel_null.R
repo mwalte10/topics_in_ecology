@@ -212,6 +212,7 @@ model <- function(t, y, parms){
   ###Tracking cases
   cases <- y[1235]
   cases.l <- y[1236]
+  cases.h <- y[1237]
   
   
   infected_total_h <- sum(sum(I1_h), sum(I2_h), sum(I3_h), sum(I4_h), sum(I2_h.v), sum(I3_h.v), sum(I4_h.v))
@@ -239,8 +240,8 @@ model <- function(t, y, parms){
     mu * c(pop_l, rep(0,27)) +
     c(0, 1/365 / head(age_window, -1) * head(S1_l, -1)) -
     c(1/365 / head(age_window, -1) * head(S1_l, -1), 0) -
-    travel * S1_l * (beta_h * infected_total_h / effective_population_h) -
     native * S1_l * (beta_l * infected_total_l / effective_population_l) -
+    travel * S1_l * (beta_h * infected_total_h / effective_population_h) -
     S1_l * delta - 
     S1_l * vac_l * (1 - spec)
   
@@ -252,8 +253,8 @@ model <- function(t, y, parms){
     I1_h * gamma -
     I1_h * delta
   dI1_l <- 
-    travel * S1_l * (beta_h * infected_total_h / effective_population_h) +
     native * S1_l * (beta_l * infected_total_l / effective_population_l) +
+    travel * S1_l * (beta_h * infected_total_h / effective_population_h) +
     c(0, 1/365 / head(age_window, -1) * head(I1_l, -1)) -
     c(1/365 / head(age_window, -1) * head(I1_l, -1), 0) -
     I1_l * gamma -
@@ -306,16 +307,16 @@ model <- function(t, y, parms){
     R1_l * sigma +
     c(0, 1/365 / head(age_window, -1) * head(S2_l, -1)) -
     c(1/365 / head(age_window, -1) * head(S2_l, -1), 0) -
-    travel * S2_l * (0.75 * beta_h * infected_total_h / effective_population_h) -
     native * S2_l * (0.75 * beta_l * infected_total_l / effective_population_l) -
+    travel * S2_l * (0.75 * beta_h * infected_total_h / effective_population_h) -
     S2_l * delta - 
     S2_l * vac_l * sens
   dS2_l.v <-
     R1_l.v * sigma +
     c(0, 1/365 / head(age_window, -1) * head(S2_l.v, -1)) -
     c(1/365 / head(age_window, -1) * head(S2_l.v, -1), 0) -
-    travel * S2_l.v * (beta_h * infected_total_h / effective_population_h) -
     native * S2_l.v * (beta_l * infected_total_l / effective_population_l) -
+    travel * S2_l.v * (beta_h * infected_total_h / effective_population_h) -
     S2_l.v * delta
   
   dI2_h <- 
@@ -333,15 +334,15 @@ model <- function(t, y, parms){
     I2_h.v * gamma -
     I2_h.v * delta
   dI2_l <- 
-    travel * S2_l * (0.75 * beta_h * infected_total_h / effective_population_h) +
     native * S2_l * (0.75 * beta_l * infected_total_l / effective_population_l) +
+    travel * S2_l * (0.75 * beta_h * infected_total_h / effective_population_h) +
     c(0, 1/365 / head(age_window, -1) * head(I2_l, -1)) -
     c(1/365 / head(age_window, -1) * head(I2_l, -1), 0) -
     I2_l * gamma -
     I2_l * delta
   dI2_l.v <-
-    travel * S2_l.v * (beta_h * infected_total_h / effective_population_h) +
     native * S2_l.v * (beta_l * infected_total_l / effective_population_l) +
+    travel * S2_l.v * (beta_h * infected_total_h / effective_population_h) +
     c(0, 1/365 / head(age_window, -1) * head(I2_l.v, -1)) -
     c(1/365 / head(age_window, -1) * head(I2_l.v, -1), 0) -
     I2_l.v * gamma -
@@ -398,16 +399,16 @@ model <- function(t, y, parms){
     R2_l * sigma + 
     c(0, 1/365 / head(age_window, -1) * head(S3_l, -1)) -
     c(1/365 / head(age_window, -1) * head(S3_l, -1), 0) -
-    travel * S3_l * (0.5 * beta_h * infected_total_h / effective_population_h) -
     native * S3_l * (0.5 * beta_l * infected_total_l / effective_population_l) -
+    travel * S3_l * (0.5 * beta_h * infected_total_h / effective_population_h) -
     S3_l * delta -
     S3_l * vac_l * sens
   dS3_l.v <-
     R2_l.v * sigma + 
     c(0, 1/365 / head(age_window, -1) * head(S3_l.v, -1)) -
     c(1/365 / head(age_window, -1) * head(S3_l.v, -1), 0) -
-    travel * S3_l.v * (0.75 * beta_h * infected_total_h / effective_population_h) -
     native * S3_l.v * (0.75 * beta_l * infected_total_l / effective_population_l) -
+    travel * S3_l.v * (0.75 * beta_h * infected_total_h / effective_population_h) -
     S3_l.v * delta
   
   dI3_h <- 
@@ -425,15 +426,15 @@ model <- function(t, y, parms){
     I3_h.v * gamma -
     I3_h.v * delta
   dI3_l <- 
-    travel * S3_l * (0.5 * beta_h * infected_total_h / effective_population_h) +
     native * S3_l * (0.5 * beta_l * infected_total_l / effective_population_l) +
+    travel * S3_l * (0.5 * beta_h * infected_total_h / effective_population_h) +
     c(0, 1/365 / head(age_window, -1) * head(I3_l, -1)) -
     c(1/365 / head(age_window, -1) * head(I3_l, -1), 0) -
     I3_l * gamma -
     I3_l * delta
   dI3_l.v <-
-    travel * S3_l.v * (0.75 * beta_h * infected_total_h / effective_population_h) +
     native * S3_l.v * (0.75 * beta_l * infected_total_l / effective_population_l) +
+    travel * S3_l.v * (0.75 * beta_h * infected_total_h / effective_population_h) +
     c(0, 1/365 / head(age_window, -1) * head(I3_l.v, -1)) -
     c(1/365 / head(age_window, -1) * head(I3_l.v, -1), 0) -
     I3_l.v * gamma -
@@ -490,16 +491,16 @@ model <- function(t, y, parms){
     R3_l * sigma +
     c(0, 1/365 / head(age_window, -1) * head(S4_l, -1)) -
     c(1/365 / head(age_window, -1) * head(S4_l, -1), 0) -
-    travel * S4_l * (0.25 * beta_h * infected_total_h / effective_population_h) -
     native * S4_l * (0.25 * beta_l * infected_total_l / effective_population_l) -
+    travel * S4_l * (0.25 * beta_h * infected_total_h / effective_population_h) -
     S4_l * delta - 
     S4_l * vac_l * sens
   dS4_l.v <-
     R3_l.v * sigma + 
     c(0, 1/365 / head(age_window, -1) * head(S4_l.v, -1)) -
     c(1/365 / head(age_window, -1) * head(S4_l.v, -1), 0) -
-    travel * S4_l.v * (0.5 * beta_h * infected_total_h / effective_population_h) -
     native * S4_l.v * (0.5 * beta_l * infected_total_l / effective_population_l) -
+    travel * S4_l.v * (0.5 * beta_h * infected_total_h / effective_population_h) -
     S4_l.v * delta 
   
   dI4_h <- 
@@ -517,15 +518,15 @@ model <- function(t, y, parms){
     I4_h.v * gamma -
     I4_h.v * delta
   dI4_l <- 
-    travel * S4_l * (0.25 * beta_h * infected_total_h / effective_population_h) +
     native * S4_l * (0.25 * beta_l * infected_total_l / effective_population_l) +
+    travel * S4_l * (0.25 * beta_h * infected_total_h / effective_population_h) +
     c(0, 1/365 / head(age_window, -1) * head(I4_l, -1)) -
     c(1/365 / head(age_window, -1) * head(I4_l, -1), 0) -
     I4_l * gamma -
     I4_l * delta
   dI4_l.v <-
-    travel * S4_l.v * (0.5 * beta_h * infected_total_h / effective_population_h) +
     native * S4_l.v * (0.5 * beta_l * infected_total_l / effective_population_l) +
+    travel * S4_l.v * (0.5 * beta_h * infected_total_h / effective_population_h) +
     c(0, 1/365 / head(age_window, -1) * head(I4_l.v, -1)) -
     c(1/365 / head(age_window, -1) * head(I4_l.v, -1), 0) -
     I4_l.v * gamma -
@@ -673,6 +674,34 @@ model <- function(t, y, parms){
   quaternary.l <- sum(quaternary.l) * 0.063425
 
   cases.l <- primary.l + secondary.l  + tertiary.l + quaternary.l
+  
+  primary.h <-
+    native * S1_h * (beta_h * infected_total_h / effective_population_h) +
+    travel * S1_h * (beta_l * infected_total_l / effective_population_l) +
+    native * S2_h.v * (beta_h * infected_total_h / effective_population_h) +
+    travel * S2_h.v * (beta_l * infected_total_l / effective_population_l)
+  primary.h <- sum(primary.h) * 0.18
+  
+  secondary.h <-
+    native * S2_h * (0.75 * beta_h * infected_total_h / effective_population_h) +
+    travel * S2_h * (0.75 * beta_l * infected_total_l / effective_population_l) +
+    native * S3_h.v * (0.75 * beta_h * infected_total_h / effective_population_h) +
+    travel * S3_h.v * (0.75 * beta_l * infected_total_l / effective_population_l)
+  secondary.h <- sum(secondary.h) * 0.41
+  
+  tertiary.h <-
+    native * S3_h * (0.5 * beta_h * infected_total_h / effective_population_h) +
+    travel * S3_h * (0.5 * beta_l * infected_total_l / effective_population_l) +
+    native * S4_h.v * (0.5 * beta_h * infected_total_h / effective_population_h) +
+    travel * S4_h.v * (0.5 * beta_l * infected_total_l / effective_population_l)
+  tertiary.h <- sum(tertiary.h) * 0.063425
+  
+  quaternary.h <-
+    native * S4_h * (0.25 * beta_h * infected_total_h / effective_population_h) +
+    travel * S4_h * (0.25 * beta_l * infected_total_l / effective_population_l)
+  quaternary.h <- sum(quaternary.h) * 0.063425
+  
+  cases.h <- primary.h + secondary.h  + tertiary.h + quaternary.h
     
   
   list(c(dS1_h, dI1_h, dR1_h,
@@ -691,7 +720,7 @@ model <- function(t, y, parms){
          dS2_l.v, dI2_l.v, dR2_l.v,
          dS3_l.v, dI3_l.v, dR3_l.v,
          dS4_l.v, dI4_l.v, dR4_l.v,
-         I_total, I_l, cases, cases.l))
+         I_total, I_l, cases, cases.l, cases.h))
   
 }
 
@@ -707,7 +736,7 @@ y_init <- c(susceptible_h(1), infected_h(1), recovered_h(1),
             susceptible_l(2), infected_l(2), recovered_l(2),
             susceptible_l(3), infected_l(3), recovered_l(3),
             susceptible_l(4), infected_l(4), recovered_l(4),
-            rep(0, 280), 0, 0, 0, 0)
+            rep(0, 280), 0, 0, 0, 0, 0)
 years = 50
 years_vac = 30
 times <- seq(from = 0, to = 365 * years, by = .1)
@@ -718,29 +747,34 @@ out_null <- ode(times = times, y = y_init, func = model, parms = parms_null)
 
 {
   #out_last <- out[nrow(out),(2:(ncol(out) - 4))]
-  track_infected <- out[,(ncol(out) - 3)]
+  track_infected <- out[,(ncol(out) - 4)]
   track_infected <- track_infected[length(track_infected)]
-  track_l <- out[,(ncol(out) - 2)]
+  track_l <- out[,(ncol(out) - 3)]
   track_l <- track_l[length(track_l)]
   track_h <- track_infected - track_l
-  cases <- out[,(ncol(out) - 1)]
+  cases <- out[,(ncol(out) - 2)]
   cases <- cases[length(cases)]
-  cases.l <- out[,(ncol(out))]
+  cases.l <- out[,(ncol(out) - 1)]
   cases.l <- cases.l[length(cases.l)]
-  cases.h <- cases - cases.l
+  cases.h <- out[,(ncol(out))]
+  cases.h <- cases.h[length(cases.h)]
+  #cases.h <- cases - cases.l
 }
 
 ##Null outputs
-{track_infected.null <- out_null[,(ncol(out_null) - 3)]
+{track_infected.null <- out_null[,(ncol(out_null) - 4)]
   track_infected.null <- track_infected.null[length(track_infected.null)]
-  track_l.null <- out_null[,(ncol(out_null) - 2)]
+  track_l.null <- out_null[,(ncol(out_null) - 3)]
   track_l.null <- track_l.null[length(track_l.null)]
   track_h.null <- track_infected.null - track_l.null
-  cases.null <- out_null[,(ncol(out_null) - 1)]
+  cases.null <- out_null[,(ncol(out_null) - 2)]
   cases.null <- cases.null[length(cases.null)]
-  cases.l.null <- out_null[,(ncol(out_null))]
+  cases.l.null <- out_null[,(ncol(out_null) - 1)]
   cases.l.null <- cases.l.null[length(cases.l.null)]
-  cases.h.null <- cases.null - cases.l.null}
+  cases.h.null <- out_null[,(ncol(out_null))]
+  cases.h.null <- cases.h.null[length(cases.h.null)]
+  #cases.h.null <- cases.null - cases.l.null
+  }
 
 #Averted calculations
 {
