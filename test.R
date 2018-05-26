@@ -742,7 +742,7 @@ y_init <- c(susceptible_h(1), infected_h(1), recovered_h(1),
             susceptible_l(3), infected_l(3), recovered_l(3),
             susceptible_l(4), infected_l(4), recovered_l(4),
             rep(0, 280), 0, 0, 0, 0, 0)
-years = 40
+years = 30
 years_vac = 30
 times <- seq(from = 0, to = 365 * years, by = .1)
 #out <- ode(times = times, y = y_init, func = model, parms = parms)
@@ -750,8 +750,8 @@ out_null <- ode(times = times, y = y_init, func = model, parms = parms_null)
 
 
 
-vac_h.pop <- sum(out_null[0:years_vac * 365 - 1, 338:617])
-vac_l.pop <- sum(out_null[0:years_vac * 365 - 1, 954:1233])
+vac_h.pop <- sum(out_null[0:(years_vac * 365 - 1), 338:617])
+vac_l.pop <- sum(out_null[0:(years_vac * 365 - 1), 954:1233])
 
 output <- cbind(vac_h.pop, vac_l.pop)
 
