@@ -6,13 +6,13 @@ args = commandArgs(TRUE)
 input = as.numeric(args[1])
 beta_h <- 0.3236842
 beta_l <- 0.95
-vac_h <- rep(0, 20)
-vac_l <- seq(0.1, 0.9, length.out = 20)
-vac_h.new <- rep(vac_h, 20)
-vac_l.new <- rep(NA, 400)
-for(i in 1:20){
-  j <- 20 * (i - 1)
-  vac_l.new[(1:20) + j] <- rep(vac_l[i], 20)
+vac_h <- rep(0, 5)
+vac_l <- seq(0.1, 0.9, length.out = 5)
+vac_h.new <- rep(vac_h, 5)
+vac_l.new <- rep(NA, 25)
+for(i in 1:5){
+  j <- 5 * (i - 1)
+  vac_l.new[(1:5) + j] <- rep(vac_l[i], 5)
 }
 vac_mat <- cbind(vac_h.new, vac_l.new)
 vac_h <- vac_mat[input,1]
