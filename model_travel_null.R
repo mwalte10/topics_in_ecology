@@ -6,8 +6,8 @@ args = commandArgs(TRUE)
 input = as.numeric(args[1])
 beta_h <- 0.3236842
 beta_l <- 0.95
-vac_h <- seq(0.1, 0.9, length.out = 5)
-vac_l <- rep(0, 5)
+vac_h <- rep(0, 5)
+vac_l <- seq(0.1, 0.9, length.out = 5)
 vac_h.new <- rep(vac_h, 5)
 vac_l.new <- rep(NA, 25)
 for(i in 1:5){
@@ -95,10 +95,10 @@ population_h <- sum(susceptible_total_h + infected_total_h + recovered_total_h)
 population_l <- sum(susceptible_total_l + infected_total_l + recovered_total_l)
 
 
-native <- c(rep(1, 7), rep(0.86, 9), rep(0.842, 4), 0.814, 0.7676, 0.7784, rep(0.809, 5))
+#native <- c(rep(1, 7), rep(0.86, 9), rep(0.842, 4), 0.814, 0.7676, 0.7784, rep(0.809, 5))
 # native_more <- 2 * native
 # native_less <- 0.5 * native
-#native <- rep(1, 28)
+native <- rep(1, 28)
 
 parms <- c(beta_h = beta_h,
            beta_l = beta_l,
