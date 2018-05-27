@@ -6,13 +6,13 @@ args = commandArgs(TRUE)
 input = as.numeric(args[1])
 beta_h <- 0.3236842
 beta_l <- 0.95
-vac_h <- rep(0, 5)
-vac_l <- seq(0.1, 0.9, length.out = 5)
-vac_h.new <- rep(vac_h, 5)
-vac_l.new <- rep(NA, 25)
-for(i in 1:5){
-  j <- 5 * (i - 1)
-  vac_l.new[(1:5) + j] <- rep(vac_l[i], 5)
+vac_h <- seq(0.1, 0.9, length.out = 10)
+vac_l <- seq(0.1, 0.9, length.out = 10)
+vac_h.new <- rep(vac_h, 10)
+vac_l.new <- rep(NA, 100)
+for(i in 1:10){
+  j <- 10 * (i - 1)
+  vac_l.new[(1:10) + j] <- rep(vac_l[i], 10)
 }
 vac_mat <- cbind(vac_h.new, vac_l.new)
 vac_h <- vac_mat[input,1]
@@ -744,7 +744,6 @@ out <- ode(times = times, y = y_init, func = model, parms = parms)
 out_null <- ode(times = times, y = y_init, func = model, parms = parms_null)
 
 
-
 {
   #out_last <- out[nrow(out),(2:(ncol(out) - 4))]
   track_infected <- out[,(ncol(out) - 4)]
@@ -789,4 +788,12 @@ out_null <- ode(times = times, y = y_init, func = model, parms = parms_null)
 }
 
 save(output, file = paste('output_', input, '.RData', sep = ''))
+
+vac_h.pop.null <- sum(out_null[0:(years_vac * 365 - 1), 338:617])
+vac_l.pop.null <- sum(out_null[0:(years_vac * 365 - 1), 954:1233])
+vac_h.pop <- sum(out[0:(years_vac * 365 - 1), 338:617])
+vac_l.pop <- sum(out[0:(years_vac * 365 - 1), 954:1233])
+
+vac_output <- cbind(vac_h.pop.null, vac_l.pop.null, vac_h.pop, vac_l.pop)
+save(vac_output, file = paste('vac_output_', input, '.RData', sep = ''))
 
