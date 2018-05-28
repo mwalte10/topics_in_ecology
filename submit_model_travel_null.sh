@@ -1,7 +1,7 @@
 #!/bin/csh
 
-#$ -N model_travel_null_
-#$ -t 1-100
+#$ -N model_vac_
+#$ -t 1-25
 
 module load bio/R/3.3.1-gcc
 
