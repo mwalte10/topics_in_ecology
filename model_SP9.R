@@ -734,7 +734,7 @@ years = 8
 years_vac = 5
 times <- seq(from = 0, to = 365 * years, by = .1)
 out <- ode(times = times, y = y_init, func = model, parms = parms)
-# out_null <- ode(times = times, y = y_init, func = model, parms = parms_null)
+#out_null <- ode(times = times, y = y_init, func = model, parms = parms_null)
 
 #SP9 calcs
 {
@@ -764,8 +764,9 @@ sp9.vec <- c(sp9, sp9.l, sp9.h)
 save(sp9.vec, file = paste('sp9.more_', input, '.RData', sep = ''))
 }
 #Averted calcs
-{# {
-#   #out_last <- out[nrow(out),(2:(ncol(out) - 4))]
+{
+  # {
+  #out_last <- out[nrow(out),(2:(ncol(out) - 4))]
 #   track_infected <- out[,(ncol(out) - 3)]
 #   track_l <- out[,(ncol(out) - 2)]
 #   track_h <- track_infected - track_l
