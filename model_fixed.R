@@ -133,8 +133,8 @@ parms <- c(beta_h = beta_h,
            age_window = c(rep(1, 21), rep(10, 7)),
            native = native,
            travel = 1 - native,
-           vac_h = 0,
-           vac_l = 0,
+           vac_h = vac_h,
+           vac_l = vac_l,
            sens = 0.85,
            spec = 0.95)
 parms_null <- c(beta_h = beta_h,
@@ -807,7 +807,7 @@ out_null <- ode(times = times, y = y_init, func = model, parms = parms_null)
   save(output, file = paste('output_', input, '.RData', sep = ''))
   }
 #Secondary cases calcs
-# {
+{
 # secondary.h <- out[,((28 * 5) + 2):((28 * 6) + 1)]
 # secondary.h <- rowSums(secondary.h)
 # secondary.l <- out[,((28 * 27) + 2):((28 * 28) + 1)]
@@ -837,7 +837,7 @@ out_null <- ode(times = times, y = y_init, func = model, parms = parms_null)
 # secondary_averted <- cbind(h_avert, l_avert)
 # 
 # save(secondary_averted, file = paste('secondary_averted', i, '.RData', sep = ''))
-# }
+}
 
 
 
