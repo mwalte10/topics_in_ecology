@@ -6,13 +6,13 @@ args = commandArgs(TRUE)
 input = as.numeric(args[1])
 beta_h <- 0.3236842
 beta_l <- 0.95
-vac_h <- seq(0.1, 0.9, length.out = 5)
-vac_l <- seq(0.1, 0.9, length.out = 5)
-vac_h.new <- rep(vac_h, 5)
-vac_l.new <- rep(NA, 25)
-for(i in 1:5){
-  j <- 5 * (i - 1)
-  vac_l.new[(1:5) + j] <- rep(vac_l[i], 5)
+vac_h <- seq(0.1, 0.9, length.out = 4)
+vac_l <- seq(0.1, 0.9, length.out = 4)
+vac_h.new <- rep(vac_h, 4)
+vac_l.new <- rep(NA, 16)
+for(i in 1:4){
+  j <- 4 * (i - 1)
+  vac_l.new[(1:4) + j] <- rep(vac_l[i], 4)
 }
 vac_mat <- cbind(vac_h.new, vac_l.new)
 vac_h <- vac_mat[input,1]
@@ -118,23 +118,23 @@ parms <- c(beta_h = beta_h,
            vac_l = 0,
            sens = 0.85,
            spec = 0.95)
-# parms_null <- c(beta_h = beta_h,
-#                 beta_l = beta_l,
-#                 gamma = 1/4,
-#                 sigma = 1/(365 * 1.2),
-#                 mu = 19 / (1000 * 365),
-#                 delta = c((0.013 / 365), rep(0.001 / 365, 4), rep(0, 10), rep(0.001, 5), 
-#                           0.002 / 365, 0.0025 / 365, 
-#                           0.004 / 365, 0.0085 / 365,
-#                           0.0175 / 365, 0.0425 / 365,
-#                           0.114 / 365, 0.151 / 365),
-#                 age_window = c(rep(1, 21), rep(10, 7)),
-#                 native = native,
-#                 travel = 1 - native,
-#                 vac_h = 0,
-#                 vac_l = 0,
-#                 sens = 0.85,
-#                 spec = 0.95)
+parms_null <- c(beta_h = beta_h,
+                beta_l = beta_l,
+                gamma = 1/4,
+                sigma = 1/(365 * 1.2),
+                mu = 19 / (1000 * 365),
+                delta = c((0.013 / 365), rep(0.001 / 365, 4), rep(0, 10), rep(0.001, 5),
+                          0.002 / 365, 0.0025 / 365,
+                          0.004 / 365, 0.0085 / 365,
+                          0.0175 / 365, 0.0425 / 365,
+                          0.114 / 365, 0.151 / 365),
+                age_window = c(rep(1, 21), rep(10, 7)),
+                native = native,
+                travel = 1 - native,
+                vac_h = 0,
+                vac_l = 0,
+                sens = 0.85,
+                spec = 0.95)
 
 ############################
 #MODEL
@@ -716,6 +716,8 @@ times <- seq(from = 0, to = 365 * years, by = .1)
 out <- ode(times = times, y = y_init, func = model, parms = parms)
 out_null <- ode(times = times, y = y_init, func = model, parms = parms_null)
 
+#SP9 calcs
+{
 # {nines_h <- 11 + c(1, 29, 57,
 #                    85, 113, 141,
 #                    169, 197, 225,
@@ -740,19 +742,9 @@ out_null <- ode(times = times, y = y_init, func = model, parms = parms_null)
 # 
 # sp9.vec <- c(sp9, sp9.l, sp9.h)
 # save(sp9.vec, file = paste('sp9.more_', input, '.RData', sep = ''))
-
-
-
-
-
-
-
-
-
-
-
-
-{
+}
+#Averted calcs
+{{
   #out_last <- out[nrow(out),(2:(ncol(out) - 4))]
   track_infected <- out[,(ncol(out) - 3)]
   track_l <- out[,(ncol(out) - 2)]
@@ -783,8 +775,6 @@ out_null <- ode(times = times, y = y_init, func = model, parms = parms_null)
   cases.h.null <- cases.null - cases.l.null
   }
 
-
-
 #Averted calculations
 {
   infections_averted <- (((track_infected.null - track_infected) / track_infected.null) * 100)
@@ -796,8 +786,41 @@ out_null <- ode(times = times, y = y_init, func = model, parms = parms_null)
   output <- cbind(infections_averted.h, infections_averted, infections_averted.l,
                   cases_averted.h, cases_averted, cases_averted.l)
 }
+  save(output, file = paste('output_', input, '.RData', sep = ''))
+  }
+#Secondary cases calcs
+# {
+# secondary.h <- out[,((28 * 5) + 2):((28 * 6) + 1)]
+# secondary.h <- rowSums(secondary.h)
+# secondary.l <- out[,((28 * 27) + 2):((28 * 28) + 1)]
+# secondary.l <- rowSums(secondary.l)
+# secondary.hv <- out[,((28 * 18) + 2):((28 * 19) + 1)]
+# secondary.hv <- rowSums(secondary.hv)
+# secondary.lv <- out[,((28 * 40) + 2):((28 * 41) + 1)]
+# secondary.lv <- rowSums(secondary.lv)
+# 
+# secondary.h <- secondary.h + secondary.hv
+# secondary.l <- secondary.l + secondary.lv
+# 
+# secondary.h_v <- out.null[,((28 * 5) + 2):((28 * 6) + 1)]
+# secondary.h_v <- rowSums(secondary.h_v)
+# secondary.l_v <- out.null[,((28 * 27) + 2):((28 * 28) + 1)]
+# secondary.l_v <- rowSums(secondary.l_v)
+# secondary.hv_v <- out.null[,((28 * 18) + 2):((28 * 19) + 1)]
+# secondary.hv_v <- rowSums(secondary.hv_v)
+# secondary.lv_v <- out.null[,((28 * 40) + 2):((28 * 41) + 1)]
+# secondary.lv_v <- rowSums(secondary.lv_v)
+# 
+# secondary.h_v <- secondary.h_v + secondary.hv_v
+# secondary.l_v <- secondary.l_v + secondary.lv_v
+# 
+# secondary_averted <- c(((secondary.h - secondary.h_v) / secondary.h_v) * 100, 
+#                        ((secondary.l - secondary.l_v) / secondary.l_v) * 100)
+# 
+# save(secondary_averted, file = paste('secondary_averted', i, '.RData', sep = ''))
+# }
 
-save(output, file = paste('output_', input, '.RData', sep = ''))
+
 
 
 
