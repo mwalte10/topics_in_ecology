@@ -730,8 +730,8 @@ y_init <- c(susceptible_h(1), infected_h(1), recovered_h(1),
             susceptible_l(3), infected_l(3), recovered_l(3),
             susceptible_l(4), infected_l(4), recovered_l(4),
             rep(0, 280), 0, 0, 0, 0)
-years = 8
-years_vac = 5
+years = 30
+years_vac = 30
 times <- seq(from = 0, to = 365 * years, by = .1)
 out <- ode(times = times, y = y_init, func = model, parms = parms)
 #out_null <- ode(times = times, y = y_init, func = model, parms = parms_null)
