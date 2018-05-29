@@ -743,7 +743,7 @@ years = 50
 years_vac = 30
 times <- seq(from = 0, to = 365 * years, by = .1)
 out <- ode(times = times, y = y_init, func = model, parms = parms)
-out_null <- ode(times = times, y = y_init, func = model, parms = parms_null)
+#out_null <- ode(times = times, y = y_init, func = model, parms = parms_null)
 
 
 {
@@ -751,62 +751,52 @@ out_null <- ode(times = times, y = y_init, func = model, parms = parms_null)
   track_infected <- out[,(ncol(out) - 4)]
   track_l <- out[,(ncol(out) - 3)]
   track_h <- track_infected - track_l
-  
-  png(filename = paste('track_i', i, '.png', sep = ''))
-  plot(x = times, y = track_infected, type = "l")
-  lines(x = times, y = track_h, col = "red")
-  lines(x = times, y = track_l, col = "blue")
-  legend("center", c("Total pop", "Low transmission", "High transmission"), lty = rep(1,3), col = c("black", "red", "blue"))
-  dev.off()
-  
   track_infected <- track_infected[length(track_infected)]
   track_l <- track_l[length(track_l)]
   track_h <- track_infected - track_l
   
   cases <- out[,(ncol(out) - 2)]
-  #cases <- sum(cases)
   cases <- cases[length(cases)]
   cases.l <- out[,(ncol(out) - 1)]
-  #cases.l <- sum(cases.l)
   cases.l <- cases.l[length(cases.l)]
   cases.h <- out[,(ncol(out))]
-  #cases.h <- sum(cases.h)
   cases.h <- cases.h[length(cases.h)]
-  #cases.h <- cases - cases.l
 }
 
-##Null outputs
-{track_infected.null <- out_null[,(ncol(out_null) - 4)]
-  #track_infected.null <- sum(track_infected.null)
-  track_infected.null <- track_infected.null[length(track_infected.null)]
-  track_l.null <- out_null[,(ncol(out_null) - 3)]
-  #track_l.null <- sum(track_l.null)
-  track_l.null <- track_l.null[length(track_l.null)]
-  track_h.null <- track_infected.null - track_l.null
-  cases.null <- out_null[,(ncol(out_null) - 2)]
-  #cases.null <- sum(cases.null)
-  cases.null <- cases.null[length(cases.null)]
-  cases.l.null <- out_null[,(ncol(out_null) - 1)]
-  #cases.l.null <- sum(cases.l.null)
-  cases.l.null <- cases.l.null[length(cases.l.null)]
-  cases.h.null <- out_null[,(ncol(out_null))]
-  #cases.h.null <- sum(cases.h.null)
-  cases.h.null <- cases.h.null[length(cases.h.null)]
-  #cases.h.null <- cases.null - cases.l.null
-}
+# ##Null outputs
+# {track_infected.null <- out_null[,(ncol(out_null) - 4)]
+#   #track_infected.null <- sum(track_infected.null)
+#   track_infected.null <- track_infected.null[length(track_infected.null)]
+#   track_l.null <- out_null[,(ncol(out_null) - 3)]
+#   #track_l.null <- sum(track_l.null)
+#   track_l.null <- track_l.null[length(track_l.null)]
+#   track_h.null <- track_infected.null - track_l.null
+#   cases.null <- out_null[,(ncol(out_null) - 2)]
+#   #cases.null <- sum(cases.null)
+#   cases.null <- cases.null[length(cases.null)]
+#   cases.l.null <- out_null[,(ncol(out_null) - 1)]
+#   #cases.l.null <- sum(cases.l.null)
+#   cases.l.null <- cases.l.null[length(cases.l.null)]
+#   cases.h.null <- out_null[,(ncol(out_null))]
+#   #cases.h.null <- sum(cases.h.null)
+#   cases.h.null <- cases.h.null[length(cases.h.null)]
+#   #cases.h.null <- cases.null - cases.l.null
+# }
+# 
+# 
+# 
+# #Averted calculations
+# {
+#   infections_averted <- (((track_infected.null - track_infected) / track_infected.null) * 100)
+#   infections_averted.h <- (((track_h.null - track_h) / track_h.null) * 100)
+#   infections_averted.l <- (((track_l.null - track_l) / track_l.null) * 100)
+#   cases_averted <- (((cases.null - cases) / cases.null) * 100)
+#   cases_averted.h <- (((cases.h.null - cases.h) / cases.h.null) * 100)
+#   cases_averted.l <- (((cases.l.null - cases.l) / cases.l.null) * 100)
+#   output <- cbind(infections_averted.h, infections_averted, infections_averted.l,
+#                   cases_averted.h, cases_averted, cases_averted.l)
+# }
 
-
-
-#Averted calculations
-{
-  infections_averted <- (((track_infected.null - track_infected) / track_infected.null) * 100)
-  infections_averted.h <- (((track_h.null - track_h) / track_h.null) * 100)
-  infections_averted.l <- (((track_l.null - track_l) / track_l.null) * 100)
-  cases_averted <- (((cases.null - cases) / cases.null) * 100)
-  cases_averted.h <- (((cases.h.null - cases.h) / cases.h.null) * 100)
-  cases_averted.l <- (((cases.l.null - cases.l) / cases.l.null) * 100)
-  output <- cbind(infections_averted.h, infections_averted, infections_averted.l,
-                  cases_averted.h, cases_averted, cases_averted.l)
-}
-
+output <- c(track_h, track_infected, track_l,
+            cases.h, cases, cases.l)
 save(output, file = paste('output_', input, '.RData', sep = ''))
