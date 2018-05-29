@@ -4,6 +4,27 @@
 ############################
 args = commandArgs(TRUE)
 input = as.numeric(args[1])
+
+##########################
+#IF DOING BETA/SP9
+##########################
+# beta_h <- seq(0.25, 0.95, length.out = 20)
+# beta_l <- seq(0.25, 0.95, length.out = 20)
+# beta_h.new <- rep(beta_h, 20)
+# beta_l.new <- rep(NA, 400)
+# for(i in 1:20){
+#     j <- 20* (i - 1)
+#     beta_l.new[(1:20) + j] <- rep(beta_l[i], 20)
+#   }
+# beta_mat <- cbind(beta_h.new, beta_l.new)
+# beta_h <- beta_mat[input,1]
+# beta_l <- beta_mat[input,2]
+# vac_h <- 0
+# vac_l <- 0
+
+##########################
+#IF DOING VAC COVERAGE
+##########################
 beta_h <- 0.3236842
 beta_l <- 0.95
 vac_h <- seq(0.1, 0.9, length.out = 4)
@@ -17,8 +38,6 @@ for(i in 1:4){
 vac_mat <- cbind(vac_h.new, vac_l.new)
 vac_h <- vac_mat[input,1]
 vac_l <- vac_mat[input,2]
-
-
 
 
 library(deSolve)
@@ -97,8 +116,8 @@ population_l <- sum(susceptible_total_l + infected_total_l + recovered_total_l)
 
 
 native <- c(rep(1, 7), rep(0.86, 9), rep(0.842, 4), 0.814, 0.7676, 0.7784, rep(0.809, 5))
-#native_more <- 2 * native
-#native_less <- 0.5 * native
+#travel_more <- 2 * (1 - native)
+#travel_less <- 0.5 * (1 - native)
 #native <- rep(1, 28)
 
 parms <- c(beta_h = beta_h,
@@ -694,6 +713,7 @@ model <- function(t, y, parms){
          dS3_l.v, dI3_l.v, dR3_l.v,
          dS4_l.v, dI4_l.v, dR4_l.v,
          I_total, I_l, cases, cases.l))
+
   
 }
 
@@ -710,8 +730,8 @@ y_init <- c(susceptible_h(1), infected_h(1), recovered_h(1),
             susceptible_l(3), infected_l(3), recovered_l(3),
             susceptible_l(4), infected_l(4), recovered_l(4),
             rep(0, 280), 0, 0, 0, 0)
-years = 40
-years_vac = 30
+years = 8
+years_vac = 5
 times <- seq(from = 0, to = 365 * years, by = .1)
 out <- ode(times = times, y = y_init, func = model, parms = parms)
 out_null <- ode(times = times, y = y_init, func = model, parms = parms_null)
@@ -752,11 +772,9 @@ out_null <- ode(times = times, y = y_init, func = model, parms = parms_null)
   track_infected <- track_infected[length(track_infected)]
   track_l <- track_l[length(track_l)]
   track_h <- track_infected - track_l
-
   cases <- out[,(ncol(out) - 1)]
   cases <- cases[length(cases)]
   cases.l <- out[,(ncol(out))]
-  cases.l <- sum(cases.l)
   cases.l <- cases.l[length(cases.l)]
   cases.h <- cases - cases.l
 }
@@ -802,20 +820,21 @@ out_null <- ode(times = times, y = y_init, func = model, parms = parms_null)
 # secondary.h <- secondary.h + secondary.hv
 # secondary.l <- secondary.l + secondary.lv
 # 
-# secondary.h_v <- out.null[,((28 * 5) + 2):((28 * 6) + 1)]
+# secondary.h_v <- out_null[,((28 * 5) + 2):((28 * 6) + 1)]
 # secondary.h_v <- rowSums(secondary.h_v)
-# secondary.l_v <- out.null[,((28 * 27) + 2):((28 * 28) + 1)]
+# secondary.l_v <- out_null[,((28 * 27) + 2):((28 * 28) + 1)]
 # secondary.l_v <- rowSums(secondary.l_v)
-# secondary.hv_v <- out.null[,((28 * 18) + 2):((28 * 19) + 1)]
+# secondary.hv_v <- out_null[,((28 * 18) + 2):((28 * 19) + 1)]
 # secondary.hv_v <- rowSums(secondary.hv_v)
-# secondary.lv_v <- out.null[,((28 * 40) + 2):((28 * 41) + 1)]
+# secondary.lv_v <- out_null[,((28 * 40) + 2):((28 * 41) + 1)]
 # secondary.lv_v <- rowSums(secondary.lv_v)
 # 
 # secondary.h_v <- secondary.h_v + secondary.hv_v
 # secondary.l_v <- secondary.l_v + secondary.lv_v
 # 
-# secondary_averted <- c(((secondary.h - secondary.h_v) / secondary.h_v) * 100, 
-#                        ((secondary.l - secondary.l_v) / secondary.l_v) * 100)
+# h_avert <- ((secondary.h - secondary.h_v) / secondary.h_v) * 100
+# l_avert <- ((secondary.l - secondary.l_v) / secondary.l_v) * 100
+# secondary_averted <- cbind(h_avert, l_avert)
 # 
 # save(secondary_averted, file = paste('secondary_averted', i, '.RData', sep = ''))
 # }
