@@ -1,7 +1,7 @@
 #!/bin/csh
 
-#$ -N model_sp9_
-#$ -t 1-400
+#$ -N model_test_
+#$ -t 1-25
 
 module load bio/R/3.3.1-gcc
 
