@@ -115,10 +115,10 @@ population_h <- sum(susceptible_total_h + infected_total_h + recovered_total_h)
 population_l <- sum(susceptible_total_l + infected_total_l + recovered_total_l)
 
 
-native <- c(rep(1, 7), rep(0.86, 9), rep(0.842, 4), 0.814, 0.7676, 0.7784, rep(0.809, 5))
+#native <- c(rep(1, 7), rep(0.86, 9), rep(0.842, 4), 0.814, 0.7676, 0.7784, rep(0.809, 5))
 #travel_more <- 2 * (1 - native)
 #travel_less <- 0.5 * (1 - native)
-#native <- rep(1, 28)
+native <- rep(1, 28)
 
 parms <- c(beta_h = beta_h,
            beta_l = beta_l,
@@ -234,14 +234,30 @@ model <- function(t, y, parms){
   cases.l <- y[1236]
   cases.h <- y[1237]
   
-  
-  infected_total_h <- sum(sum(I1_h), sum(I2_h), sum(I3_h), sum(I4_h), sum(I2_h.v), sum(I3_h.v), sum(I4_h.v))
-  population_h <- y[1:616]
-  pop_h <- sum(population_h)
-  infected_total_l <- sum(sum(I1_l), sum(I2_l), sum(I3_l), sum(I4_l), sum(I2_l.v), sum(I3_l.v), sum(I4_l.v))
-  population_l <- y[617:1232]
-  pop_l <- sum(population_l)
-  
+  infecteds_h <- cbind((I1_h), (I2_h), (I3_h), (I4_h), (I2_h.v), (I3_h.v), (I4_h.v))
+  infected_total_h <- rowSums(infecteds_h)
+  population_h <- cbind(S1_h, I1_h, R1_h,
+                        S2_h, I2_h, R2_h,
+                        S3_h, I3_h, R3_h,
+                        S4_h, I4_h, R4_h,
+                        R1_h.v,
+                        S2_h.v, I2_h.v, R2_h.v,
+                        S3_h.v, I3_h.v, R3_h.v,
+                        S4_h.v, I4_h.v, R4_h.v)
+  pop_h <- rowSums(population_h)
+  birth_pop_h <- sum(pop_h)
+  infecteds_l <- cbind((I1_l), (I2_l), (I3_l), (I4_l), (I2_l.v), (I3_l.v), (I4_l.v))
+  infected_total_l <- rowSums(infecteds_l)
+  population_l <- cbind(S1_l, I1_l, R1_l,
+                 S2_l, I2_l, R2_l,
+                 S3_l, I3_l, R3_l,
+                 S4_l, I4_l, R4_l,
+                 R1_l.v,
+                 S2_l.v, I2_l.v, R2_l.v,
+                 S3_l.v, I3_l.v, R3_l.v,
+                 S4_l.v, I4_l.v, R4_l.v)
+  pop_l <- rowSums(population_l)
+  birth_pop_l <- sum(pop_l)
   # effective_population_h <- population_h + rep(travel,22) * population_l
   # effective_population_h <- sum(effective_population_h)
   # effective_population_l <- population_l + rep(travel,22) * population_h
@@ -249,7 +265,7 @@ model <- function(t, y, parms){
   
   #first infection
   dS1_h <-  
-    mu * c(pop_h, rep(0,27)) +
+    mu * c(birth_pop_h, rep(0,27)) +
     c(0, 1/365 / head(age_window, -1) * head(S1_h, -1)) -
     c(1/365 / head(age_window, -1) * head(S1_h, -1), 0) -
     native * S1_h * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) -
@@ -257,7 +273,7 @@ model <- function(t, y, parms){
     S1_h * delta -
     S1_h * vac_h * (1 - spec)
   dS1_l <-  
-    mu * c(pop_l, rep(0,27)) +
+    mu * c(birth_pop_l, rep(0,27)) +
     c(0, 1/365 / head(age_window, -1) * head(S1_l, -1)) -
     c(1/365 / head(age_window, -1) * head(S1_l, -1), 0)  -
     native * S1_l * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) -
