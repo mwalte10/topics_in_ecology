@@ -1,8 +1,0 @@
-#!/bin/csh
-
-#$ -N dengvaxia_vac
-#$ -t 1-50
-
-module load bio/R/3.3.1-gcc
-
-Rscript basic_vaccination_movement.R $SGE_TASK_ID
