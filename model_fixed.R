@@ -35,9 +35,9 @@ for(i in 1:4){
   j <- 4 * (i - 1)
   vac_l.new[(1:4) + j] <- rep(vac_l[i], 4)
 }
-vac_mat <- cbind(vac_h.new, vac_l.new)
-vac_h <- vac_mat[input,1]
-vac_l <- vac_mat[input,2]
+vac.mat <- cbind(vac_h.new, vac_l.new)
+vac_h <- vac.mat[input,1]
+vac_l <- vac.mat[input,2]
 
 
 library(deSolve)
