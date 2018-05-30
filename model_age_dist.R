@@ -768,24 +768,20 @@ out_null <- ode(times = times, y = y_init, func = model, parms = parms_null)
 # save(secondary_averted, file = paste('secondary_averted', i, '.RData', sep = ''))
 }
 #Age dist of infected
-{age.mat <- matrix(data = NA, nrow = 28, ncol = nrow(out))
+age.mat <- matrix(data = NA, nrow = 28, ncol = nrow(out))
 age.mat[,1] <- rep(0, 28)
 for(i in 2:nrow(out)){
   age.mat[,i] <- out[i, 1235: 1262] / out[i,1234]
 }
-
-{png(filename = paste('age_distribution_', i, '.png', sep = ''))
-  par(xpd = FALSE)
-  barplot(age.mat, col = rainbow(28), ylim = c(0,1), border = NA, space = 0,
-         main = "Age Distribution of Infections",
-         ylab = "Age Distribution", xlab = "Timestep")
+{mypath <- file.path("C:","R","/afs/crc.nd.edu/user/m/mwalte10/topics_in_ecology",paste('age_distribution_', i, '.png', sep = ''))
+jpg(file=mypath)
+barplot(age.mat, col = rainbow(28), ylim = c(0,1), border = NA, space = 0,
+        main = "Age Distribution of Infections",
+        ylab = "Age Distribution", xlab = "Timestep")
 abline(v = years_vac * 365 * 10)
 box()
 legend("topleft",  legend=c("7","9"), fill = c(rainbow(28)[7], rainbow(28)[9]),
        pch=c(1,3), title="Notable Ages")
 dev.off()
-}}
-
-
-
+}
 
