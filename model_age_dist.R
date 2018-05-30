@@ -115,10 +115,10 @@ population_h <- sum(susceptible_total_h + infected_total_h + recovered_total_h)
 population_l <- sum(susceptible_total_l + infected_total_l + recovered_total_l)
 
 
-#native <- c(rep(1, 7), rep(0.86, 9), rep(0.842, 4), 0.814, 0.7676, 0.7784, rep(0.809, 5))
+native <- c(rep(1, 7), rep(0.86, 9), rep(0.842, 4), 0.814, 0.7676, 0.7784, rep(0.809, 5))
 #travel_more <- 2 * (1 - native)
 #travel_less <- 0.5 * (1 - native)
-native <- rep(1, 28)
+#native <- rep(1, 28)
 
 parms <- c(beta_h = beta_h,
            beta_l = beta_l,
