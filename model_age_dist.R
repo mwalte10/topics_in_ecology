@@ -774,7 +774,7 @@ for(i in 2:nrow(out)){
   age.mat[,i] <- out[i, 1235: 1262] / out[i,1234]
 }
 
-pdf(paste('age_distribution_', i, '.png', sep = ''))
+pdf(paste('age_distribution_', i, '.pdf', sep = ''))
 barplot(age.mat, col = rainbow(28), ylim = c(0,1), border = NA, space = 0,
         main = "Age Distribution of Infections",
         ylab = "Age Distribution", xlab = "Timestep")
