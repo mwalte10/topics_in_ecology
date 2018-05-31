@@ -777,7 +777,7 @@ colors <- rainbow(28)
 colors[7] <- "black"
 colors[9] <- "red"
 
-pdf(paste('age_distribution_', i, '.pdf', sep = ''))
+pdf(paste('age_distribution_', input, '.pdf', sep = ''))
 barplot(age.mat, col = colors, ylim = c(0,1), border = NA, space = 0,
         main = "Age Distribution of Infections",
         ylab = "Age Distribution", xlab = "Timestep")
@@ -785,6 +785,6 @@ abline(v = years_vac * 365 * 10)
 box()
 legend("topleft",  legend=c("7","9"), fill = c("black", "red"),
        pch=c(1,3), title="Notable Ages")
-dev.off()
+rm(dev.off()
 
 
