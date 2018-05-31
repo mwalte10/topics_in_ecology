@@ -785,6 +785,6 @@ abline(v = years_vac * 365 * 10)
 box()
 legend("topleft",  legend=c("7","9"), fill = c("black", "red"),
        pch=c(1,3), title="Notable Ages")
-rm(dev.off()
+dev.off()
 
 
