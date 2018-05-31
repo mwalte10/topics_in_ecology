@@ -770,17 +770,20 @@ out_null <- ode(times = times, y = y_init, func = model, parms = parms_null)
 #Age dist of infected
 age.mat <- matrix(data = NA, nrow = 28, ncol = nrow(out))
 age.mat[,1] <- rep(0, 28)
-for(i in 2:nrow(out)){
-  age.mat[,i] <- out[i, 1235: 1262] / out[i,1234]
+for(j in 2:nrow(out)){
+  age.mat[,j] <- out[j, 1235: 1262] / out[j,1234]
 }
+colors <- rainbow(28)
+colors[7] <- "black"
+colors[9] <- "red"
 
 pdf(paste('age_distribution_', i, '.pdf', sep = ''))
-barplot(age.mat, col = rainbow(28), ylim = c(0,1), border = NA, space = 0,
+barplot(age.mat, col = colors, ylim = c(0,1), border = NA, space = 0,
         main = "Age Distribution of Infections",
         ylab = "Age Distribution", xlab = "Timestep")
 abline(v = years_vac * 365 * 10)
 box()
-legend("topleft",  legend=c("7","9"), fill = c(rainbow(28)[7], rainbow(28)[9]),
+legend("topleft",  legend=c("7","9"), fill = c("black", "red"),
        pch=c(1,3), title="Notable Ages")
 dev.off()
 
