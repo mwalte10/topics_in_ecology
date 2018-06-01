@@ -865,7 +865,7 @@ colors <- rainbow(28)
 colors[7] <- "black"
 colors[9] <- "red"
 
-pdf(paste('age_distribution_', input, '.pdf', sep = ''))
+png(paste('age_distribution_', input, '.png', sep = ''))
 barplot(age.mat, col = colors, ylim = c(0,1), border = NA, space = 0,
         main = "Age Distribution of Infections",
         ylab = "Age Distribution", xlab = "Timestep")
