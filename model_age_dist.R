@@ -28,7 +28,7 @@ input = as.numeric(args[1])
 beta_h <- 0.3236842
 beta_l <- 0.95
 vac_h <- seq(0.1, 0.9, length.out = 4)
-vac_l <- seq(0.1, 0.9, length.out = 4)
+vac_l <- rep(0, 4)
 vac_h.new <- rep(vac_h, 4)
 vac_l.new <- rep(NA, 16)
 for(i in 1:4){
@@ -115,10 +115,10 @@ population_h <- sum(susceptible_total_h + infected_total_h + recovered_total_h)
 population_l <- sum(susceptible_total_l + infected_total_l + recovered_total_l)
 
 
-native <- c(rep(1, 7), rep(0.86, 9), rep(0.842, 4), 0.814, 0.7676, 0.7784, rep(0.809, 5))
+#native <- c(rep(1, 7), rep(0.86, 9), rep(0.842, 4), 0.814, 0.7676, 0.7784, rep(0.809, 5))
 #travel_more <- 2 * (1 - native)
 #travel_less <- 0.5 * (1 - native)
-#native <- rep(1, 28)
+native <- rep(1, 28)
 
 parms <- c(beta_h = beta_h,
            beta_l = beta_l,
@@ -856,23 +856,23 @@ out_null <- ode(times = times, y = y_init, func = model, parms = parms_null)
 # save(secondary_averted, file = paste('secondary_averted', i, '.RData', sep = ''))
 }
 #Age dist of infected
-age.mat <- matrix(data = NA, nrow = 28, ncol = nrow(out))
-age.mat[,1] <- rep(0, 28)
-for(j in 2:nrow(out)){
-  age.mat[,j] <- out[j, 1234: 1261] / out[j,1262]
-}
-colors <- rainbow(28)
-colors[7] <- "black"
-colors[9] <- "red"
-
-png(paste('age_distribution_', input, '.png', sep = ''))
-barplot(age.mat, col = colors, ylim = c(0,1), border = NA, space = 0,
-        main = "Age Distribution of Infections",
-        ylab = "Age Distribution", xlab = "Timestep")
-abline(v = years_vac * 365 * 10)
-box()
-legend("topleft",  legend=c("7","9"), fill = c("black", "red"),
-       pch=c(1,3), title="Notable Ages")
-dev.off()
+# age.mat <- matrix(data = NA, nrow = 28, ncol = nrow(out))
+# age.mat[,1] <- rep(0, 28)
+# for(j in 2:nrow(out)){
+#   age.mat[,j] <- out[j, 1234: 1261] / out[j,1262]
+# }
+# colors <- rainbow(28)
+# colors[7] <- "black"
+# colors[9] <- "red"
+# 
+# png(paste('age_distribution_', input, '.png', sep = ''))
+# barplot(age.mat, col = colors, ylim = c(0,1), border = NA, space = 0,
+#         main = "Age Distribution of Infections",
+#         ylab = "Age Distribution", xlab = "Timestep")
+# abline(v = years_vac * 365 * 10)
+# box()
+# legend("topleft",  legend=c("7","9"), fill = c("black", "red"),
+#        pch=c(1,3), title="Notable Ages")
+# dev.off()
 
 
