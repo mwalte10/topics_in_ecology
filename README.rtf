@@ -1,0 +1,66 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1348\cocoasubrtf170
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\listtable{\list\listtemplateid1\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid1\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{hyphen\}}{\leveltext\leveltemplateid2\'01\uc0\u8259 ;}{\levelnumbers;}\fi-360\li1440\lin1440 }{\listname ;}\listid1}}
+{\*\listoverridetable{\listoverride\listid1\listoverridecount0\ls1}}
+\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+
+\f0\b\fs28 \cf0 Effect of Dengvaxia campaigns in neighborhoods of differing transmission intensity\
+\
+
+\b0\fs24 This study utilizes a modified SIR framework to examine the implications of differing vaccination campaigns between two areas of varying transmission intensities which experience travel between each area. This was originally motivated by neighborhoods of differing socioeconomic status (SES), and so some variables reflect one neighborhood of a higher SES (end in \'93_h\'94) and some reflect a neighborhood of a lower SES (end in \'93_l\'94).\
+\
+
+\fs28 Files\
+
+\b\fs24 model_age_dist.R
+\b0  is the most up-to-date version of the model and was created to examine the effect of vaccination on the age distribution of infections. It follows the general form of all models in this study which can be outlined as:\
+\pard\tx220\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\fi-720\pardirnatural
+\ls1\ilvl0\cf0 {\listtext	\'95	}CRC information\
+\pard\tx940\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li1440\fi-1440\pardirnatural
+\ls1\ilvl1\cf0 {\listtext	\uc0\u8259 	}Includes whether beta is being varied to establish the beta/SP9 relationship or whether vaccination coverage is being varied.\
+\pard\tx220\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\fi-720\pardirnatural
+\ls1\ilvl0\cf0 {\listtext	\'95	}Establishing initial conditions\
+\pard\tx940\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li1440\fi-1440\pardirnatural
+\ls1\ilvl1\cf0 {\listtext	\uc0\u8259 	}A variety of functions that sets up the correct age distribution of susceptible, infected, and recovered persons. \
+\pard\tx220\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\fi-720\pardirnatural
+\ls1\ilvl0\cf0 {\listtext	\'95	}Parameters\
+\pard\tx940\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li1440\fi-1440\pardirnatural
+\ls1\ilvl1\cf0 {\listtext	\uc0\u8259 	}gamma: recovery rate\
+{\listtext	\uc0\u8259 	}delta: death rate (age-specific)\
+{\listtext	\uc0\u8259 	}mu: birth rate\
+{\listtext	\uc0\u8259 	}sigma: loss of cross-immunity\
+{\listtext	\uc0\u8259 	}native: amount of time spent within one km of home\
+{\listtext	\uc0\u8259 	}travel: amount of time spent outside of one km of home\
+{\listtext	\uc0\u8259 	}And then the null version where vaccination coverage is zero\
+\pard\tx220\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\fi-720\pardirnatural
+\ls1\ilvl0\cf0 {\listtext	\'95	}Model\
+\pard\tx940\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li1440\fi-1440\pardirnatural
+\ls1\ilvl1\cf0 {\listtext	\uc0\u8259 	}A series of 44 differential equations which require 
+\b \'91deSolve\'92
+\b0  to solve. \
+{\listtext	\uc0\u8259 	}Gives a data frame which gives the state of each of the differential equations at each time step.\
+{\listtext	\uc0\u8259 	}Also gives the age breakdown of the people infected, the total number people infected, number of people infected in the _l community, number of cases, and number of cases in the _l community at each timestep.\
+{\listtext	\uc0\u8259 	}y_init: initial conditions\
+{\listtext	\uc0\u8259 	}years: total number of years the model will run for\
+{\listtext	\uc0\u8259 	}years_vac: number of years after which vaccination will be enacted\
+{\listtext	\uc0\u8259 	}out: regular model 
+\b with 
+\b0 vaccination\
+{\listtext	\uc0\u8259 	}out_null: model 
+\b without
+\b0  vaccination\
+\pard\tx220\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li720\fi-720\pardirnatural
+\ls1\ilvl0\cf0 {\listtext	\'95	}Outputs\
+\pard\tx940\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li1440\fi-1440\pardirnatural
+\ls1\ilvl1\cf0 {\listtext	\uc0\u8259 	}SP9 calcs: will give the sp9 in each community at a given beta. Used to initially establish relationship.\
+{\listtext	\uc0\u8259 	}Averted calcs: gives infections and cases averted\
+{\listtext	\uc0\u8259 	}Secondary cases calcs: gives the difference in secondary cases due to vac vs. due to naturally acquiring them.\
+{\listtext	\uc0\u8259 	}Age dist infected: used to visualize how the age distribution changes after vaccination.\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+
+\b \cf0 \
+processing_population.R
+\b0  can be used to create the gridded graphics that show how cases/infections averted changes with coverage level. \
+}
