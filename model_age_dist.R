@@ -27,6 +27,8 @@ input = as.numeric(args[1])
 ##########################
 beta_h <- 0.3236842
 beta_l <- 0.95
+##
+replace <- c(8, 15, 16, 17, 43, 48, 49, 50)
 vac_h <- seq(0.1, 0.9, length.out = 20)
 vac_l <- seq(0.1, 0.9, length.out = 20)
 vac_h.new <- rep(vac_h, 20)
@@ -36,8 +38,8 @@ for(i in 1:20){
   vac_l.new[(1:20) + j] <- rep(vac_l[i], 20)
 }
 vac.mat <- cbind(vac_h.new, vac_l.new)
-vac_h <- vac.mat[input,1]
-vac_l <- vac.mat[input,2]
+vac_h <- vac.mat[replace[input],1]
+vac_l <- vac.mat[replace[input],2]
 
 
 library(deSolve)
@@ -822,58 +824,59 @@ out_null <- ode(times = times, y = y_init, func = model, parms = parms_null)
   output <- cbind(infections_averted.h, infections_averted, infections_averted.l,
                   cases_averted.h, cases_averted, cases_averted.l)
 }
-  save(output, file = paste('output_', input, '.RData', sep = ''))
+  save(output, file = paste('output_', replace[input], '.RData', sep = ''))
 }
-#Secondary cases calcs
-{
-secondary.h <- out[,((28 * 5) + 2):((28 * 6) + 1)]
-secondary.h <- rowSums(secondary.h)
-secondary.l <- out[,((28 * 27) + 2):((28 * 28) + 1)]
-secondary.l <- rowSums(secondary.l)
-secondary.hv <- out[,((28 * 18) + 2):((28 * 19) + 1)]
-secondary.hv <- rowSums(secondary.hv)
-secondary.lv <- out[,((28 * 40) + 2):((28 * 41) + 1)]
-secondary.lv <- rowSums(secondary.lv)
-
-secondary.h <- secondary.h + secondary.hv
-secondary.l <- secondary.l + secondary.lv
-
-secondary.h_v <- out_null[,((28 * 5) + 2):((28 * 6) + 1)]
-secondary.h_v <- rowSums(secondary.h_v)
-secondary.l_v <- out_null[,((28 * 27) + 2):((28 * 28) + 1)]
-secondary.l_v <- rowSums(secondary.l_v)
-secondary.hv_v <- out_null[,((28 * 18) + 2):((28 * 19) + 1)]
-secondary.hv_v <- rowSums(secondary.hv_v)
-secondary.lv_v <- out_null[,((28 * 40) + 2):((28 * 41) + 1)]
-secondary.lv_v <- rowSums(secondary.lv_v)
-
-secondary.h_v <- secondary.h_v + secondary.hv_v
-secondary.l_v <- secondary.l_v + secondary.lv_v
-
-h_avert <- ((secondary.h - secondary.h_v) / secondary.h_v) * 100
-l_avert <- ((secondary.l - secondary.l_v) / secondary.l_v) * 100
-secondary_averted <- cbind(h_avert, l_avert)
-
-save(secondary_averted, file = paste('secondary_averted', i, '.RData', sep = ''))
-}
-#Age dist of infected
-age.mat <- matrix(data = NA, nrow = 28, ncol = nrow(out))
-age.mat[,1] <- rep(0, 28)
-for(j in 2:nrow(out)){
-  age.mat[,j] <- out[j, 1234: 1261] / out[j,1262]
-}
-colors <- rainbow(28)
-colors[7] <- "black"
-colors[9] <- "red"
-
-png(paste('age_distribution_', input, '.png', sep = ''))
-barplot(age.mat, col = colors, ylim = c(0,1), border = NA, space = 0,
-        main = "Age Distribution of Infections",
-        ylab = "Age Distribution", xlab = "Timestep")
-abline(v = years_vac * 365 * 10)
-box()
-legend("topleft",  legend=c("7","9"), fill = c("black", "red"),
-       pch=c(1,3), title="Notable Ages")
-dev.off()
+{# #Secondary cases calcs
+# {
+# secondary.h <- out[,((28 * 5) + 2):((28 * 6) + 1)]
+# secondary.h <- rowSums(secondary.h)
+# secondary.l <- out[,((28 * 27) + 2):((28 * 28) + 1)]
+# secondary.l <- rowSums(secondary.l)
+# secondary.hv <- out[,((28 * 18) + 2):((28 * 19) + 1)]
+# secondary.hv <- rowSums(secondary.hv)
+# secondary.lv <- out[,((28 * 40) + 2):((28 * 41) + 1)]
+# secondary.lv <- rowSums(secondary.lv)
+# 
+# secondary.h <- secondary.h + secondary.hv
+# secondary.l <- secondary.l + secondary.lv
+# 
+# secondary.h_v <- out_null[,((28 * 5) + 2):((28 * 6) + 1)]
+# secondary.h_v <- rowSums(secondary.h_v)
+# secondary.l_v <- out_null[,((28 * 27) + 2):((28 * 28) + 1)]
+# secondary.l_v <- rowSums(secondary.l_v)
+# secondary.hv_v <- out_null[,((28 * 18) + 2):((28 * 19) + 1)]
+# secondary.hv_v <- rowSums(secondary.hv_v)
+# secondary.lv_v <- out_null[,((28 * 40) + 2):((28 * 41) + 1)]
+# secondary.lv_v <- rowSums(secondary.lv_v)
+# 
+# secondary.h_v <- secondary.h_v + secondary.hv_v
+# secondary.l_v <- secondary.l_v + secondary.lv_v
+# 
+# h_avert <- ((secondary.h - secondary.h_v) / secondary.h_v) * 100
+# l_avert <- ((secondary.l - secondary.l_v) / secondary.l_v) * 100
+# secondary_averted <- cbind(h_avert, l_avert)
+# 
+# save(secondary_averted, file = paste('secondary_averted', i, '.RData', sep = ''))
+# }
+# #Age dist of infected
+# age.mat <- matrix(data = NA, nrow = 28, ncol = nrow(out))
+# age.mat[,1] <- rep(0, 28)
+# for(j in 2:nrow(out)){
+#   age.mat[,j] <- out[j, 1234: 1261] / out[j,1262]
+# }
+# colors <- rainbow(28)
+# colors[7] <- "black"
+# colors[9] <- "red"
+# 
+# png(paste('age_distribution_', input, '.png', sep = ''))
+# barplot(age.mat, col = colors, ylim = c(0,1), border = NA, space = 0,
+#         main = "Age Distribution of Infections",
+#         ylab = "Age Distribution", xlab = "Timestep")
+# abline(v = years_vac * 365 * 10)
+# box()
+# legend("topleft",  legend=c("7","9"), fill = c("black", "red"),
+#        pch=c(1,3), title="Notable Ages")
+# dev.off()
+  }
 
 
