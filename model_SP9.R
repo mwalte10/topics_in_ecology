@@ -115,7 +115,8 @@ population_h <- sum(susceptible_total_h + infected_total_h + recovered_total_h)
 population_l <- sum(susceptible_total_l + infected_total_l + recovered_total_l)
 
 
-native <- c(rep(1, 7), rep(0.86, 9), rep(0.842, 4), 0.814, 0.7676, 0.7784, rep(0.809, 5))
+#native <- c(rep(1, 7), rep(0.86, 9), rep(0.842, 4), 0.814, 0.7676, 0.7784, rep(0.809, 5))
+native <- rep(0.9999, 28)
 #travel_more <- 2 * (1 - native)
 #travel_less <- 0.5 * (1 - native)
 #native <- rep(1, 28)
@@ -761,83 +762,7 @@ no_exposure <- out[i, nines_h[1]] + out[i, nines_h[13]] + out[i, nines_h[14]]
 sp9.h <- 1 - (no_exposure / sum(out[i, nines_h]))
 
 sp9.vec <- c(sp9, sp9.l, sp9.h)
-save(sp9.vec, file = paste('sp9.more_', input, '.RData', sep = ''))
-}
-#Averted calcs
-{
-  # {
-  #out_last <- out[nrow(out),(2:(ncol(out) - 4))]
-#   track_infected <- out[,(ncol(out) - 3)]
-#   track_l <- out[,(ncol(out) - 2)]
-#   track_h <- track_infected - track_l
-#   track_infected <- track_infected[length(track_infected)]
-#   track_l <- track_l[length(track_l)]
-#   track_h <- track_infected - track_l
-#   cases <- out[,(ncol(out) - 1)]
-#   cases <- cases[length(cases)]
-#   cases.l <- out[,(ncol(out))]
-#   cases.l <- cases.l[length(cases.l)]
-#   cases.h <- cases - cases.l
-# }
-# 
-# ##Null outputs
-# {track_infected.null <- out_null[,(ncol(out_null) - 3)]
-#   track_infected.null <- track_infected.null[length(track_infected.null)]
-#   track_l.null <- out_null[,(ncol(out_null) - 2)]
-#   track_l.null <- track_l.null[length(track_l.null)]
-#   track_h.null <- track_infected.null - track_l.null
-# 
-#   cases.null <- out_null[,(ncol(out_null) - 1)]
-#   cases.null <- cases.null[length(cases.null)]
-#   cases.l.null <- out_null[,(ncol(out_null))]
-#   cases.l.null <- cases.l.null[length(cases.l.null)]
-#   cases.h.null <- cases.null - cases.l.null
-#   }
-# 
-# #Averted calculations
-# {
-#   infections_averted <- (((track_infected.null - track_infected) / track_infected.null) * 100)
-#   infections_averted.h <- (((track_h.null - track_h) / track_h.null) * 100)
-#   infections_averted.l <- (((track_l.null - track_l) / track_l.null) * 100)
-#   cases_averted <- (((cases.null - cases) / cases.null) * 100)
-#   cases_averted.h <- (((cases.h.null - cases.h) / cases.h.null) * 100)
-#   cases_averted.l <- (((cases.l.null - cases.l) / cases.l.null) * 100)
-#   output <- cbind(infections_averted.h, infections_averted, infections_averted.l,
-#                   cases_averted.h, cases_averted, cases_averted.l)
-# }
-#   save(output, file = paste('output_', input, '.RData', sep = ''))
-}
-#Secondary cases calcs
-{
-# secondary.h <- out[,((28 * 5) + 2):((28 * 6) + 1)]
-# secondary.h <- rowSums(secondary.h)
-# secondary.l <- out[,((28 * 27) + 2):((28 * 28) + 1)]
-# secondary.l <- rowSums(secondary.l)
-# secondary.hv <- out[,((28 * 18) + 2):((28 * 19) + 1)]
-# secondary.hv <- rowSums(secondary.hv)
-# secondary.lv <- out[,((28 * 40) + 2):((28 * 41) + 1)]
-# secondary.lv <- rowSums(secondary.lv)
-# 
-# secondary.h <- secondary.h + secondary.hv
-# secondary.l <- secondary.l + secondary.lv
-# 
-# secondary.h_v <- out_null[,((28 * 5) + 2):((28 * 6) + 1)]
-# secondary.h_v <- rowSums(secondary.h_v)
-# secondary.l_v <- out_null[,((28 * 27) + 2):((28 * 28) + 1)]
-# secondary.l_v <- rowSums(secondary.l_v)
-# secondary.hv_v <- out_null[,((28 * 18) + 2):((28 * 19) + 1)]
-# secondary.hv_v <- rowSums(secondary.hv_v)
-# secondary.lv_v <- out_null[,((28 * 40) + 2):((28 * 41) + 1)]
-# secondary.lv_v <- rowSums(secondary.lv_v)
-# 
-# secondary.h_v <- secondary.h_v + secondary.hv_v
-# secondary.l_v <- secondary.l_v + secondary.lv_v
-# 
-# h_avert <- ((secondary.h - secondary.h_v) / secondary.h_v) * 100
-# l_avert <- ((secondary.l - secondary.l_v) / secondary.l_v) * 100
-# secondary_averted <- cbind(h_avert, l_avert)
-# 
-# save(secondary_averted, file = paste('secondary_averted', i, '.RData', sep = ''))
+save(sp9.vec, file = paste('sp9.test_', input, '.RData', sep = ''))
 }
 
 
