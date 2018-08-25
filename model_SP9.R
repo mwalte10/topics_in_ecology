@@ -739,7 +739,8 @@ out <- ode(times = times, y = y_init, func = model, parms = parms)
 
 #SP9 calcs
 {
-{nines_h <- 11 + c(1, 29, 57,
+{
+  nines_h <- 11 + c(1, 29, 57,
                    85, 113, 141,
                    169, 197, 225,
                    253, 281, 309,
@@ -748,7 +749,8 @@ out <- ode(times = times, y = y_init, func = model, parms = parms)
                    449, 477, 505,
                    533, 561, 589)
   nines_l <- nines_h + 616
-  nines <- c(nines_h, nines_l)}
+  nines <- c(nines_h, nines_l)
+  }
 
 i <- nrow(out)
 no_exposure <- out[i, nines[1]] + out[i, nines[13]] + out[i, nines[14]] +
