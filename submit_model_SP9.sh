@@ -5,4 +5,4 @@
 
 module load bio/R/3.3.1-gcc
 
-Rscript model_age_dist.R $SGE_TASK_ID
+Rscript model_SP9.R $SGE_TASK_ID
