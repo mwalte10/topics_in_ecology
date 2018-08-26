@@ -758,47 +758,47 @@ out_null <- ode(times = times, y = y_init, func = model, parms = parms_null)
 
 #Averted calcs
 {
-{
-  #out_last <- out[nrow(out),(2:(ncol(out) - 4))]
-  track_infected <- out[,(ncol(out) - 3)]
-  track_l <- out[,(ncol(out) - 2)]
-  track_h <- track_infected - track_l
-  track_infected <- track_infected[length(track_infected)]
-  track_l <- track_l[length(track_l)]
-  track_h <- track_infected - track_l
-  cases <- out[,(ncol(out) - 1)]
-  cases <- cases[length(cases)]
-  cases.l <- out[,(ncol(out))]
-  cases.l <- cases.l[length(cases.l)]
-  cases.h <- cases - cases.l
-}
-
-##Null outputs
-{track_infected.null <- out_null[,(ncol(out_null) - 3)]
-  track_infected.null <- track_infected.null[length(track_infected.null)]
-  track_l.null <- out_null[,(ncol(out_null) - 2)]
-  track_l.null <- track_l.null[length(track_l.null)]
-  track_h.null <- track_infected.null - track_l.null
-
-  cases.null <- out_null[,(ncol(out_null) - 1)]
-  cases.null <- cases.null[length(cases.null)]
-  cases.l.null <- out_null[,(ncol(out_null))]
-  cases.l.null <- cases.l.null[length(cases.l.null)]
-  cases.h.null <- cases.null - cases.l.null
-  }
-
-#Averted calculations
-{
-  infections_averted <- (((track_infected.null - track_infected) / track_infected.null) * 100)
-  infections_averted.h <- (((track_h.null - track_h) / track_h.null) * 100)
-  infections_averted.l <- (((track_l.null - track_l) / track_l.null) * 100)
-  cases_averted <- (((cases.null - cases) / cases.null) * 100)
-  cases_averted.h <- (((cases.h.null - cases.h) / cases.h.null) * 100)
-  cases_averted.l <- (((cases.l.null - cases.l) / cases.l.null) * 100)
-  output <- cbind(infections_averted.h, infections_averted, infections_averted.l,
-                  cases_averted.h, cases_averted, cases_averted.l)
-}
-  save(output, file = paste('output_', input, '.RData', sep = ''))
+# {
+#   #out_last <- out[nrow(out),(2:(ncol(out) - 4))]
+#   track_infected <- out[,(ncol(out) - 3)]
+#   track_l <- out[,(ncol(out) - 2)]
+#   track_h <- track_infected - track_l
+#   track_infected <- track_infected[length(track_infected)]
+#   track_l <- track_l[length(track_l)]
+#   track_h <- track_infected - track_l
+#   cases <- out[,(ncol(out) - 1)]
+#   cases <- cases[length(cases)]
+#   cases.l <- out[,(ncol(out))]
+#   cases.l <- cases.l[length(cases.l)]
+#   cases.h <- cases - cases.l
+# }
+# 
+# ##Null outputs
+# {track_infected.null <- out_null[,(ncol(out_null) - 3)]
+#   track_infected.null <- track_infected.null[length(track_infected.null)]
+#   track_l.null <- out_null[,(ncol(out_null) - 2)]
+#   track_l.null <- track_l.null[length(track_l.null)]
+#   track_h.null <- track_infected.null - track_l.null
+# 
+#   cases.null <- out_null[,(ncol(out_null) - 1)]
+#   cases.null <- cases.null[length(cases.null)]
+#   cases.l.null <- out_null[,(ncol(out_null))]
+#   cases.l.null <- cases.l.null[length(cases.l.null)]
+#   cases.h.null <- cases.null - cases.l.null
+#   }
+# 
+# #Averted calculations
+# {
+#   infections_averted <- (((track_infected.null - track_infected) / track_infected.null) * 100)
+#   infections_averted.h <- (((track_h.null - track_h) / track_h.null) * 100)
+#   infections_averted.l <- (((track_l.null - track_l) / track_l.null) * 100)
+#   cases_averted <- (((cases.null - cases) / cases.null) * 100)
+#   cases_averted.h <- (((cases.h.null - cases.h) / cases.h.null) * 100)
+#   cases_averted.l <- (((cases.l.null - cases.l) / cases.l.null) * 100)
+#   output <- cbind(infections_averted.h, infections_averted, infections_averted.l,
+#                   cases_averted.h, cases_averted, cases_averted.l)
+# }
+#   save(output, file = paste('output_', input, '.RData', sep = ''))
 }
 {
   # #Secondary cases calcs
@@ -831,7 +831,7 @@ h_avert <- ((secondary.h_v - secondary.h) / secondary.h_v) * 100
 l_avert <- ((secondary.l_v - secondary.l) / secondary.l_v) * 100
 secondary_averted <- cbind(h_avert, l_avert)
 
-save(secondary_averted, file = paste('secondary_averted', i, '.RData', sep = ''))
+save(secondary_averted, file = paste('secondary_averted_', i, '.RData', sep = ''))
 }
 
   }
