@@ -593,10 +593,10 @@ model <- function(t, y, parms){
     S4_l * vac_l * sens
   
   I_tot <-
-    native * S1_h * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
-    travel * S1_h * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
-    native * S1_l * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
-    travel * S1_l * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    # native * S1_h * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    # travel * S1_h * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    # native * S1_l * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    # travel * S1_l * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
     native * S2_h * beta_h * 0.75 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
     travel * S2_h * beta_l * 0.75 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
     native * S2_h.v * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
@@ -605,59 +605,59 @@ model <- function(t, y, parms){
     travel * S2_l * beta_h * 0.75 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
     native * S2_l.v * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
     travel * S2_l.v * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
-    native * S3_h * beta_h * 0.5 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
-    travel * S3_h * beta_l * 0.5 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
-    native * S3_h.v * beta_h * 0.75 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
-    travel * S3_h.v * beta_l * 0.75 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
-    native * S3_l * beta_l * 0.5 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
-    travel * S3_l * beta_h * 0.5 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
-    native * S3_l.v * beta_l * 0.75 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
-    travel * S3_l.v * beta_h * 0.75 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
-    native * S4_h * beta_h * 0.25 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
-    travel * S4_h * beta_l * 0.25 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
-    native * S4_h.v * beta_h * 0.5 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
-    travel * S4_h.v * beta_l * 0.5 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
-    native * S4_l * beta_l * 0.25 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
-    travel * S4_l * beta_h * 0.25 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
-    native * S4_l.v * beta_l * 0.5 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
-    travel * S4_l.v * beta_h * 0.5 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) 
+    # native * S3_h * beta_h * 0.5 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    # travel * S3_h * beta_l * 0.5 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    # native * S3_h.v * beta_h * 0.75 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    # travel * S3_h.v * beta_l * 0.75 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    # native * S3_l * beta_l * 0.5 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    # travel * S3_l * beta_h * 0.5 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    # native * S3_l.v * beta_l * 0.75 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    # travel * S3_l.v * beta_h * 0.75 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    # native * S4_h * beta_h * 0.25 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    # travel * S4_h * beta_l * 0.25 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    # native * S4_h.v * beta_h * 0.5 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    # travel * S4_h.v * beta_l * 0.5 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    # native * S4_l * beta_l * 0.25 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    # travel * S4_l * beta_h * 0.25 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    # native * S4_l.v * beta_l * 0.5 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    # travel * S4_l.v * beta_h * 0.5 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) 
   I_total <- sum(I_tot)
   
-  I_secondary_tot <- 
-    native * S2_h * beta_h * 0.75 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
-    travel * S2_h * beta_l * 0.75 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
-    native * S2_h.v * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
-    travel * S2_h.v * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
-    native * S2_l * beta_l * 0.75 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
-    travel * S2_l * beta_h * 0.75 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
-    native * S2_l.v * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
-    travel * S2_l.v * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) 
-  I_secondary_tot <- sum(I_secondary_tot)
+  # I_secondary_tot <- 
+  #   native * S2_h * beta_h * 0.75 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+  #   travel * S2_h * beta_l * 0.75 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+  #   native * S2_h.v * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+  #   travel * S2_h.v * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+  #   native * S2_l * beta_l * 0.75 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+  #   travel * S2_l * beta_h * 0.75 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+  #   native * S2_l.v * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+  #   travel * S2_l.v * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) 
+  # I_secondary_tot <- sum(I_secondary_tot)
     
  
    I_l <-
-    native * S1_l * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
-    travel * S1_l * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    # native * S1_l * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    # travel * S1_l * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
     native * S2_l * beta_l * 0.75 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
     travel * S2_l * beta_h * 0.75 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
     native * S2_l.v * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
     travel * S2_l.v * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
-    native * S3_l * beta_l * 0.5 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
-    travel * S3_l * beta_h * 0.5 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
-    native * S3_l.v * beta_l * 0.75 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
-    travel * S3_l.v * beta_h * 0.75 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
-    native * S4_l * beta_l * 0.25 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
-    travel * S4_l * beta_h * 0.25 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
-    native * S4_l.v * beta_l * 0.5 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
-    travel * S4_l.v * beta_h * 0.5 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) 
+    # native * S3_l * beta_l * 0.5 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    # travel * S3_l * beta_h * 0.5 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    # native * S3_l.v * beta_l * 0.75 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    # travel * S3_l.v * beta_h * 0.75 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    # native * S4_l * beta_l * 0.25 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    # travel * S4_l * beta_h * 0.25 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    # native * S4_l.v * beta_l * 0.5 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    # travel * S4_l.v * beta_h * 0.5 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) 
   I_l <- sum(I_l)
   
-  I_l_secondary <-
-    native * S2_l * beta_l * 0.75 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
-    travel * S2_l * beta_h * 0.75 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
-    native * S2_l.v * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
-    travel * S2_l.v * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l)
-  I_l_secondary <- sum(I_l_secondary)
+  # I_l_secondary <-
+  #   native * S2_l * beta_l * 0.75 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+  #   travel * S2_l * beta_h * 0.75 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+  #   native * S2_l.v * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+  #   travel * S2_l.v * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l)
+  # I_l_secondary <- sum(I_l_secondary)
     
   
   primary <-
@@ -700,7 +700,8 @@ model <- function(t, y, parms){
     travel * S4_l * beta_h * 0.25 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) 
   quaternary <- sum(quaternary) * 0.063425
   
-  cases <- primary + secondary + tertiary + quaternary
+  # cases <- primary + secondary + tertiary + quaternary
+  cases <- secondary 
   
   primary.l <-
     native * S1_l * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
@@ -728,7 +729,8 @@ model <- function(t, y, parms){
     travel * S4_l * beta_h * 0.25 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l)
   quaternary.l <- sum(quaternary.l) * 0.063425
   
-  cases.l <- primary.l + secondary.l  + tertiary.l + quaternary.l
+  # cases.l <- primary.l + secondary.l  + tertiary.l + quaternary.l
+  cases.l <- secondary.l  
   
   
 
@@ -750,8 +752,6 @@ model <- function(t, y, parms){
          dS2_l.v, dI2_l.v, dR2_l.v,
          dS3_l.v, dI3_l.v, dR3_l.v,
          dS4_l.v, dI4_l.v, dR4_l.v,
-         I_secondary_tot, I_l_secondary, 
-         secondary, secondary.l,
          I_tot, I_total, I_l, cases, cases.l
          ))
 
@@ -770,7 +770,7 @@ y_init <- c(susceptible_h(1), infected_h(1), recovered_h(1),
             susceptible_l(2), infected_l(2), recovered_l(2),
             susceptible_l(3), infected_l(3), recovered_l(3),
             susceptible_l(4), infected_l(4), recovered_l(4),
-            rep(0, 280), rep(0,28), 0, 0, 0, 0, 0,0,0,0)
+            rep(0, 280), rep(0,28), 0, 0, 0, 0)
 years = 50
 years_vac = 30
 times <- seq(from = 0, to = 365 * years, by = .1)
@@ -780,87 +780,87 @@ out_null <- ode(times = times, y = y_init, func = model, parms = parms_null)
 
 #Averted calcs
 {
-# {
-#   #out_last <- out[nrow(out),(2:(ncol(out) - 4))]
-#   track_infected <- out[,(ncol(out) - 3)]
-#   track_l <- out[,(ncol(out) - 2)]
-#   track_h <- track_infected - track_l
-#   track_infected <- track_infected[length(track_infected)]
-#   track_l <- track_l[length(track_l)]
-#   track_h <- track_infected - track_l
-#   cases <- out[,(ncol(out) - 1)]
-#   cases <- cases[length(cases)]
-#   cases.l <- out[,(ncol(out))]
-#   cases.l <- cases.l[length(cases.l)]
-#   cases.h <- cases - cases.l
-# }
-# 
-# ##Null outputs
-# {track_infected.null <- out_null[,(ncol(out_null) - 3)]
-#   track_infected.null <- track_infected.null[length(track_infected.null)]
-#   track_l.null <- out_null[,(ncol(out_null) - 2)]
-#   track_l.null <- track_l.null[length(track_l.null)]
-#   track_h.null <- track_infected.null - track_l.null
-# 
-#   cases.null <- out_null[,(ncol(out_null) - 1)]
-#   cases.null <- cases.null[length(cases.null)]
-#   cases.l.null <- out_null[,(ncol(out_null))]
-#   cases.l.null <- cases.l.null[length(cases.l.null)]
-#   cases.h.null <- cases.null - cases.l.null
-#   }
-# 
-# #Averted calculations
-# {
-#   infections_averted <- (((track_infected.null - track_infected) / track_infected.null) * 100)
-#   infections_averted.h <- (((track_h.null - track_h) / track_h.null) * 100)
-#   infections_averted.l <- (((track_l.null - track_l) / track_l.null) * 100)
-#   cases_averted <- (((cases.null - cases) / cases.null) * 100)
-#   cases_averted.h <- (((cases.h.null - cases.h) / cases.h.null) * 100)
-#   cases_averted.l <- (((cases.l.null - cases.l) / cases.l.null) * 100)
-#   output <- cbind(infections_averted.h, infections_averted, infections_averted.l,
-#                   cases_averted.h, cases_averted, cases_averted.l)
-# }
-#   save(output, file = paste('output_', input, '.RData', sep = ''))
+{
+  #out_last <- out[nrow(out),(2:(ncol(out) - 4))]
+  track_infected <- out[,(ncol(out) - 3)]
+  track_l <- out[,(ncol(out) - 2)]
+  track_h <- track_infected - track_l
+  track_infected <- track_infected[length(track_infected)]
+  track_l <- track_l[length(track_l)]
+  track_h <- track_infected - track_l
+  cases <- out[,(ncol(out) - 1)]
+  cases <- cases[length(cases)]
+  cases.l <- out[,(ncol(out))]
+  cases.l <- cases.l[length(cases.l)]
+  cases.h <- cases - cases.l
+}
+
+##Null outputs
+{track_infected.null <- out_null[,(ncol(out_null) - 3)]
+  track_infected.null <- track_infected.null[length(track_infected.null)]
+  track_l.null <- out_null[,(ncol(out_null) - 2)]
+  track_l.null <- track_l.null[length(track_l.null)]
+  track_h.null <- track_infected.null - track_l.null
+
+  cases.null <- out_null[,(ncol(out_null) - 1)]
+  cases.null <- cases.null[length(cases.null)]
+  cases.l.null <- out_null[,(ncol(out_null))]
+  cases.l.null <- cases.l.null[length(cases.l.null)]
+  cases.h.null <- cases.null - cases.l.null
+  }
+
+#Averted calculations
+{
+  infections_averted <- (((track_infected.null - track_infected) / track_infected.null) * 100)
+  infections_averted.h <- (((track_h.null - track_h) / track_h.null) * 100)
+  infections_averted.l <- (((track_l.null - track_l) / track_l.null) * 100)
+  cases_averted <- (((cases.null - cases) / cases.null) * 100)
+  cases_averted.h <- (((cases.h.null - cases.h) / cases.h.null) * 100)
+  cases_averted.l <- (((cases.l.null - cases.l) / cases.l.null) * 100)
+  output <- cbind(infections_averted.h, infections_averted, infections_averted.l,
+                  cases_averted.h, cases_averted, cases_averted.l)
+}
+  save(output, file = paste('output_', input, '.RData', sep = ''))
 }
 {
   # #Secondary cases calcs
-{
-    sec_infected <- out[,(ncol(out) - 8)]
-    sec_inf_l <- out[,(ncol(out) - 7)]
-    sec_infected <- sec_infected[length(sec_infected)]
-    sec_inf_l <- sec_inf_l[length(sec_inf_l)]
-    sec_inf_h <- sec_infected - sec_inf_l
-    cases.sec <- out[,(ncol(out) - 6)]
-    cases.sec <- cases.sec[length(cases.sec)]
-    cases.l.sec <- out[,(ncol(out) - 5)]
-    cases.l.sec <- cases.l.sec[length(cases.l.sec)]
-    cases.h.sec <- cases.sec - cases.l.sec
-
-    
-    sec_infected.null <- out_null[,(ncol(out_null) - 8)]
-    sec_inf_l.null <- out_null[,(ncol(out_null) - 7)]
-    sec_infected.null <- sec_infected.null[length(sec_infected.null)]
-    sec_inf_l.null <- sec_inf_l.null[length(sec_inf_l.null)]
-    sec_inf_h.null <- sec_infected.null - sec_inf_l.null
-    cases.sec.null <- out_null[,(ncol(out_null) - 6)]
-    cases.sec.null <- cases.sec.null[length(cases.sec.null)]
-    cases.l.sec.null <- out_null[,(ncol(out_null) - 5)]
-    cases.l.sec.null <- cases.l.sec.null[length(cases.l.sec.null)]
-    cases.h.sec.null <- cases.sec.null - cases.l.sec.null
-    
-    infections_averted.sec <- (((sec_infected.null - sec_infected) / sec_infected.null) * 100)
-      infections_averted.h.sec <- (((sec_inf_h.null - sec_inf_h) / sec_inf_h.null) * 100)
-      infections_averted.l.sec <- (((sec_inf_l.null - sec_inf_l) / sec_inf_l.null) * 100)
-      cases_averted.sec <- (((cases.sec.null - cases.sec) / cases.sec.null) * 100)
-      cases_averted.h.sec <- (((cases.h.sec.null - cases.h.sec) / cases.h.sec.null) * 100)
-      cases_averted.l.sec <- (((cases.l.sec.null - cases.l.sec) / cases.l.sec.null) * 100)
-      output <- cbind(infections_averted.h.sec, infections_averted.sec, infections_averted.l.sec,
-                      cases_averted.h.sec, cases_averted.sec, cases_averted.l.sec)
-    
-    
-save(output, file = paste('secondary_averted_', i, '.RData', sep = ''))
-}
-
-  }
-
+# {
+#     sec_infected <- out[,(ncol(out) - 8)]
+#     sec_inf_l <- out[,(ncol(out) - 7)]
+#     sec_infected <- sec_infected[length(sec_infected)]
+#     sec_inf_l <- sec_inf_l[length(sec_inf_l)]
+#     sec_inf_h <- sec_infected - sec_inf_l
+#     cases.sec <- out[,(ncol(out) - 6)]
+#     cases.sec <- cases.sec[length(cases.sec)]
+#     cases.l.sec <- out[,(ncol(out) - 5)]
+#     cases.l.sec <- cases.l.sec[length(cases.l.sec)]
+#     cases.h.sec <- cases.sec - cases.l.sec
+# 
+#     
+#     sec_infected.null <- out_null[,(ncol(out_null) - 8)]
+#     sec_inf_l.null <- out_null[,(ncol(out_null) - 7)]
+#     sec_infected.null <- sec_infected.null[length(sec_infected.null)]
+#     sec_inf_l.null <- sec_inf_l.null[length(sec_inf_l.null)]
+#     sec_inf_h.null <- sec_infected.null - sec_inf_l.null
+#     cases.sec.null <- out_null[,(ncol(out_null) - 6)]
+#     cases.sec.null <- cases.sec.null[length(cases.sec.null)]
+#     cases.l.sec.null <- out_null[,(ncol(out_null) - 5)]
+#     cases.l.sec.null <- cases.l.sec.null[length(cases.l.sec.null)]
+#     cases.h.sec.null <- cases.sec.null - cases.l.sec.null
+#     
+#     infections_averted.sec <- (((sec_infected.null - sec_infected) / sec_infected.null) * 100)
+#       infections_averted.h.sec <- (((sec_inf_h.null - sec_inf_h) / sec_inf_h.null) * 100)
+#       infections_averted.l.sec <- (((sec_inf_l.null - sec_inf_l) / sec_inf_l.null) * 100)
+#       cases_averted.sec <- (((cases.sec.null - cases.sec) / cases.sec.null) * 100)
+#       cases_averted.h.sec <- (((cases.h.sec.null - cases.h.sec) / cases.h.sec.null) * 100)
+#       cases_averted.l.sec <- (((cases.l.sec.null - cases.l.sec) / cases.l.sec.null) * 100)
+#       output <- cbind(infections_averted.h.sec, infections_averted.sec, infections_averted.l.sec,
+#                       cases_averted.h.sec, cases_averted.sec, cases_averted.l.sec)
+#     
+#     
+# save(output, file = paste('secondary_averted_', i, '.RData', sep = ''))
+# }
+# 
+   }
+# 
 
