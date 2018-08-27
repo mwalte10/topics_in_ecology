@@ -622,6 +622,17 @@ model <- function(t, y, parms){
     native * S4_l.v * beta_l * 0.5 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
     travel * S4_l.v * beta_h * 0.5 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) 
   I_total <- sum(I_tot)
+  
+  I_secondary_tot <- 
+    native * S2_h * beta_h * 0.75 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    travel * S2_h * beta_l * 0.75 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    native * S2_h.v * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    travel * S2_h.v * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    native * S2_l * beta_l * 0.75 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    travel * S2_l * beta_h * 0.75 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    native * S2_l.v * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    travel * S2_l.v * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) 
+  I_secondary_tot <- sum(I_secondary_tot)
     
  
    I_l <-
@@ -640,6 +651,14 @@ model <- function(t, y, parms){
     native * S4_l.v * beta_l * 0.5 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
     travel * S4_l.v * beta_h * 0.5 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) 
   I_l <- sum(I_l)
+  
+  I_l_secondary <-
+    native * S2_l * beta_l * 0.75 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    travel * S2_l * beta_h * 0.75 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    native * S2_l.v * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    travel * S2_l.v * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l)
+  I_l_secondary <- sum(I_l_secondary)
+    
   
   primary <-
     native * S1_h * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
@@ -731,7 +750,10 @@ model <- function(t, y, parms){
          dS2_l.v, dI2_l.v, dR2_l.v,
          dS3_l.v, dI3_l.v, dR3_l.v,
          dS4_l.v, dI4_l.v, dR4_l.v,
-         I_tot, I_total, I_l, cases, cases.l))
+         I_secondary_tot, I_l_secondary, 
+         secondary, secondary.l,
+         I_tot, I_total, I_l, cases, cases.l
+         ))
 
   
 }
@@ -748,7 +770,7 @@ y_init <- c(susceptible_h(1), infected_h(1), recovered_h(1),
             susceptible_l(2), infected_l(2), recovered_l(2),
             susceptible_l(3), infected_l(3), recovered_l(3),
             susceptible_l(4), infected_l(4), recovered_l(4),
-            rep(0, 280), rep(0,28), 0, 0, 0, 0)
+            rep(0, 280), rep(0,28), 0, 0, 0, 0, 0,0,0,0)
 years = 50
 years_vac = 30
 times <- seq(from = 0, to = 365 * years, by = .1)
@@ -803,35 +825,40 @@ out_null <- ode(times = times, y = y_init, func = model, parms = parms_null)
 {
   # #Secondary cases calcs
 {
-secondary.h <- out[,((28 * 5) + 2):((28 * 6) + 1)]
-secondary.h <- rowSums(secondary.h)
-secondary.l <- out[,((28 * 27) + 2):((28 * 28) + 1)]
-secondary.l <- rowSums(secondary.l)
-secondary.hv <- out[,((28 * 18) + 2):((28 * 19) + 1)]
-secondary.hv <- rowSums(secondary.hv)
-secondary.lv <- out[,((28 * 40) + 2):((28 * 41) + 1)]
-secondary.lv <- rowSums(secondary.lv)
+    sec_infected <- out[,(ncol(out) - 8)]
+    sec_inf_l <- out[,(ncol(out) - 7)]
+    sec_infected <- sec_infected[length(sec_infected)]
+    sec_inf_l <- sec_inf_l[length(sec_inf_l)]
+    sec_inf_h <- sec_infected - sec_inf_l
+    cases.sec <- out[,(ncol(out) - 6)]
+    cases.sec <- cases.sec[length(cases.sec)]
+    cases.l.sec <- out[,(ncol(out) - 5)]
+    cases.l.sec <- cases.l.sec[length(cases.l.sec)]
+    cases.h.sec <- cases.sec - cases.l.sec
 
-secondary.h <- secondary.h + secondary.hv
-secondary.l <- secondary.l + secondary.lv
-
-secondary.h_v <- out_null[,((28 * 5) + 2):((28 * 6) + 1)]
-secondary.h_v <- rowSums(secondary.h_v)
-secondary.l_v <- out_null[,((28 * 27) + 2):((28 * 28) + 1)]
-secondary.l_v <- rowSums(secondary.l_v)
-secondary.hv_v <- out_null[,((28 * 18) + 2):((28 * 19) + 1)]
-secondary.hv_v <- rowSums(secondary.hv_v)
-secondary.lv_v <- out_null[,((28 * 40) + 2):((28 * 41) + 1)]
-secondary.lv_v <- rowSums(secondary.lv_v)
-
-secondary.h_v <- secondary.h_v + secondary.hv_v
-secondary.l_v <- secondary.l_v + secondary.lv_v
-
-h_avert <- ((secondary.h_v - secondary.h) / secondary.h_v) * 100
-l_avert <- ((secondary.l_v - secondary.l) / secondary.l_v) * 100
-secondary_averted <- cbind(h_avert, l_avert)
-
-save(secondary_averted, file = paste('secondary_averted_', i, '.RData', sep = ''))
+    
+    sec_infected.null <- out_null[,(ncol(out_null) - 8)]
+    sec_inf_l.null <- out_null[,(ncol(out_null) - 7)]
+    sec_infected.null <- sec_infected.null[length(sec_infected.null)]
+    sec_inf_l.null <- sec_inf_l.null[length(sec_inf_l.null)]
+    sec_inf_h.null <- sec_infected.null - sec_inf_l.null
+    cases.sec.null <- out_null[,(ncol(out_null) - 6)]
+    cases.sec.null <- cases.sec.null[length(cases.sec.null)]
+    cases.l.sec.null <- out_null[,(ncol(out_null) - 5)]
+    cases.l.sec.null <- cases.l.sec.null[length(cases.l.sec.null)]
+    cases.h.sec.null <- cases.sec.null - cases.l.sec.null
+    
+    infections_averted.sec <- (((sec_infected.null - sec_infected) / sec_infected.null) * 100)
+      infections_averted.h.sec <- (((sec_inf_h.null - sec_inf_h) / sec_inf_h.null) * 100)
+      infections_averted.l.sec <- (((sec_inf_l.null - sec_inf_l) / sec_inf_l.null) * 100)
+      cases_averted.sec <- (((cases.sec.null - cases.sec) / cases.sec.null) * 100)
+      cases_averted.h.sec <- (((cases.h.sec.null - cases.h.sec) / cases.h.sec.null) * 100)
+      cases_averted.l.sec <- (((cases.l.sec.null - cases.l.sec) / cases.l.sec.null) * 100)
+      output <- cbind(infections_averted.h.sec, infections_averted.sec, infections_averted.l.sec,
+                      cases_averted.h.sec, cases_averted.sec, cases_averted.l.sec)
+    
+    
+save(output, file = paste('secondary_averted_', i, '.RData', sep = ''))
 }
 
   }
