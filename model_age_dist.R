@@ -600,7 +600,7 @@ model <- function(t, y, parms){
     native * S2_l * beta_l * 0.75 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
     travel * S2_l * beta_h * 0.75 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
     native * S2_l.v * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
-    travel * S2_l.v * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    travel * S2_l.v * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) 
     # native * S1_h * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
     # travel * S1_h * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
     # native * S1_l * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
@@ -639,7 +639,7 @@ model <- function(t, y, parms){
     native * S2_l * beta_l * 0.75 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
     travel * S2_l * beta_h * 0.75 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
     native * S2_l.v * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
-    travel * S2_l.v * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    travel * S2_l.v * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) 
      # native * S1_l * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
      # travel * S1_l * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
     # native * S3_l * beta_l * 0.5 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
@@ -822,9 +822,9 @@ out_null <- ode(times = times, y = y_init, func = model, parms = parms_null)
 }
   save(output, file = paste('output_', input, '.RData', sep = ''))
 }
-{
+
   # #Secondary cases calcs
-# {
+{
 #     sec_infected <- out[,(ncol(out) - 8)]
 #     sec_inf_l <- out[,(ncol(out) - 7)]
 #     sec_infected <- sec_infected[length(sec_infected)]
@@ -860,7 +860,7 @@ out_null <- ode(times = times, y = y_init, func = model, parms = parms_null)
 #     
 # save(output, file = paste('secondary_averted_', i, '.RData', sep = ''))
 # }
-# 
-   }
-# 
+
+  }
+
 
