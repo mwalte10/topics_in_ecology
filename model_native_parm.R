@@ -777,11 +777,11 @@ sp9.vec <- c(sp9, sp9.l, sp9.h)
 names(sp9.vec) <- c('sp9', 'sp9.l', 'sp9.h')
 save(sp9.vec, file = paste('sp9.test_', input, '.RData', sep = ''))
 
-dependent_parms <- c(beta_h, beta_l, native, sp9.vec)
-names(dependent_parms) <- c('beta_h', 'beta_l', 'native', 'sp9', 'sp9.l', 'sp9.h')
-if(sp9.l > 0.83 & sp9.l < 0.87 & sp9.h > 0.43 & sp9.h < 0.47){
-  save(dependent_parms, file = paste('dependent_parms_', input, '.RData', sep = ''))
-}
+# dependent_parms <- c(beta_h, beta_l, native, sp9.vec)
+# names(dependent_parms) <- c('beta_h', 'beta_l', 'native', 'sp9', 'sp9.l', 'sp9.h')
+# if(sp9.l > 0.83 & sp9.l < 0.87 & sp9.h > 0.43 & sp9.h < 0.47){
+#   save(dependent_parms, file = paste('dependent_parms_', input, '.RData', sep = ''))
+# }
 
 
 }
