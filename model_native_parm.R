@@ -14,18 +14,22 @@ native.parm <- seq(0.9, 0.9999, length.out = 20)
 beta_h.new <- rep(beta_h, 20)
 beta_l.new <- rep(NA, 400)
 for(i in 1:20){
-    j <- 20* (i - 1)
-    beta_l.new[(1:20) + j] <- rep(beta_l[i], 20)
-  }
+  j <- 20* (i - 1)
+  beta_l.new[(1:20) + j] <- rep(beta_l[i], 20)
+}
 beta_mat <- as.table(cbind(beta_h.new, beta_l.new))
 add <- list()
 for(i in 1:20){
   add[[i]] <- rep(native.parm[i], 400)
 }
 add <- unlist(add)
-beta_h.long <- rep(beta_mat[,1], 20)
-beta_l.long <- rep(beta_mat[,2], 20)
-parms_mat <- cbind(beta_h.long, beta_l.long, add)
+beta_h <- rep(beta_mat[,1], 20)
+beta_l <- rep(beta_mat[,2], 20)
+native <- add
+x <- beta_l - beta_h
+keep <- unname(which(x > 0))
+parms_mat <- cbind(beta_h, beta_l, add)
+parms_mat <- parms_mat[keep,]
 beta_h <- parms_mat[input,1]
 beta_l <- parms_mat[input,2]
 native <- rep(parms_mat[input,3], 28)
