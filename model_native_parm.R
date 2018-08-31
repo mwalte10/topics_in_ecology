@@ -28,7 +28,7 @@ beta_l.long <- rep(beta_mat[,2], 20)
 parms_mat <- cbind(beta_h.long, beta_l.long, add)
 beta_h <- parms_mat[input,1]
 beta_l <- parms_mat[input,2]
-native <- parms_mat[input,3]
+native <- rep(parms_mat[input,3], 28)
 vac_h <- 0
 vac_l <- 0
 
