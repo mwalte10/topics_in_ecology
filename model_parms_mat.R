@@ -15,8 +15,8 @@ native.vec <- c(0.9525789, 0.9578368, 0.9841263, 0.9893842, 0.9946421, 0.9999)
 beta_h <- beta_h.vec[input]
 beta_l <- beta_l.vec[input]
 native <- rep(native.vec[input], 28)
-vac_h <- 0.8
-vac_l <- 0.8
+vac_h <- 0.6
+vac_l <- 1
 
 
 library(deSolve)
