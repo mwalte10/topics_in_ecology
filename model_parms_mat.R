@@ -16,7 +16,7 @@ beta_h <- beta_h.vec[input]
 beta_l <- beta_l.vec[input]
 native <- rep(native.vec[input], 28)
 vac_h <- 0.6
-vac_l <- 0.1
+vac_l <- 1
 
 
 library(deSolve)
