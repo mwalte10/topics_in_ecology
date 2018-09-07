@@ -9,14 +9,12 @@ input = as.numeric(args[1])
 ##########################
 #IF DOING VAC COVERAGE
 ##########################
-beta_h.vec <- c(0.25, 0.25, 0.3236842, 0.2868421, 0.2500000, 0.3236842)
-beta_l.vec <- c(0.7289474, 0.7289474, 0.6552632, 0.7657895, 0.95, 0.7289474)
-native.vec <- c(0.9525789, 0.9578368, 0.9841263, 0.9893842, 0.9946421, 0.9999)
-beta_h <- beta_h.vec[input]
-beta_l <- beta_l.vec[input]
-native <- rep(native.vec[input], 28)
-vac_h <- 0.6
-vac_l <- 1
+load('parameters.RData')
+beta_h <- new.parms.mat[input, 1]
+beta_l <- new.parms.mat[input, 2]
+native <- rep(new.parms.mat[input, 3], 28)
+vac_h <- new.parms.mat[input, 4]
+vac_l <- new.parms.mat[input, 5]
 
 
 library(deSolve)
@@ -792,6 +790,13 @@ years_vac = 30
 times <- seq(from = 0, to = 365 * years, by = .1)
 out <- ode(times = times, y = y_init, func = model, parms = parms)
 out_null <- ode(times = times, y = y_init, func = model, parms = parms_null)
+
+out_last <- out[nrow(out),(2:(ncol(out) - 16))]
+out_last.null <- out_null[nrow(out_null),(2:(ncol(out_null) - 16))]
+save(out_last, file = paste('out_last_', input, '.RData', sep = ''))
+save(out_last.null, file = paste('out_last.null_', input, '.RData', sep = ''))
+
+
 
 
 #Averted calcs
