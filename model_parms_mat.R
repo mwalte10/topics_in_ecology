@@ -610,6 +610,14 @@ model <- function(t, y, parms){
     travel * S2_l.v * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l)
   I_secondary_tot <- sum(I_secondary_tot)
   
+  I_secondary_vac <- 
+    native * S2_h.v * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    travel * S2_h.v * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    native * S2_l.v * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    travel * S2_l.v * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l)
+  I_secondary_vac <- sum(I_secondary_vac)
+    
+  
   I_post_sec_tot <- 
     native * S3_h * beta_h * 0.5 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
     travel * S3_h * beta_l * 0.5 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
@@ -628,6 +636,19 @@ model <- function(t, y, parms){
     native * S4_l.v * beta_l * 0.5 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
     travel * S4_l.v * beta_h * 0.5 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l)
   I_post_sec_tot <- sum(I_post_sec_tot)
+  
+  I_post_sec_vac <- 
+    native * S3_h.v * beta_h * 0.75 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    travel * S3_h.v * beta_l * 0.75 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    native * S3_l.v * beta_l * 0.75 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    travel * S3_l.v * beta_h * 0.75 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    native * S4_h.v * beta_h * 0.5 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    travel * S4_h.v * beta_l * 0.5 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    native * S4_l.v * beta_l * 0.5 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    travel * S4_l.v * beta_h * 0.5 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l)
+  I_post_sec_vac <- sum(I_post_sec_vac)
+    
+    
  
    I_l <-
     native * S1_l * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
@@ -635,7 +656,7 @@ model <- function(t, y, parms){
     native * S2_l * beta_l * 0.75 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
     travel * S2_l * beta_h * 0.75 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
     native * S2_l.v * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
-    travel * S2_l.v * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) 
+    travel * S2_l.v * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
     native * S3_l * beta_l * 0.5 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
     travel * S3_l * beta_h * 0.5 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
     native * S3_l.v * beta_l * 0.75 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
@@ -645,6 +666,16 @@ model <- function(t, y, parms){
     native * S4_l.v * beta_l * 0.5 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
     travel * S4_l.v * beta_h * 0.5 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l)
   I_l <- sum(I_l)
+  
+  I_l_vac <- 
+    native * S2_l.v * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    travel * S2_l.v * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    native * S3_l.v * beta_l * 0.75 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    travel * S3_l.v * beta_h * 0.75 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    native * S4_l.v * beta_l * 0.5 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    travel * S4_l.v * beta_h * 0.5 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l)
+  I_l_vac <- sum(I_l_vac)
+    
   
   I_l_primary_tot <- 
     native * S1_l * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
@@ -658,6 +689,11 @@ model <- function(t, y, parms){
     travel * S2_l.v * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l)
   I_l_sec_tot <- sum(I_l_sec_tot)
   
+  I_l_sec_vac <- 
+    native * S2_l.v * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    travel * S2_l.v * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l)
+  I_l_sec_vac <- sum(I_l_sec_vac)
+  
   I_l_post_sec_tot <- 
     native * S3_l * beta_l * 0.5 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
     travel * S3_l * beta_h * 0.5 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
@@ -669,44 +705,264 @@ model <- function(t, y, parms){
     travel * S4_l.v * beta_h * 0.5 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l)
   I_l_post_sec_tot <- sum(I_l_post_sec_tot)
   
+  I_l_post_sec_vac <- 
+    native * S3_l.v * beta_l * 0.75 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    travel * S3_l.v * beta_h * 0.75 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    native * S4_l.v * beta_l * 0.5 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    travel * S4_l.v * beta_h * 0.5 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l)
+  I_l_post_sec_vac <- sum(I_l_post_sec_vac)
+    
+  
   primary <-
     native * S1_h * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
     travel * S1_h * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
     native * S1_l * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
-    travel * S1_l * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
-    native * S2_h.v * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
-    travel * S2_h.v * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
-    native * S2_l.v * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
-    travel * S2_l.v * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) 
+    travel * S1_l * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) 
   primary <- sum(primary) * 0.18
+  
+  ##primary cases incidence
+{  primary_tot.cases <- 
+    native * S1_h * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    travel * S1_h * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    native * S1_l * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    travel * S1_l * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) 
+  primary_tot.cases <- sum(primary_tot.cases) * 0.18
+  
+  primary_tot.ncases <- 
+    native * S1_h * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    travel * S1_h * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    native * S1_l * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    travel * S1_l * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) 
+  primary_tot.ncases <- sum(primary_tot.ncases) * 0.82
+  
+  primary_cases.l <-
+    travel * S1_h * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    native * S1_l * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) 
+  primary_cases.l <- sum(primary_cases.l) * 0.18
+  
+  primary_ncases.l <- 
+    travel * S1_h * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    native * S1_l * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) 
+  primary_ncases.l <- sum(primary_ncases.l) * 0.82
+  
+  primary_cases.h <- 
+    native * S1_h * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    travel * S1_l * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) 
+  primary_cases.h <- sum(primary_cases.h) * 0.18
+  
+  primary_ncases.h <- 
+    native * S1_h * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    travel * S1_l * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) 
+  primary_ncases.h <- sum(primary_ncases.h) * 0.82}
+  
   
   secondary <-
     native * S2_h * beta_h * 0.75 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
     travel * S2_h * beta_l * 0.75 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
     native * S2_l * beta_l * 0.75 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
     travel * S2_l * beta_h * 0.75 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
-    native * S3_h.v * beta_h * 0.75 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
-    travel * S3_h.v * beta_l * 0.75 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
-    native * S3_l.v * beta_l * 0.75 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
-    travel * S3_l.v * beta_h * 0.75 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l)
+    native * S2_h.v * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    travel * S2_h.v * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    native * S2_l.v * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    travel * S2_l.v * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) 
   secondary <- sum(secondary) * 0.41
+  
+  #vaccinated case incidence
+{  secondary_vac_tot.cases <- 
+    native * S2_h.v * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    travel * S2_h.v * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    native * S2_l.v * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    travel * S2_l.v * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) 
+  secondary_vac_tot.cases <- sum(secondary_vac_tot.cases) * 0.41
+  
+  secondary_vac_tot.ncases <- 
+    native * S2_h.v * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    travel * S2_h.v * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    native * S2_l.v * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    travel * S2_l.v * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) 
+  secondary_vac_tot.ncases <- sum(secondary_vac_tot.ncases) * 0.59
+  
+  secondary_vac_cases.l <- 
+    travel * S2_h.v * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    native * S2_l.v * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) 
+  secondary_vac_cases.l <- sum(secondary_vac_cases.l) * 0.41
+  
+  secondary_vac_ncases.l <- 
+    travel * S2_h.v * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    native * S2_l.v * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) 
+  secondary_vac_ncases.l <- sum(secondary_vac_ncases.l) * 0.59
+  
+  secondary_vac_cases.h <- 
+    native * S2_h.v * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    travel * S2_l.v * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) 
+  secondary_vac_cases.h <- sum(secondary_vac_cases.h) * 0.41
+  
+  secondary_vac_ncases.h <- 
+    native * S2_h.v * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    travel * S2_l.v * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) 
+  secondary_vac_ncases.h <- sum(secondary_vac_ncases.h) * 0.59}
+  
+  #nonvaccinated case incidence
+{  secondary_tot.cases <-
+    native * S2_h * beta_h * 0.75 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    travel * S2_h * beta_l * 0.75 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    native * S2_l * beta_l * 0.75 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    travel * S2_l * beta_h * 0.75 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) 
+  secondary_tot.cases <- sum(secondary_tot.cases) * 0.41
+  
+  secondary_tot.ncases <-
+    native * S2_h * beta_h * 0.75 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    travel * S2_h * beta_l * 0.75 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    native * S2_l * beta_l * 0.75 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    travel * S2_l * beta_h * 0.75 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) 
+  secondary_tot.ncases <- sum(secondary_tot.ncases) * 0.59
+  
+  secondary_cases.l <-
+    travel * S2_h * beta_l * 0.75 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    native * S2_l * beta_l * 0.75 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) 
+  secondary_cases.l <- sum(secondary_cases.l) * 0.41
+  
+  secondary_ncases.l <-
+    travel * S2_h * beta_l * 0.75 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    native * S2_l * beta_l * 0.75 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) 
+  secondary_ncases.l <- sum(secondary_ncases.l) * 0.59
+  
+  secondary_cases.h <-
+    native * S2_h * beta_h * 0.75 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    travel * S2_l * beta_h * 0.75 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) 
+  secondary_cases.h <- sum(secondary_cases.h) * 0.41
+  
+  secondary_ncases.h <-
+    native * S2_h * beta_h * 0.75 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    travel * S2_l * beta_h * 0.75 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) 
+  secondary_ncases.h <- sum(secondary_ncases.h) * 0.59}
+  
   
   tertiary <-
     native * S3_h * beta_h * 0.5 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
     travel * S3_h * beta_l * 0.5 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
     native * S3_l * beta_l * 0.5 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
     travel * S3_l * beta_h * 0.5 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    native * S3_h.v * beta_h * 0.75 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    travel * S3_h.v * beta_l * 0.75 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    native * S3_l.v * beta_l * 0.75 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    travel * S3_l.v * beta_h * 0.75 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l)
+  tertiary <- sum(tertiary) * 0.063425
+  
+  
+  ##post sec vaccinated case incidence
+ { postsec_vac_tot.cases <- 
+    native * S3_h.v * beta_h * 0.75 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    travel * S3_h.v * beta_l * 0.75 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    native * S3_l.v * beta_l * 0.75 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    travel * S3_l.v * beta_h * 0.75 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
     native * S4_h.v * beta_h * 0.5 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
     travel * S4_h.v * beta_l * 0.5 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
     native * S4_l.v * beta_l * 0.5 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
     travel * S4_l.v * beta_h * 0.5 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l)
-  tertiary <- sum(tertiary) * 0.063425
+  postsec_vac_tot.cases <- sum(postsec_vac_tot.cases) * 0.063425
   
+  postsec_vac_tot.ncases <- 
+    native * S3_h.v * beta_h * 0.75 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    travel * S3_h.v * beta_l * 0.75 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    native * S3_l.v * beta_l * 0.75 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    travel * S3_l.v * beta_h * 0.75 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    native * S4_h.v * beta_h * 0.5 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    travel * S4_h.v * beta_l * 0.5 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    native * S4_l.v * beta_l * 0.5 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    travel * S4_l.v * beta_h * 0.5 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l)
+  postsec_vac_tot.ncases <- sum(postsec_vac_tot.ncases) * 0.936575
+  
+  postsec_vac_cases.l <- 
+    travel * S3_h.v * beta_l * 0.75 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    native * S3_l.v * beta_l * 0.75 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    travel * S4_h.v * beta_l * 0.5 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    native * S4_l.v * beta_l * 0.5 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) 
+  postsec_vac_cases.l <- sum(postsec_vac_cases.l) * 0.063425
+  
+  postsec_vac_ncases.l <- 
+    travel * S3_h.v * beta_l * 0.75 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    native * S3_l.v * beta_l * 0.75 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    travel * S4_h.v * beta_l * 0.5 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    native * S4_l.v * beta_l * 0.5 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) 
+  postsec_vac_ncases.l <- sum(postsec_vac_ncases.l) * 0.936575
+  
+  postsec_vac_cases.h <- 
+    native * S3_h.v * beta_h * 0.75 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    travel * S3_l.v * beta_h * 0.75 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    native * S4_h.v * beta_h * 0.5 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    travel * S4_l.v * beta_h * 0.5 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l)
+  postsec_vac_cases.h <- sum(postsec_vac_cases.h) * 0.063425
+  
+  postsec_vac_ncases.h <- 
+    native * S3_h.v * beta_h * 0.75 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    travel * S3_l.v * beta_h * 0.75 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    native * S4_h.v * beta_h * 0.5 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    travel * S4_l.v * beta_h * 0.5 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l)
+  postsec_vac_ncases.h <- sum(postsec_vac_ncases.h) * 0.936575}
+  
+  ##post sec nonvaccinated case incidence
+{  postsec_tot_cases <- 
+    native * S3_h * beta_h * 0.5 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    travel * S3_h * beta_l * 0.5 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    native * S3_l * beta_l * 0.5 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    travel * S3_l * beta_h * 0.5 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    native * S4_h * beta_h * 0.25 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    travel * S4_h * beta_l * 0.25 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    native * S4_l * beta_l * 0.25 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    travel * S4_l * beta_h * 0.25 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l)
+  postsec_tot_cases <- sum(postsec_tot_cases) * 0.063425
+  
+  postsec_tot_ncases <- 
+    native * S3_h * beta_h * 0.5 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    travel * S3_h * beta_l * 0.5 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    native * S3_l * beta_l * 0.5 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    travel * S3_l * beta_h * 0.5 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    native * S4_h * beta_h * 0.25 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    travel * S4_h * beta_l * 0.25 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    native * S4_l * beta_l * 0.25 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    travel * S4_l * beta_h * 0.25 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l)
+  postsec_tot_ncases <- sum(postsec_tot_ncases) * 0.936575
+  
+  postsec_cases.l <- 
+    travel * S3_h * beta_l * 0.5 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    native * S3_l * beta_l * 0.5 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    travel * S4_h * beta_l * 0.25 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    native * S4_l * beta_l * 0.25 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) 
+  postsec_cases.l <- sum(postsec_cases.l) * 0.063425
+  
+  postsec_ncases.l <- 
+    travel * S3_h * beta_l * 0.5 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    native * S3_l * beta_l * 0.5 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    travel * S4_h * beta_l * 0.25 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    native * S4_l * beta_l * 0.25 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) 
+  postsec_ncases.l <- sum(postsec_ncases.l) * 0.936575
+  
+  postsec_cases.h <- 
+    native * S3_h * beta_h * 0.5 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    travel * S3_l * beta_h * 0.5 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    native * S4_h * beta_h * 0.25 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    travel * S4_l * beta_h * 0.25 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l)
+  postsec_cases.h <- sum(postsec_cases.h) * 0.063425
+  
+  postsec_ncases.h <- 
+    native * S3_h * beta_h * 0.5 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    travel * S3_l * beta_h * 0.5 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    native * S4_h * beta_h * 0.25 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    travel * S4_l * beta_h * 0.25 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l)
+  postsec_ncases.h <- sum(postsec_ncases.h) * 0.936575
+  
+}
+{  
   quaternary <-
     native * S4_h * beta_h * 0.25 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
     travel * S4_h * beta_l * 0.25 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
     native * S4_l * beta_l * 0.25 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
-    travel * S4_l * beta_h * 0.25 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) 
+    travel * S4_l * beta_h * 0.25 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    native * S4_h.v * beta_h * 0.5 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    travel * S4_h.v * beta_l * 0.5 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    native * S4_l.v * beta_l * 0.5 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    travel * S4_l.v * beta_h * 0.5 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l)
   quaternary <- sum(quaternary) * 0.063425
   
   cases <- primary + secondary + tertiary + quaternary
@@ -714,34 +970,33 @@ model <- function(t, y, parms){
 
   primary.l <-
     native * S1_l * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
-    travel * S1_l * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
-    native * S2_l.v * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
-    travel * S2_l.v * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) 
+    travel * S1_l * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l)  
   primary.l <- sum(primary.l) * 0.18
   
   secondary.l <-
     native * S2_l * beta_l * 0.75 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
     travel * S2_l * beta_h * 0.75 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
-    native * S3_l.v * beta_l * 0.75 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
-    travel * S3_l.v * beta_h * 0.75 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) 
+    native * S2_l.v * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    travel * S2_l.v * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) 
   secondary.l <- sum(secondary.l) * 0.41
   
   tertiary.l <-
     native * S3_l * beta_l * 0.5 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
     travel * S3_l * beta_h * 0.5 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
-    native * S4_l.v * beta_l * 0.5 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
-    travel * S4_l.v * beta_h * 0.5 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l)
+    native * S3_l.v * beta_l * 0.75 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    travel * S3_l.v * beta_h * 0.75 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) 
+    
   tertiary.l <- sum(tertiary.l) * 0.063425
   
   quaternary.l <-
     native * S4_l * beta_l * 0.25 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
-    travel * S4_l * beta_h * 0.25 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l)
+    travel * S4_l * beta_h * 0.25 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) + 
+    native * S4_l.v * beta_l * 0.5 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
+    travel * S4_l.v * beta_h * 0.5 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l)
   quaternary.l <- sum(quaternary.l) * 0.063425
   
   cases.l <- primary.l + secondary.l  + tertiary.l + quaternary.l
-  post_sec.l <- tertiary.l + quaternary.l
-
-  
+  post_sec.l <- tertiary.l + quaternary.l}
 
     
   
@@ -761,6 +1016,30 @@ model <- function(t, y, parms){
          dS2_l.v, dI2_l.v, dR2_l.v,
          dS3_l.v, dI3_l.v, dR3_l.v,
          dS4_l.v, dI4_l.v, dR4_l.v,
+         I_secondary_vac, I_post_sec_vac,
+         I_l_sec_vac, I_l_post_sec_vac,
+         
+         #1238 & 1239
+         primary_tot.cases, primary_tot.ncases, 
+         primary_cases.l, primary_ncases.l,
+         primary_cases.h, primary_ncases.h,
+         
+         #1244
+         secondary_vac_tot.cases, secondary_vac_tot.ncases,
+         secondary_vac_cases.l, secondary_vac_ncases.l,
+         secondary_vac_cases.h, secondary_vac_ncases.h,
+         secondary_tot.cases, secondary_tot.ncases,
+         secondary_cases.l, secondary_ncases.l,
+         secondary_cases.h, secondary_ncases.h,
+         
+         #1256
+         postsec_vac_tot.cases, postsec_vac_tot.ncases,
+         postsec_vac_cases.l, postsec_vac_ncases.l,
+         postsec_vac_cases.h, postsec_vac_ncases.h,
+         postsec_tot_cases, postsec_tot_ncases,
+         postsec_cases.l, postsec_ncases.l,
+         postsec_cases.h, postsec_ncases.h,
+         
          I_total, I_l, cases, cases.l,
          I_primary_tot, I_secondary_tot, I_post_sec_tot,
          I_l_primary_tot, I_l_sec_tot, I_l_post_sec_tot,
@@ -783,8 +1062,8 @@ y_init <- c(susceptible_h(1), infected_h(1), recovered_h(1),
             susceptible_l(2), infected_l(2), recovered_l(2),
             susceptible_l(3), infected_l(3), recovered_l(3),
             susceptible_l(4), infected_l(4), recovered_l(4),
-            rep(0, 280), 
-            rep(0,16))
+            rep(0, 280), rep(0, 30),
+            rep(0,20))
 years = 50
 years_vac = 30
 times <- seq(from = 0, to = 365 * years, by = .1)
@@ -795,6 +1074,53 @@ out_last <- out[nrow(out),(2:(ncol(out) - 16))]
 out_last.null <- out_null[nrow(out_null),(2:(ncol(out_null) - 16))]
 save(out_last, file = paste('out_last_', input, '.RData', sep = ''))
 save(out_last.null, file = paste('out_last.null_', input, '.RData', sep = ''))
+
+
+##incidence calcs 
+{I_prim_tot <- diff(out[,1242])
+I_sec_tot <- diff(out[,1243])
+I_psec_tot <- diff(out[,1244])
+I_prim_l <- diff(out[,1245])
+I_sec_l <- diff(out[,1246])
+I_psec_l <- diff(out[,1247])
+I_prim_h <- I_prim_tot - I_prim_l
+I_sec_h <- I_sec_tot - I_sec_l
+I_psec_h <- I_psec_tot - I_psec_l
+I_sec_vac <- diff(out[,1234])
+I_psec_vac <- diff(out[,1235])
+I_sec_vac_l <- diff(out[,1236])
+I_psec_vac_l <- diff(out[,1237])
+I_sec_vac_h <- I_sec_vac - I_sec_vac_l
+I_psec_vac_h <- I_psec_vac - I_psec_vac_l}
+
+sv.h <- sum(diff(out[,1248]), diff(out[,1260]))
+sn.h <- sum(diff(out[(3650 * years_vac + 1):nrow(out),1242]), diff(out[(3650 * years_vac + 1):nrow(out),1254]), diff(out[(3650 * years_vac + 1):nrow(out),1266]))
+hv.h <- sum(diff(out[,1249]), diff(out[,1261]))
+hn.h <- sum(diff(out[(3650 * years_vac + 1):nrow(out),1243]), diff(out[(3650 * years_vac + 1):nrow(out),1255]), diff(out[(3650 * years_vac + 1):nrow(out),1267]))
+
+or.h <- (sv.h / sn.h) / (hv.h / hn.h)
+rr.h <- (sv.h / (sv.h + hv.h)) / (sn.h / (sn.h + hn.h))
+
+sv.l <- sum(diff(out[,1246]), diff(out[,1258]))
+sn.l <- sum(diff(out[(3650 * years_vac + 1):nrow(out),1240]), diff(out[(3650 * years_vac + 1):nrow(out),1252]), diff(out[(3650 * years_vac + 1):nrow(out),1264]))
+hv.l <- sum(diff(out[,1247]), diff(out[,1261]))
+hn.l <- sum(diff(out[(3650 * years_vac + 1):nrow(out),1241]), diff(out[(3650 * years_vac + 1):nrow(out),1253]), diff(out[(3650 * years_vac + 1):nrow(out),1266]))
+
+or.l <- (sv.l / sn.l) / (hv.l / hn.l)
+rr.l <- (sv.l / (sv.l + hv.l)) / (sn.l / (sn.l + hn.l))
+
+rr_or_vec <- c(or.h, rr.h, or.l, rr.l)
+save(rr_or_vec, file = paste('rr_or_', input, '.RData', sep = ''))
+
+incidence_mat <- out[,1238:1267]
+save(incidence_mat, file = paste('incidence_counts_', input, '.RData', sep = ''))
+
+
+
+###issue with the non-sec, non-vac individuals (no way that these are being counted currently)
+##this is only a problem for the vaccination individuals bc they never experience a primary inf/case
+##might also need to track the number of s1 - s2 nv individuals for this? 
+##summing all of these would give total number of people experiencing that infection in that time period
 
 
 
