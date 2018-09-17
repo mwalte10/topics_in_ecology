@@ -1049,7 +1049,7 @@ model <- function(t, y, parms){
          postsec_tot_cases, postsec_tot_ncases,
          #1264, 1265
          postsec_cases.l, postsec_ncases.l,
-         #1266, 1267
+         #1266, 
          postsec_cases.h, postsec_ncases.h,
          
          I_total, I_l, cases, cases.l,
