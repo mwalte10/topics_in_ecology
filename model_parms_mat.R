@@ -1021,23 +1021,35 @@ model <- function(t, y, parms){
          
          #1238 & 1239
          primary_tot.cases, primary_tot.ncases, 
+         #1240, 1241
          primary_cases.l, primary_ncases.l,
+         #1242, 1243
          primary_cases.h, primary_ncases.h,
          
-         #1244
+         #1244, 1245
          secondary_vac_tot.cases, secondary_vac_tot.ncases,
+         #1246, 1247
          secondary_vac_cases.l, secondary_vac_ncases.l,
+         #1248, 1249
          secondary_vac_cases.h, secondary_vac_ncases.h,
+         #1250, 1251
          secondary_tot.cases, secondary_tot.ncases,
+         #1252, 1253
          secondary_cases.l, secondary_ncases.l,
+         #1254, 1255
          secondary_cases.h, secondary_ncases.h,
          
-         #1256
+         #1256, 1257
          postsec_vac_tot.cases, postsec_vac_tot.ncases,
+         #1258, 1259
          postsec_vac_cases.l, postsec_vac_ncases.l,
+         #1260, 1261
          postsec_vac_cases.h, postsec_vac_ncases.h,
+         #1262, 1263
          postsec_tot_cases, postsec_tot_ncases,
+         #1264, 1265
          postsec_cases.l, postsec_ncases.l,
+         #1266, 1267
          postsec_cases.h, postsec_ncases.h,
          
          I_total, I_l, cases, cases.l,
@@ -1103,8 +1115,8 @@ rr.h <- (sv.h / (sv.h + hv.h)) / (sn.h / (sn.h + hn.h))
 
 sv.l <- sum(diff(out[,1246]), diff(out[,1258]))
 sn.l <- sum(diff(out[(3650 * years_vac + 1):nrow(out),1240]), diff(out[(3650 * years_vac + 1):nrow(out),1252]), diff(out[(3650 * years_vac + 1):nrow(out),1264]))
-hv.l <- sum(diff(out[,1247]), diff(out[,1261]))
-hn.l <- sum(diff(out[(3650 * years_vac + 1):nrow(out),1241]), diff(out[(3650 * years_vac + 1):nrow(out),1253]), diff(out[(3650 * years_vac + 1):nrow(out),1266]))
+hv.l <- sum(diff(out[,1247]), diff(out[,1259]))
+hn.l <- sum(diff(out[(3650 * years_vac + 1):nrow(out),1241]), diff(out[(3650 * years_vac + 1):nrow(out),1253]), diff(out[(3650 * years_vac + 1):nrow(out),1265]))
 
 or.l <- (sv.l / sn.l) / (hv.l / hn.l)
 rr.l <- (sv.l / (sv.l + hv.l)) / (sn.l / (sn.l + hn.l))
