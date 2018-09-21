@@ -1124,8 +1124,8 @@ rr.l <- (sv.l / (sv.l + hv.l)) / (sn.l / (sn.l + hn.l))
 rr_or_vec <- c(or.h, rr.h, or.l, rr.l)
 save(rr_or_vec, file = paste('rr_or_', input, '.RData', sep = ''))
 
-incidence_mat <- out[,1238:1267]
-save(incidence_mat, file = paste('incidence_counts_', input, '.RData', sep = ''))
+# incidence_mat <- out[,1238:1267]
+# save(incidence_mat, file = paste('incidence_counts_', input, '.RData', sep = ''))
 
 
 
@@ -1135,39 +1135,37 @@ save(incidence_mat, file = paste('incidence_counts_', input, '.RData', sep = '')
 ##summing all of these would give total number of people experiencing that infection in that time period
 
 
+indexing <- c((3650 * years_vac + 1):(nrow(out) - 1))
 
-
-#Averted calcs
-{
 {
   #out_last <- out[nrow(out),(2:(ncol(out) - 4))]
-  track_infected <- out[,(ncol(out) - 15)]
-  track_l <- out[,(ncol(out) - 14)]
+  track_infected <- diff(out[,(ncol(out) - 15)])
+  track_l <- diff(out[,(ncol(out) - 14)])
   track_h <- track_infected - track_l
-  track_infected <- track_infected[length(track_infected)]
-  track_l <- track_l[length(track_l)]
+  track_infected <- sum(track_infected[indexing])
+  track_l <- sum(track_l[indexing])
   track_h <- track_infected - track_l
-  cases <- out[,(ncol(out) - 13)]
-  cases <- cases[length(cases)]
-  cases.l <- out[,(ncol(out) -12)]
-  cases.l <- cases.l[length(cases.l)]
+  cases <- diff(out[,(ncol(out) - 13)])
+  cases <- sum(cases[indexing])
+  cases.l <- diff(out[,(ncol(out) -12)])
+  cases.l <- sum(cases.l[indexing])
   cases.h <- cases - cases.l
 }
 
 ##Null outputs
 {
-  track_infected.null <- out_null[,(ncol(out_null) - 15)]
-  track_infected.null <- track_infected.null[length(track_infected.null)]
-  track_l.null <- out_null[,(ncol(out_null) - 14)]
-  track_l.null <- track_l.null[length(track_l.null)]
+  track_infected.null <- diff(out_null[,(ncol(out_null) - 15)])
+  track_infected.null <- sum(track_infected.null[indexing])
+  track_l.null <- diff(out_null[,(ncol(out_null) - 14)])
+  track_l.null <- sum(track_l.null[indexing])
   track_h.null <- track_infected.null - track_l.null
-
-  cases.null <- out_null[,(ncol(out_null) - 13)]
+  
+  cases.null <- diff(out_null[,(ncol(out_null) - 13)])
   cases.null <- cases.null[length(cases.null)]
-  cases.l.null <- out_null[,(ncol(out_null) -12)]
-  cases.l.null <- cases.l.null[length(cases.l.null)]
+  cases.l.null <- diff(out_null[,(ncol(out_null) -12)])
+  cases.l.null <- sum(cases.l.null[indexing])
   cases.h.null <- cases.null - cases.l.null
-  }
+}
 
 #Averted calculations, NEED TO CHECK THIS
 {
@@ -1178,73 +1176,103 @@ save(incidence_mat, file = paste('incidence_counts_', input, '.RData', sep = '')
   cases_averted.h <- (((cases.h.null - cases.h) / cases.h.null) * 100)
   cases_averted.l <- (((cases.l.null - cases.l) / cases.l.null) * 100)
   output <- cbind(infections_averted.h, infections_averted, infections_averted.l,
-                  cases_averted.h, cases_averted, cases_averted.l)
-}
-  save(output, file = paste('output_', input, '.RData', sep = ''))
+                       cases_averted.h, cases_averted, cases_averted.l)
 }
 
-#Secondary averted calculations, CHECK THIS
-track_sec_infected <- out[,(ncol(out) - 10)]
-track_sec_l <- out[,(ncol(out) - 7)]
-track_sec_h <- track_sec_infected - track_sec_l
-track_sec_infected <- track_sec_infected[length(track_sec_infected)]
-track_sec_l <- track_sec_l[length(track_sec_l)]
-track_sec_h <- track_sec_infected - track_sec_l
-cases_sec <- out[,(ncol(out) - 4)]
-cases_sec <- cases_sec[length(cases_sec)]
-cases_sec.l <- out[,(ncol(out) - 1)]
-cases_sec.l <- cases_sec.l[length(cases_sec.l)]
-cases_sec.h <- cases_sec - cases_sec.l
-
-track_sec_infected.null <- out_null[,(ncol(out_null) - 10)]
-track_sec_infected.null <- track_sec_infected.null[length(track_sec_infected.null)]
-track_sec_l.null <- out_null[,(ncol(out_null) - 7)]
-track_sec_l.null <- track_sec_l.null[length(track_sec_l.null)]
-track_sec_h.null <- track_sec_infected.null - track_sec_l.null
-
-cases.sec_null <- out_null[,(ncol(out_null) - 4)]
-cases.sec_null <- cases.sec_null[length(cases.sec_null)]
-cases.sec_l.null <- out_null[,(ncol(out_null) - 1)]
-cases.sec_l.null <- cases.sec_l.null[length(cases.sec_l.null)]
-cases.sec_h.null <- cases.sec_null - cases.sec_l.null
-
-infections.sec_averted <- (((track_sec_infected.null - track_sec_infected) / track_sec_infected.null) * 100)
-infections.sec_averted.h <- (((track_sec_h.null - track_sec_h) / track_sec_h.null) * 100)
-infections.sec_averted.l <- (((track_sec_l.null - track_sec_l) / track_sec_l.null) * 100)
-cases.sec_averted <- (((cases.sec_null - cases_sec) / cases.sec_null) * 100)
-cases.sec_averted.h <- (((cases.sec_h.null - cases_sec.h) / cases.sec_h.null) * 100)
-cases.sec_averted.l <- (((cases.sec_l.null - cases_sec.l) / cases.sec_l.null) * 100)
-output.sec <- cbind(infections.sec_averted.h, infections.sec_averted, infections.sec_averted.l,
-                cases.sec_averted.h, cases.sec_averted, cases.sec_averted.l)
-save(output.sec, file = paste('output.sec_', input, '.RData', sep = ''))
-
-#prop cases calculations
-primary.cases <- out[,(ncol(out) - 5)]
-primary.cases <- primary.cases[length(primary.cases)]
-secondary.cases <- out[,(ncol(out) - 4)]
-secondary.cases <- secondary.cases[length(secondary.cases)]
-postsecondary.cases <- out[,(ncol(out) - 3)]
-postsecondary.cases <- postsecondary.cases[length(postsecondary.cases)]
+save(output, file = paste('output_', input, '.RData', sep = ''))
 
 
-primary.l.cases <- out[,(ncol(out) - 2)]
-primary.l.cases <- primary.l.cases[length(primary.l.cases)]
-secondary.l.cases <- out[,(ncol(out) - 1)]
-secondary.l.cases <- secondary.l.cases[length(secondary.l.cases)]
-postsecondary.l.cases <- out[,(ncol(out))]
-postsecondary.l.cases <- postsecondary.l.cases[length(postsecondary.l.cases)]
 
-primary.h.cases <- primary.cases - primary.l.cases
-secondary.h.cases <- secondary.cases - secondary.l.cases
-postsecondary.h.cases <- postsecondary.cases - postsecondary.l.cases
+{
+# #Secondary averted calculations, CHECK THIS
+# track_sec_infected <- out[,(ncol(out) - 10)]
+# track_sec_l <- out[,(ncol(out) - 7)]
+# track_sec_h <- track_sec_infected - track_sec_l
+# track_sec_infected <- track_sec_infected[length(track_sec_infected)]
+# track_sec_l <- track_sec_l[length(track_sec_l)]
+# track_sec_h <- track_sec_infected - track_sec_l
+# cases_sec <- out[,(ncol(out) - 4)]
+# cases_sec <- cases_sec[length(cases_sec)]
+# cases_sec.l <- out[,(ncol(out) - 1)]
+# cases_sec.l <- cases_sec.l[length(cases_sec.l)]
+# cases_sec.h <- cases_sec - cases_sec.l
+# 
+# track_sec_infected.null <- out_null[,(ncol(out_null) - 10)]
+# track_sec_infected.null <- track_sec_infected.null[length(track_sec_infected.null)]
+# track_sec_l.null <- out_null[,(ncol(out_null) - 7)]
+# track_sec_l.null <- track_sec_l.null[length(track_sec_l.null)]
+# track_sec_h.null <- track_sec_infected.null - track_sec_l.null
+# 
+# cases.sec_null <- out_null[,(ncol(out_null) - 4)]
+# cases.sec_null <- cases.sec_null[length(cases.sec_null)]
+# cases.sec_l.null <- out_null[,(ncol(out_null) - 1)]
+# cases.sec_l.null <- cases.sec_l.null[length(cases.sec_l.null)]
+# cases.sec_h.null <- cases.sec_null - cases.sec_l.null
+# 
+# infections.sec_averted <- (((track_sec_infected.null - track_sec_infected) / track_sec_infected.null) * 100)
+# infections.sec_averted.h <- (((track_sec_h.null - track_sec_h) / track_sec_h.null) * 100)
+# infections.sec_averted.l <- (((track_sec_l.null - track_sec_l) / track_sec_l.null) * 100)
+# cases.sec_averted <- (((cases.sec_null - cases_sec) / cases.sec_null) * 100)
+# cases.sec_averted.h <- (((cases.sec_h.null - cases_sec.h) / cases.sec_h.null) * 100)
+# cases.sec_averted.l <- (((cases.sec_l.null - cases_sec.l) / cases.sec_l.null) * 100)
+# output.sec <- cbind(infections.sec_averted.h, infections.sec_averted, infections.sec_averted.l,
+#                 cases.sec_averted.h, cases.sec_averted, cases.sec_averted.l)
+# save(output.sec, file = paste('output.sec_', input, '.RData', sep = ''))
+# 
+# #prop cases calculations
+# primary.cases <- out[,(ncol(out) - 5)]
+# primary.cases <- primary.cases[length(primary.cases)]
+# secondary.cases <- out[,(ncol(out) - 4)]
+# secondary.cases <- secondary.cases[length(secondary.cases)]
+# postsecondary.cases <- out[,(ncol(out) - 3)]
+# postsecondary.cases <- postsecondary.cases[length(postsecondary.cases)]
+# 
+# 
+# primary.l.cases <- out[,(ncol(out) - 2)]
+# primary.l.cases <- primary.l.cases[length(primary.l.cases)]
+# secondary.l.cases <- out[,(ncol(out) - 1)]
+# secondary.l.cases <- secondary.l.cases[length(secondary.l.cases)]
+# postsecondary.l.cases <- out[,(ncol(out))]
+# postsecondary.l.cases <- postsecondary.l.cases[length(postsecondary.l.cases)]
+# 
+# primary.h.cases <- primary.cases - primary.l.cases
+# secondary.h.cases <- secondary.cases - secondary.l.cases
+# postsecondary.h.cases <- postsecondary.cases - postsecondary.l.cases
+# 
+# prop.cases.tot <- c(primary.cases, secondary.cases, postsecondary.cases,
+#                     primary.l.cases, secondary.l.cases, postsecondary.l.cases,
+#                     primary.h.cases, secondary.h.cases, postsecondary.h.cases) / c(rep(cases, 3), rep(cases.l, 3), rep(cases.h, 3))
+# names(prop.cases.tot) <- c("Primary Cases", "Secondary Cases", "Postsecondary Cases",
+#                            "Primary Cases, High Transmission", "Secondary Cases, High Transmission", "Postsecondary Cases, High Transmission",
+#                            "Primary Cases, Low Transmission", "Secondary Cases, Low Transmission", "Postsecondary Cases, Low Transmission")
+# save(prop.cases.tot, file = paste('prop.cases_', input, '.RData', sep = ''))
+}
 
-prop.cases.tot <- c(primary.cases, secondary.cases, postsecondary.cases,
-                    primary.l.cases, secondary.l.cases, postsecondary.l.cases,
-                    primary.h.cases, secondary.h.cases, postsecondary.h.cases) / c(rep(cases, 3), rep(cases.l, 3), rep(cases.h, 3))
-names(prop.cases.tot) <- c("Primary Cases", "Secondary Cases", "Postsecondary Cases",
-                           "Primary Cases, High Transmission", "Secondary Cases, High Transmission", "Postsecondary Cases, High Transmission",
-                           "Primary Cases, Low Transmission", "Secondary Cases, Low Transmission", "Postsecondary Cases, Low Transmission")
-save(prop.cases.tot, file = paste('prop.cases_', input, '.RData', sep = ''))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
