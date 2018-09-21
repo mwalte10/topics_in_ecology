@@ -9,7 +9,7 @@ input = as.numeric(args[1])
 ##########################
 #IF DOING VAC COVERAGE
 ##########################
-load('parameters.RData')
+load('parms.RData')
 beta_h <- new.parms.mat[input, 1]
 beta_l <- new.parms.mat[input, 2]
 native <- rep(new.parms.mat[input, 3], 28)
