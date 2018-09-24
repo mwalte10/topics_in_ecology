@@ -719,6 +719,8 @@ model <- function(t, y, parms){
     native * S1_l * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
     travel * S1_l * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) 
   primary <- sum(primary) * 0.18
+
+  
   
   ##primary cases incidence
 {  primary_tot.cases <- 
@@ -766,6 +768,7 @@ model <- function(t, y, parms){
     native * S2_l.v * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
     travel * S2_l.v * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) 
   secondary <- sum(secondary) * 0.41
+  
   
   #vaccinated case incidence
 {  secondary_vac_tot.cases <- 
@@ -848,6 +851,7 @@ model <- function(t, y, parms){
     native * S3_l.v * beta_l * 0.75 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
     travel * S3_l.v * beta_h * 0.75 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l)
   tertiary <- sum(tertiary) * 0.063425
+  
   
   
   ##post sec vaccinated case incidence
@@ -967,6 +971,31 @@ model <- function(t, y, parms){
   
   cases <- primary + secondary + tertiary + quaternary
   post_sec <- tertiary + quaternary
+  
+  primary.h <- 
+  native * S1_h * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+  travel * S1_l * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) 
+  primary.h <- sum(primary.h) * 0.18
+  
+  secondary.h <- 
+    native * S2_h * beta_h * 0.75 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    travel * S2_l * beta_h * 0.75 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    native * S2_h.v * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    travel * S2_l.v * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) 
+  secondary.h <- sum(secondary.h) * 0.41
+  
+  post_sec.h <- 
+    native * S3_h * beta_h * 0.5 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    travel * S3_l * beta_h * 0.5 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    native * S3_h.v * beta_h * 0.75 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    travel * S3_l.v * beta_h * 0.75 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l)
+    native * S4_h * beta_h * 0.25 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    travel * S4_l * beta_h * 0.25 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    native * S4_h.v * beta_h * 0.5 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
+    travel * S4_l.v * beta_h * 0.5 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l)
+  post_sec.h <- sum(post_sec.h) * 0.063425
+  
+  cases.h <- primary.h + secondary.h + post_sec.h
 
   primary.l <-
     native * S1_l * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
@@ -1019,43 +1048,51 @@ model <- function(t, y, parms){
          I_secondary_vac, I_post_sec_vac,
          I_l_sec_vac, I_l_post_sec_vac,
          
-         #1238 & 1239
+         #1237 & 1238
          primary_tot.cases, primary_tot.ncases, 
-         #1240, 1241
+         #1239, 1240
          primary_cases.l, primary_ncases.l,
-         #1242, 1243
+         #1241, 1242
          primary_cases.h, primary_ncases.h,
          
-         #1244, 1245
+         #1243, 1244
          secondary_vac_tot.cases, secondary_vac_tot.ncases,
-         #1246, 1247
+         #1245, 1246
          secondary_vac_cases.l, secondary_vac_ncases.l,
-         #1248, 1249
+         #1247, 1248
          secondary_vac_cases.h, secondary_vac_ncases.h,
-         #1250, 1251
+         #1249, 1250
          secondary_tot.cases, secondary_tot.ncases,
-         #1252, 1253
+         #1251, 1252
          secondary_cases.l, secondary_ncases.l,
-         #1254, 1255
+         #1253, 1254
          secondary_cases.h, secondary_ncases.h,
          
-         #1256, 1257
+         #1255, 1256
          postsec_vac_tot.cases, postsec_vac_tot.ncases,
-         #1258, 1259
+         #1257, 1258
          postsec_vac_cases.l, postsec_vac_ncases.l,
-         #1260, 1261
+         #1259, 1260
          postsec_vac_cases.h, postsec_vac_ncases.h,
-         #1262, 1263
+         #1261, 1262
          postsec_tot_cases, postsec_tot_ncases,
-         #1264, 1265
+         #1263, 1264
          postsec_cases.l, postsec_ncases.l,
-         #1266, 
+         #1265, 1266
          postsec_cases.h, postsec_ncases.h,
          
+         #1267
+         cases.h,
+         
+         #1268, 1269, 1270, 1271
          I_total, I_l, cases, cases.l,
+         #1272, 1273, 1274
          I_primary_tot, I_secondary_tot, I_post_sec_tot,
+         #1275, 1276, 1277
          I_l_primary_tot, I_l_sec_tot, I_l_post_sec_tot,
+         #1278, 1279, 1280
          primary, secondary, post_sec,
+         #1281, 1282, 1283
          primary.l, secondary.l, post_sec.l
          ))
 
@@ -1075,7 +1112,7 @@ y_init <- c(susceptible_h(1), infected_h(1), recovered_h(1),
             susceptible_l(3), infected_l(3), recovered_l(3),
             susceptible_l(4), infected_l(4), recovered_l(4),
             rep(0, 280), rep(0, 30),
-            rep(0,20))
+            rep(0,21))
 years = 50
 years_vac = 30
 times <- seq(from = 0, to = 365 * years, by = .1)
@@ -1089,34 +1126,36 @@ save(out_last.null, file = paste('out_last.null_', input, '.RData', sep = ''))
 
 
 ##incidence calcs 
-{I_prim_tot <- diff(out[,1242])
-I_sec_tot <- diff(out[,1243])
-I_psec_tot <- diff(out[,1244])
-I_prim_l <- diff(out[,1245])
-I_sec_l <- diff(out[,1246])
-I_psec_l <- diff(out[,1247])
-I_prim_h <- I_prim_tot - I_prim_l
-I_sec_h <- I_sec_tot - I_sec_l
-I_psec_h <- I_psec_tot - I_psec_l
-I_sec_vac <- diff(out[,1234])
-I_psec_vac <- diff(out[,1235])
-I_sec_vac_l <- diff(out[,1236])
-I_psec_vac_l <- diff(out[,1237])
-I_sec_vac_h <- I_sec_vac - I_sec_vac_l
-I_psec_vac_h <- I_psec_vac - I_psec_vac_l}
+{
+#   I_prim_tot <- diff(out[,1242])
+# I_sec_tot <- diff(out[,1243])
+# I_psec_tot <- diff(out[,1244])
+# I_prim_l <- diff(out[,1245])
+# I_sec_l <- diff(out[,1246])
+# I_psec_l <- diff(out[,1247])
+# I_prim_h <- I_prim_tot - I_prim_l
+# I_sec_h <- I_sec_tot - I_sec_l
+# I_psec_h <- I_psec_tot - I_psec_l
+# I_sec_vac <- diff(out[,1234])
+# I_psec_vac <- diff(out[,1235])
+# I_sec_vac_l <- diff(out[,1236])
+# I_psec_vac_l <- diff(out[,1237])
+# I_sec_vac_h <- I_sec_vac - I_sec_vac_l
+# I_psec_vac_h <- I_psec_vac - I_psec_vac_l
+}
 
-sv.h <- sum(diff(out[,1248]), diff(out[,1260]))
-sn.h <- sum(diff(out[(3650 * years_vac + 1):nrow(out),1242]), diff(out[(3650 * years_vac + 1):nrow(out),1254]), diff(out[(3650 * years_vac + 1):nrow(out),1266]))
-hv.h <- sum(diff(out[,1249]), diff(out[,1261]))
-hn.h <- sum(diff(out[(3650 * years_vac + 1):nrow(out),1243]), diff(out[(3650 * years_vac + 1):nrow(out),1255]), diff(out[(3650 * years_vac + 1):nrow(out),1267]))
+sv.h <- sum(diff(out[,1247]), diff(out[,1259]))
+sn.h <- sum(diff(out[(3650 * years_vac + 1):nrow(out),1241]), diff(out[(3650 * years_vac + 1):nrow(out),1253]), diff(out[(3650 * years_vac + 1):nrow(out),1265]))
+hv.h <- sum(diff(out[,1248]), diff(out[,1260]))
+hn.h <- sum(diff(out[(3650 * years_vac + 1):nrow(out),1242]), diff(out[(3650 * years_vac + 1):nrow(out),1254]), diff(out[(3650 * years_vac + 1):nrow(out),1266]))
 
 or.h <- (sv.h / sn.h) / (hv.h / hn.h)
 rr.h <- (sv.h / (sv.h + hv.h)) / (sn.h / (sn.h + hn.h))
 
-sv.l <- sum(diff(out[,1246]), diff(out[,1258]))
-sn.l <- sum(diff(out[(3650 * years_vac + 1):nrow(out),1240]), diff(out[(3650 * years_vac + 1):nrow(out),1252]), diff(out[(3650 * years_vac + 1):nrow(out),1264]))
-hv.l <- sum(diff(out[,1247]), diff(out[,1259]))
-hn.l <- sum(diff(out[(3650 * years_vac + 1):nrow(out),1241]), diff(out[(3650 * years_vac + 1):nrow(out),1253]), diff(out[(3650 * years_vac + 1):nrow(out),1265]))
+sv.l <- sum(diff(out[,1245]), diff(out[,1257]))
+sn.l <- sum(diff(out[(3650 * years_vac + 1):nrow(out),1239]), diff(out[(3650 * years_vac + 1):nrow(out),1251]), diff(out[(3650 * years_vac + 1):nrow(out),1263]))
+hv.l <- sum(diff(out[,1246]), diff(out[,1258]))
+hn.l <- sum(diff(out[(3650 * years_vac + 1):nrow(out),1240]), diff(out[(3650 * years_vac + 1):nrow(out),1252]), diff(out[(3650 * years_vac + 1):nrow(out),1264]))
 
 or.l <- (sv.l / sn.l) / (hv.l / hn.l)
 rr.l <- (sv.l / (sv.l + hv.l)) / (sn.l / (sn.l + hn.l))
@@ -1139,33 +1178,35 @@ indexing <- c((3650 * years_vac + 1):(nrow(out) - 1))
 
 {
   #out_last <- out[nrow(out),(2:(ncol(out) - 4))]
-  track_infected <- diff(out[,(ncol(out) - 15)])
-  track_l <- diff(out[,(ncol(out) - 14)])
+  track_infected <- diff(out[,1268])
+  track_l <- diff(out[,1269])
   track_h <- track_infected - track_l
   track_infected <- sum(track_infected[indexing])
   track_l <- sum(track_l[indexing])
   track_h <- track_infected - track_l
-  cases <- diff(out[,(ncol(out) - 13)])
+  cases <- diff(out[,1270])
   cases <- sum(cases[indexing])
-  cases.l <- diff(out[,(ncol(out) -12)])
+  cases.l <- diff(out[,1271])
   cases.l <- sum(cases.l[indexing])
-  cases.h <- cases - cases.l
+  cases.h <- diff(out[,1267])
+  cases.h <- sum(cases.h[indexing])
 }
 
 ##Null outputs
 {
-  track_infected.null <- diff(out_null[,(ncol(out_null) - 15)])
+  track_infected.null <- diff(out_null[,1268])
   track_infected.null <- sum(track_infected.null[indexing])
-  track_l.null <- diff(out_null[,(ncol(out_null) - 14)])
+  track_l.null <- diff(out_null[,1269])
   track_l.null <- sum(track_l.null[indexing])
   track_h.null <- track_infected.null - track_l.null
   
-  cases.null <- diff(out_null[,(ncol(out_null) - 13)])
+  cases.null <- diff(out_null[,1270])
   cases.null <- cases.null[length(cases.null)]
-  cases.l.null <- diff(out_null[,(ncol(out_null) -12)])
+  cases.l.null <- diff(out_null[,1271])
   cases.l.null <- sum(cases.l.null[indexing])
-  cases.h.null <- cases.null - cases.l.null
-}
+  cases.h.null <- diff(out_null[,1267])
+  cases.h.null <- sum(cases.h.null[indexing])
+  }
 
 #Averted calculations, NEED TO CHECK THIS
 {
