@@ -8,9 +8,9 @@ input = as.numeric(args[1])
 ##########################
 #IF DOING BETA/SP9
 ##########################
-beta_h <- seq(0.25, 0.95, length.out = 20)
-beta_l <- seq(0.25, 0.95, length.out = 20)
-native.parm <- seq(0.9, 0.9999, length.out = 20)
+beta_h <- seq(0.1, 0.4, length.out = 20)
+beta_l <- seq(0.8, 0.99, length.out = 20)
+native.parm <- seq(0.95, 1, length.out = 20)
 beta_h.new <- rep(beta_h, 20)
 beta_l.new <- rep(NA, 400)
 for(i in 1:20){
@@ -28,11 +28,13 @@ beta_l <- rep(beta_mat[,2], 20)
 native <- add
 x <- beta_l - beta_h
 keep <- unname(which(x > 0))
-parms_mat <- cbind(beta_h, beta_l, add)
-parms_mat <- parms_mat[keep,]
-beta_h <- parms_mat[input,1]
-beta_l <- parms_mat[input,2]
-native <- rep(parms_mat[input,3], 28)
+beta_l <- beta_l[keep]
+beta_h <- beta_h[keep]
+native <- native[keep]
+parm_mat <- cbind(beta_h, beta_l, native)
+beta_h <- parm_mat[input,1]
+beta_l <- parm_mat[input,2]
+native <- rep(parm_mat[input,3], 28)
 vac_h <- 0
 vac_l <- 0
 
