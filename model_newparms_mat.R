@@ -9,7 +9,7 @@ input = as.numeric(args[1])
 ##########################
 #IF DOING VAC COVERAGE
 ##########################
-load('parms.mat.RData')
+load('parms.mat.new.RData')
 beta_h <- new.parms.mat[input, 1]
 beta_l <- new.parms.mat[input, 2]
 native <- rep(new.parms.mat[input, 3], 28)
@@ -1267,32 +1267,32 @@ save(output, file = paste('output.newparms_', input, '.RData', sep = ''))
 # save(output.sec, file = paste('output.sec_', input, '.RData', sep = ''))
 # 
 # #prop cases calculations
-# primary.cases <- out[,(ncol(out) - 5)]
-# primary.cases <- primary.cases[length(primary.cases)]
-# secondary.cases <- out[,(ncol(out) - 4)]
-# secondary.cases <- secondary.cases[length(secondary.cases)]
-# postsecondary.cases <- out[,(ncol(out) - 3)]
-# postsecondary.cases <- postsecondary.cases[length(postsecondary.cases)]
-# 
-# 
-# primary.l.cases <- out[,(ncol(out) - 2)]
-# primary.l.cases <- primary.l.cases[length(primary.l.cases)]
-# secondary.l.cases <- out[,(ncol(out) - 1)]
-# secondary.l.cases <- secondary.l.cases[length(secondary.l.cases)]
-# postsecondary.l.cases <- out[,(ncol(out))]
-# postsecondary.l.cases <- postsecondary.l.cases[length(postsecondary.l.cases)]
-# 
-# primary.h.cases <- primary.cases - primary.l.cases
-# secondary.h.cases <- secondary.cases - secondary.l.cases
-# postsecondary.h.cases <- postsecondary.cases - postsecondary.l.cases
-# 
-# prop.cases.tot <- c(primary.cases, secondary.cases, postsecondary.cases,
-#                     primary.l.cases, secondary.l.cases, postsecondary.l.cases,
-#                     primary.h.cases, secondary.h.cases, postsecondary.h.cases) / c(rep(cases, 3), rep(cases.l, 3), rep(cases.h, 3))
-# names(prop.cases.tot) <- c("Primary Cases", "Secondary Cases", "Postsecondary Cases",
-#                            "Primary Cases, High Transmission", "Secondary Cases, High Transmission", "Postsecondary Cases, High Transmission",
-#                            "Primary Cases, Low Transmission", "Secondary Cases, Low Transmission", "Postsecondary Cases, Low Transmission")
-# save(prop.cases.tot, file = paste('prop.cases_', input, '.RData', sep = ''))
+primary.cases <- out[,1278]
+primary.cases <- primary.cases[length(primary.cases)]
+secondary.cases <- out[,1279]
+secondary.cases <- secondary.cases[length(secondary.cases)]
+postsecondary.cases <- out[,1280]
+postsecondary.cases <- postsecondary.cases[length(postsecondary.cases)]
+
+
+primary.l.cases <- out[,1281]
+primary.l.cases <- primary.l.cases[length(primary.l.cases)]
+secondary.l.cases <- out[,1282]
+secondary.l.cases <- secondary.l.cases[length(secondary.l.cases)]
+postsecondary.l.cases <- out[,1283]
+postsecondary.l.cases <- postsecondary.l.cases[length(postsecondary.l.cases)]
+
+primary.h.cases <- primary.cases - primary.l.cases
+secondary.h.cases <- secondary.cases - secondary.l.cases
+postsecondary.h.cases <- postsecondary.cases - postsecondary.l.cases
+
+prop.cases.tot <- c(primary.cases, secondary.cases, postsecondary.cases,
+                    primary.l.cases, secondary.l.cases, postsecondary.l.cases,
+                    primary.h.cases, secondary.h.cases, postsecondary.h.cases) / c(rep(cases, 3), rep(cases.l, 3), rep(cases.h, 3))
+names(prop.cases.tot) <- c("Primary Cases", "Secondary Cases", "Postsecondary Cases",
+                           "Primary Cases, High Transmission", "Secondary Cases, High Transmission", "Postsecondary Cases, High Transmission",
+                           "Primary Cases, Low Transmission", "Secondary Cases, Low Transmission", "Postsecondary Cases, Low Transmission")
+save(prop.cases.tot, file = paste('prop.cases_', input, '.RData', sep = ''))
 }
 
 
