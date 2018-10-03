@@ -1281,10 +1281,11 @@ cases.l <- primary.l.cases + secondary.l.cases + postsecondary.l.cases
 primary.h.cases <- primary.cases - primary.l.cases
 secondary.h.cases <- secondary.cases - secondary.l.cases
 postsecondary.h.cases <- postsecondary.cases - postsecondary.l.cases
+cases.h <- cases - cases.l
 
-prop.cases.tot <- c(primary.cases, secondary.cases, postsecondary.cases,
-                    primary.l.cases, secondary.l.cases, postsecondary.l.cases,
-                    primary.h.cases, secondary.h.cases, postsecondary.h.cases) / c(rep(cases, 3), rep(cases.l, 3), rep(cases.h, 3))
+prop.cases.tot <- c(primary.cases / cases, secondary.cases / cases, postsecondary.cases / cases,
+                    primary.l.cases / cases.l, secondary.l.cases / cases.l, postsecondary.l.cases / cases.l,
+                    primary.h.cases / cases.h, secondary.h.cases / cases.h, postsecondary.h.cases / cases.h) 
 names(prop.cases.tot) <- c("Primary Cases", "Secondary Cases", "Postsecondary Cases",
                            "Primary Cases, High Transmission", "Secondary Cases, High Transmission", "Postsecondary Cases, High Transmission",
                            "Primary Cases, Low Transmission", "Secondary Cases, Low Transmission", "Postsecondary Cases, Low Transmission")
