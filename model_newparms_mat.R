@@ -719,6 +719,7 @@ model <- function(t, y, parms){
     native * S1_l * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
     travel * S1_l * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) 
   primary <- sum(primary) * 0.18
+  primary_inf <- primary/ 0.18
 
   
   
@@ -768,6 +769,7 @@ model <- function(t, y, parms){
     native * S2_l.v * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
     travel * S2_l.v * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) 
   secondary <- sum(secondary) * 0.41
+  secondary_inf <- secondary / 0.41
   
   
   #vaccinated case incidence
@@ -971,6 +973,7 @@ model <- function(t, y, parms){
   
   cases <- primary + secondary + tertiary + quaternary
   post_sec <- tertiary + quaternary
+  post_sec_inf <- post_sec / 0.063425
   
   primary.h <- 
   native * S1_h * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
@@ -1001,6 +1004,7 @@ model <- function(t, y, parms){
     native * S1_l * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
     travel * S1_l * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l)  
   primary.l <- sum(primary.l) * 0.18
+  primary.l.inf <- primary.l / 0.18
   
   secondary.l <-
     native * S2_l * beta_l * 0.75 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
@@ -1008,6 +1012,7 @@ model <- function(t, y, parms){
     native * S2_l.v * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
     travel * S2_l.v * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) 
   secondary.l <- sum(secondary.l) * 0.41
+  secondary.l.inf <- secondary.l / 0.41
   
   tertiary.l <-
     native * S3_l * beta_l * 0.5 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
@@ -1025,7 +1030,9 @@ model <- function(t, y, parms){
   quaternary.l <- sum(quaternary.l) * 0.063425
   
   cases.l <- primary.l + secondary.l  + tertiary.l + quaternary.l
-  post_sec.l <- tertiary.l + quaternary.l}
+  post_sec.l <- tertiary.l + quaternary.l
+  post_sec.l.inf <- post_sec.l / 0.063425
+  }
 
     
   
@@ -1097,7 +1104,11 @@ model <- function(t, y, parms){
          #1278, 1279, 1280
          primary, secondary, post_sec,
          #1281, 1282, 1283
-         primary.l, secondary.l, post_sec.l
+         primary.l, secondary.l, post_sec.l, 
+         #1284, 1285, 1286
+         primary_inf, secondary_inf, post_sec_inf, 
+         #1287, 1288, 1289
+         primary.l.inf, secondary.l.inf, post_sec.l.inf
          ))
 
   
@@ -1116,12 +1127,12 @@ y_init <- c(susceptible_h(1), infected_h(1), recovered_h(1),
             susceptible_l(3), infected_l(3), recovered_l(3),
             susceptible_l(4), infected_l(4), recovered_l(4),
             rep(0, 280), rep(0, 30),
-            rep(0,21))
+            rep(0,27))
 years = 50
 years_vac = 30
 times <- seq(from = 0, to = 365 * years, by = .1)
 out <- ode(times = times, y = y_init, func = model, parms = parms)
-#out_null <- ode(times = times, y = y_init, func = model, parms = parms_null)
+out_null <- ode(times = times, y = y_init, func = model, parms = parms_null)
 
 # out_last <- out[nrow(out),(2:(ncol(out) - 16))]
 # out_last.null <- out_null[nrow(out_null),(2:(ncol(out_null) - 16))]
@@ -1290,6 +1301,80 @@ names(prop.cases.tot) <- c("Primary Cases", "Secondary Cases", "Postsecondary Ca
                            "Primary Cases, High Transmission", "Secondary Cases, High Transmission", "Postsecondary Cases, High Transmission",
                            "Primary Cases, Low Transmission", "Secondary Cases, Low Transmission", "Postsecondary Cases, Low Transmission")
 save(prop.cases.tot, file = paste('prop.cases_', input, '.RData', sep = ''))
+
+####Infections
+primary.inf <- out[nrow(out),1278]
+secondary.inf <- out[nrow(out),1279]
+postsecondary.inf<- out[nrow(out),1280]
+inf <- primary.inf + secondary.inf + postsecondary.inf
+
+primary.l.inf<- out[nrow(out),1281]
+secondary.l.inf <- out[nrow(out),1282]
+postsecondary.l.inf <- out[nrow(out),1283]
+inf.l <- primary.l.inf + secondary.l.inf + postsecondary.l.inf
+
+primary.h.inf <- primary.inf - primary.l.inf
+secondary.h.inf <- secondary.inf - secondary.l.inf
+postsecondary.h.inf <- postsecondary.inf - postsecondary.l.inf
+inf.h <- inf - inf.l
+
+prop.inf.tot <- c(primary.inf / inf, secondary.inf / inf, postsecondary.inf / inf,
+                    primary.l.inf / inf.l, secondary.l.inf / inf.l, postsecondary.l.inf / inf.l,
+                    primary.h.inf / inf.h, secondary.h.inf / inf.h, postsecondary.h.inf / inf.h) 
+names(prop.inf.tot) <- c("Primary Infections", "Secondary Infections", "Postsecondary Infections",
+                           "Primary Infections, High Transmission", "Secondary Infections, High Transmission", "Postsecondary Infections, High Transmission",
+                           "Primary Infections, Low Transmission", "Secondary Infections, Low Transmission", "Postsecondary Infections, Low Transmission")
+save(prop.inf.tot, file = paste('prop.inf_', input, '.RData', sep = ''))
+
+
+primary.cases <- out_null[nrow(out),1278]
+secondary.cases <- out_null[nrow(out),1279]
+postsecondary.cases <- out_null[nrow(out),1280]
+cases <- primary.cases + secondary.cases + postsecondary.cases
+
+primary.l.cases <- out_null[nrow(out),1281]
+secondary.l.cases <- out_null[nrow(out),1282]
+postsecondary.l.cases <- out_null[nrow(out),1283]
+cases.l <- primary.l.cases + secondary.l.cases + postsecondary.l.cases
+
+primary.h.cases <- primary.cases - primary.l.cases
+secondary.h.cases <- secondary.cases - secondary.l.cases
+postsecondary.h.cases <- postsecondary.cases - postsecondary.l.cases
+cases.h <- cases - cases.l
+
+prop.cases.tot <- c(primary.cases / cases, secondary.cases / cases, postsecondary.cases / cases,
+                    primary.l.cases / cases.l, secondary.l.cases / cases.l, postsecondary.l.cases / cases.l,
+                    primary.h.cases / cases.h, secondary.h.cases / cases.h, postsecondary.h.cases / cases.h) 
+names(prop.cases.tot) <- c("Primary Cases", "Secondary Cases", "Postsecondary Cases",
+                           "Primary Cases, High Transmission", "Secondary Cases, High Transmission", "Postsecondary Cases, High Transmission",
+                           "Primary Cases, Low Transmission", "Secondary Cases, Low Transmission", "Postsecondary Cases, Low Transmission")
+save(prop.cases.tot, file = paste('prop.cases.null_', input, '.RData', sep = ''))
+
+####Infections
+primary.inf <- out_null[nrow(out),1278]
+secondary.inf <- out_null[nrow(out),1279]
+postsecondary.inf<- out_null[nrow(out),1280]
+inf <- primary.inf + secondary.inf + postsecondary.inf
+
+primary.l.inf<- out_null[nrow(out),1281]
+secondary.l.inf <- out_null[nrow(out),1282]
+postsecondary.l.inf <- out_null[nrow(out),1283]
+inf.l <- primary.l.inf + secondary.l.inf + postsecondary.l.inf
+
+primary.h.inf <- primary.inf - primary.l.inf
+secondary.h.inf <- secondary.inf - secondary.l.inf
+postsecondary.h.inf <- postsecondary.inf - postsecondary.l.inf
+inf.h <- inf - inf.l
+
+prop.inf.tot <- c(primary.inf / inf, secondary.inf / inf, postsecondary.inf / inf,
+                  primary.l.inf / inf.l, secondary.l.inf / inf.l, postsecondary.l.inf / inf.l,
+                  primary.h.inf / inf.h, secondary.h.inf / inf.h, postsecondary.h.inf / inf.h) 
+names(prop.inf.tot) <- c("Primary Infections", "Secondary Infections", "Postsecondary Infections",
+                         "Primary Infections, High Transmission", "Secondary Infections, High Transmission", "Postsecondary Infections, High Transmission",
+                         "Primary Infections, Low Transmission", "Secondary Infections, Low Transmission", "Postsecondary Infections, Low Transmission")
+save(prop.inf.tot, file = paste('prop.inf.null_', input, '.RData', sep = ''))
+
+
 }
 
 
