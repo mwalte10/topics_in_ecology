@@ -1121,7 +1121,7 @@ years = 50
 years_vac = 30
 times <- seq(from = 0, to = 365 * years, by = .1)
 out <- ode(times = times, y = y_init, func = model, parms = parms)
-out_null <- ode(times = times, y = y_init, func = model, parms = parms_null)
+#out_null <- ode(times = times, y = y_init, func = model, parms = parms_null)
 
 # out_last <- out[nrow(out),(2:(ncol(out) - 16))]
 # out_last.null <- out_null[nrow(out_null),(2:(ncol(out_null) - 16))]
@@ -1147,86 +1147,86 @@ out_null <- ode(times = times, y = y_init, func = model, parms = parms_null)
 # I_sec_vac_h <- I_sec_vac - I_sec_vac_l
 # I_psec_vac_h <- I_psec_vac - I_psec_vac_l
 }
-out <- out[,2:ncol(out)]
-out_null <- out_null[,2:ncol(out_null)]
-
-sv.h <- sum(diff(out[,1247]), diff(out[,1259]))
-sn.h <- sum(diff(out[(3650 * years_vac + 1):nrow(out),1241]), diff(out[(3650 * years_vac + 1):nrow(out),1253]), diff(out[(3650 * years_vac + 1):nrow(out),1265]))
-hv.h <- sum(diff(out[,1248]), diff(out[,1260]))
-hn.h <- sum(diff(out[(3650 * years_vac + 1):nrow(out),1242]), diff(out[(3650 * years_vac + 1):nrow(out),1254]), diff(out[(3650 * years_vac + 1):nrow(out),1266]))
-
-or.h <- (sv.h / sn.h) / (hv.h / hn.h)
-rr.h <- (sv.h / (sv.h + hv.h)) / (sn.h / (sn.h + hn.h))
-
-sv.l <- sum(diff(out[,1245]), diff(out[,1257]))
-sn.l <- sum(diff(out[(3650 * years_vac + 1):nrow(out),1239]), diff(out[(3650 * years_vac + 1):nrow(out),1251]), diff(out[(3650 * years_vac + 1):nrow(out),1263]))
-hv.l <- sum(diff(out[,1246]), diff(out[,1258]))
-hn.l <- sum(diff(out[(3650 * years_vac + 1):nrow(out),1240]), diff(out[(3650 * years_vac + 1):nrow(out),1252]), diff(out[(3650 * years_vac + 1):nrow(out),1264]))
-
-or.l <- (sv.l / sn.l) / (hv.l / hn.l)
-rr.l <- (sv.l / (sv.l + hv.l)) / (sn.l / (sn.l + hn.l))
-
-rr_or_vec <- c(or.h, rr.h, or.l, rr.l)
-save(rr_or_vec, file = paste('rr_or.newparms_', input, '.RData', sep = ''))
-
-# incidence_mat <- out[,1238:1267]
-# save(incidence_mat, file = paste('incidence_counts_', input, '.RData', sep = ''))
-
-
-
-###issue with the non-sec, non-vac individuals (no way that these are being counted currently)
-##this is only a problem for the vaccination individuals bc they never experience a primary inf/case
-##might also need to track the number of s1 - s2 nv individuals for this? 
-##summing all of these would give total number of people experiencing that infection in that time period
-
-
-indexing <- c((3650 * years_vac + 1):(nrow(out) - 1))
-
-{
-  #out_last <- out[nrow(out),(2:(ncol(out) - 4))]
-  track_infected <- diff(out[,1268])
-  track_l <- diff(out[,1269])
-  track_h <- track_infected - track_l
-  track_infected <- sum(track_infected[indexing])
-  track_l <- sum(track_l[indexing])
-  track_h <- track_infected - track_l
-  cases <- diff(out[,1270])
-  cases <- sum(cases[indexing])
-  cases.l <- diff(out[,1271])
-  cases.l <- sum(cases.l[indexing])
-  cases.h <- diff(out[,1267])
-  cases.h <- sum(cases.h[indexing])
-}
-
-##Null outputs
-{
-  track_infected.null <- diff(out_null[,1268])
-  track_infected.null <- sum(track_infected.null[indexing])
-  track_l.null <- diff(out_null[,1269])
-  track_l.null <- sum(track_l.null[indexing])
-  track_h.null <- track_infected.null - track_l.null
-  
-  cases.null <- diff(out_null[,1270])
-  cases.null <- cases.null[length(cases.null)]
-  cases.l.null <- diff(out_null[,1271])
-  cases.l.null <- sum(cases.l.null[indexing])
-  cases.h.null <- diff(out_null[,1267])
-  cases.h.null <- sum(cases.h.null[indexing])
-  }
-
-#Averted calculations, NEED TO CHECK THIS
-{
-  infections_averted <- (((track_infected.null - track_infected) / track_infected.null) * 100)
-  infections_averted.h <- (((track_h.null - track_h) / track_h.null) * 100)
-  infections_averted.l <- (((track_l.null - track_l) / track_l.null) * 100)
-  cases_averted <- (((cases.null - cases) / cases.null) * 100)
-  cases_averted.h <- (((cases.h.null - cases.h) / cases.h.null) * 100)
-  cases_averted.l <- (((cases.l.null - cases.l) / cases.l.null) * 100)
-  output <- cbind(infections_averted.h, infections_averted, infections_averted.l,
-                       cases_averted.h, cases_averted, cases_averted.l)
-}
-
-save(output, file = paste('output.newparms_', input, '.RData', sep = ''))
+# out <- out[,2:ncol(out)]
+# out_null <- out_null[,2:ncol(out_null)]
+# 
+# sv.h <- sum(diff(out[,1247]), diff(out[,1259]))
+# sn.h <- sum(diff(out[(3650 * years_vac + 1):nrow(out),1241]), diff(out[(3650 * years_vac + 1):nrow(out),1253]), diff(out[(3650 * years_vac + 1):nrow(out),1265]))
+# hv.h <- sum(diff(out[,1248]), diff(out[,1260]))
+# hn.h <- sum(diff(out[(3650 * years_vac + 1):nrow(out),1242]), diff(out[(3650 * years_vac + 1):nrow(out),1254]), diff(out[(3650 * years_vac + 1):nrow(out),1266]))
+# 
+# or.h <- (sv.h / sn.h) / (hv.h / hn.h)
+# rr.h <- (sv.h / (sv.h + hv.h)) / (sn.h / (sn.h + hn.h))
+# 
+# sv.l <- sum(diff(out[,1245]), diff(out[,1257]))
+# sn.l <- sum(diff(out[(3650 * years_vac + 1):nrow(out),1239]), diff(out[(3650 * years_vac + 1):nrow(out),1251]), diff(out[(3650 * years_vac + 1):nrow(out),1263]))
+# hv.l <- sum(diff(out[,1246]), diff(out[,1258]))
+# hn.l <- sum(diff(out[(3650 * years_vac + 1):nrow(out),1240]), diff(out[(3650 * years_vac + 1):nrow(out),1252]), diff(out[(3650 * years_vac + 1):nrow(out),1264]))
+# 
+# or.l <- (sv.l / sn.l) / (hv.l / hn.l)
+# rr.l <- (sv.l / (sv.l + hv.l)) / (sn.l / (sn.l + hn.l))
+# 
+# rr_or_vec <- c(or.h, rr.h, or.l, rr.l)
+# save(rr_or_vec, file = paste('rr_or.newparms_', input, '.RData', sep = ''))
+# 
+# # incidence_mat <- out[,1238:1267]
+# # save(incidence_mat, file = paste('incidence_counts_', input, '.RData', sep = ''))
+# 
+# 
+# 
+# ###issue with the non-sec, non-vac individuals (no way that these are being counted currently)
+# ##this is only a problem for the vaccination individuals bc they never experience a primary inf/case
+# ##might also need to track the number of s1 - s2 nv individuals for this? 
+# ##summing all of these would give total number of people experiencing that infection in that time period
+# 
+# 
+# indexing <- c((3650 * years_vac + 1):(nrow(out) - 1))
+# 
+# {
+#   #out_last <- out[nrow(out),(2:(ncol(out) - 4))]
+#   track_infected <- diff(out[,1268])
+#   track_l <- diff(out[,1269])
+#   track_h <- track_infected - track_l
+#   track_infected <- sum(track_infected[indexing])
+#   track_l <- sum(track_l[indexing])
+#   track_h <- track_infected - track_l
+#   cases <- diff(out[,1270])
+#   cases <- sum(cases[indexing])
+#   cases.l <- diff(out[,1271])
+#   cases.l <- sum(cases.l[indexing])
+#   cases.h <- diff(out[,1267])
+#   cases.h <- sum(cases.h[indexing])
+# }
+# 
+# ##Null outputs
+# {
+#   track_infected.null <- diff(out_null[,1268])
+#   track_infected.null <- sum(track_infected.null[indexing])
+#   track_l.null <- diff(out_null[,1269])
+#   track_l.null <- sum(track_l.null[indexing])
+#   track_h.null <- track_infected.null - track_l.null
+#   
+#   cases.null <- diff(out_null[,1270])
+#   cases.null <- cases.null[length(cases.null)]
+#   cases.l.null <- diff(out_null[,1271])
+#   cases.l.null <- sum(cases.l.null[indexing])
+#   cases.h.null <- diff(out_null[,1267])
+#   cases.h.null <- sum(cases.h.null[indexing])
+#   }
+# 
+# #Averted calculations, NEED TO CHECK THIS
+# {
+#   infections_averted <- (((track_infected.null - track_infected) / track_infected.null) * 100)
+#   infections_averted.h <- (((track_h.null - track_h) / track_h.null) * 100)
+#   infections_averted.l <- (((track_l.null - track_l) / track_l.null) * 100)
+#   cases_averted <- (((cases.null - cases) / cases.null) * 100)
+#   cases_averted.h <- (((cases.h.null - cases.h) / cases.h.null) * 100)
+#   cases_averted.l <- (((cases.l.null - cases.l) / cases.l.null) * 100)
+#   output <- cbind(infections_averted.h, infections_averted, infections_averted.l,
+#                        cases_averted.h, cases_averted, cases_averted.l)
+# }
+# 
+# save(output, file = paste('output.newparms_', input, '.RData', sep = ''))
 
 
 
@@ -1267,20 +1267,16 @@ save(output, file = paste('output.newparms_', input, '.RData', sep = ''))
 # save(output.sec, file = paste('output.sec_', input, '.RData', sep = ''))
 # 
 # #prop cases calculations
-primary.cases <- out[,1278]
-primary.cases <- primary.cases[length(primary.cases)]
-secondary.cases <- out[,1279]
-secondary.cases <- secondary.cases[length(secondary.cases)]
-postsecondary.cases <- out[,1280]
-postsecondary.cases <- postsecondary.cases[length(postsecondary.cases)]
 
+primary.cases <- out[nrow(out),1278]
+secondary.cases <- out[nrow(out),1279]
+postsecondary.cases <- out[nrow(out),1280]
+cases <- primary.cases + secondary.cases + postsecondary.cases
 
-primary.l.cases <- out[,1281]
-primary.l.cases <- primary.l.cases[length(primary.l.cases)]
-secondary.l.cases <- out[,1282]
-secondary.l.cases <- secondary.l.cases[length(secondary.l.cases)]
-postsecondary.l.cases <- out[,1283]
-postsecondary.l.cases <- postsecondary.l.cases[length(postsecondary.l.cases)]
+primary.l.cases <- out[nrow(out),1281]
+secondary.l.cases <- out[nrow(out),1282]
+postsecondary.l.cases <- out[nrow(out),1283]
+cases.l <- primary.l.cases + secondary.l.cases + postsecondary.l.cases
 
 primary.h.cases <- primary.cases - primary.l.cases
 secondary.h.cases <- secondary.cases - secondary.l.cases
