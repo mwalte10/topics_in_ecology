@@ -1131,15 +1131,15 @@ y_init <- c(susceptible_h(1), infected_h(1), recovered_h(1),
 years = 30
 years_vac = 30
 times <- seq(from = 0, to = 365 * years, by = .1)
-#out <- ode(times = times, y = y_init, func = model, parms = parms)
-out_null <- ode(times = times, y = y_init, func = model, parms = parms_null)
+out <- ode(times = times, y = y_init, func = model, parms = parms)
+#out_null <- ode(times = times, y = y_init, func = model, parms = parms_null)
 
 # out_last <- out[nrow(out),(2:(ncol(out) - 16))]
 # out_last.null <- out_null[nrow(out_null),(2:(ncol(out_null) - 16))]
 # save(out_last, file = paste('out_last_', input, '.RData', sep = ''))
 # save(out_last.null, file = paste('out_last.null_', input, '.RData', sep = ''))
 
-new_y_init <- out_null[nrow(out_null),2:ncol(out_null)]
+new_y_init <- out[nrow(out),2:ncol(out)]
 save(new_y_init, file = paste('y_init_', i, '.RData', sep = ''))
 
 ##incidence calcs 
