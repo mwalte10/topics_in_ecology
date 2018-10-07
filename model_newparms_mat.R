@@ -16,7 +16,7 @@ beta_l <- new.parms.mat[x[input], 2]
 native <- rep(new.parms.mat[x[input], 3], 28)
 vac_h <- new.parms.mat[x[input], 4]
 vac_l <- new.parms.mat[x[input], 5]
-y_init <- new.parms.mat[x[input], 6]
+#y_init <- new.parms.mat[x[input], 6]
 
 
 
