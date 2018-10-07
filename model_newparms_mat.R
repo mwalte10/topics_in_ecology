@@ -10,11 +10,14 @@ input = as.numeric(args[1])
 #IF DOING VAC COVERAGE
 ##########################
 load('parms.mat.new.RData')
-beta_h <- new.parms.mat[input, 1]
-beta_l <- new.parms.mat[input, 2]
-native <- rep(new.parms.mat[input, 3], 28)
-vac_h <- new.parms.mat[input, 4]
-vac_l <- new.parms.mat[input, 5]
+x <- c(40, 44, 110, 131)
+beta_h <- new.parms.mat[x[input], 1]
+beta_l <- new.parms.mat[x[input], 2]
+native <- rep(new.parms.mat[x[input], 3], 28)
+vac_h <- new.parms.mat[x[input], 4]
+vac_l <- new.parms.mat[x[input], 5]
+y_init <- new.parms.mat[x[input], 6]
+
 
 
 library(deSolve)
