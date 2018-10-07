@@ -1263,7 +1263,7 @@ out_null <- out_null[,2:ncol(out_null)]
                        cases_averted.h, cases_averted, cases_averted.l)
 }
 # 
- save(output, file = paste('output.newparms_', input, '.RData', sep = ''))
+ save(output, file = paste('output.newparms_', x[input], '.RData', sep = ''))
 
  
 ##time series
@@ -1289,7 +1289,7 @@ ts_inf <- list(infections_h.vac, infections_l.vac, infections_h, infections_l)
 names(ts_inf) <- c('high ses, vac', 'low ses, vac', 
                    'high ses, nvac', 'low ses, nvac')
 
-save(ts_inf, file = paste('ts_inf_', input, '.RData', sep = ''))
+save(ts_inf, file = paste('ts_inf_', x[input], '.RData', sep = ''))
 
 
 {
