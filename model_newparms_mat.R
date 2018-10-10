@@ -10,12 +10,11 @@ input = as.numeric(args[1])
 #IF DOING VAC COVERAGE
 ##########################
 load('parms.mat.new.RData')
-x <- c(40, 44, 110, 131)
-beta_h <- new.parms.mat[x[input], 1]
-beta_l <- new.parms.mat[x[input], 2]
-native <- rep(new.parms.mat[x[input], 3], 28)
-vac_h <- new.parms.mat[x[input], 4]
-vac_l <- new.parms.mat[x[input], 5]
+beta_h <- new.parms.mat[input, 1]
+beta_l <- new.parms.mat[input, 2]
+native <- rep(new.parms.mat[input, 3], 28)
+vac_h <- new.parms.mat[input, 4]
+vac_l <- new.parms.mat[input, 5]
 #y_init <- new.parms.mat[x[input], 6]
 
 
@@ -572,7 +571,7 @@ model <- function(t, y, parms){
     native * S2_l * beta_l * 0.75 * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
     travel * S2_l * beta_h * 0.75 * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
     native * S2_l.v * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
-    travel * S2_l.v * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) 
+    travel * S2_l.v * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
     native * S1_h * beta_h * (native * infected_total_h / pop_h + travel * infected_total_l / pop_l) +
     travel * S1_h * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
     native * S1_l * beta_l * (native * infected_total_l / pop_l + travel * infected_total_h / pop_h) +
@@ -1229,26 +1228,26 @@ out_null <- out_null[,2:ncol(out_null)]
 # ##summing all of these would give total number of people experiencing that infection in that time period
 # 
 # 
-# indexing <- c((3650 * years_vac + 1):(nrow(out) - 1))
+indexing <- c((3650 * years_vac + 1):(nrow(out) - 1))
 # 
  {
 #   #out_last <- out[nrow(out),(2:(ncol(out) - 4))]
-  track_infected <- out[nrow(out),1268]
-  track_l <- out[nrow(out),1269]
-  track_h <- out[nrow(out),1290]
-  cases <- out[nrow(out),1270]
-  cases.l <- out[nrow(out),1271]
-  cases.h <- out[nrow(out),1267]
+  track_infected <- sum(diff(out[indexing, 1268]))
+  track_l <- sum(diff(out[indexing,1269]))
+  track_h <- sum(diff(out[indexing,1290]))
+  cases <- sum(diff(out[indexing,1270]))
+  cases.l <- sum(diff(out[indexing,1271]))
+  cases.h <- sum(diff(out[indexing,1267]))
  }
 # 
 # ##Null outputs
 {
-  track_infected.null <- out_null[nrow(out_null),1268]
-  track_l.null <- out_null[nrow(out_null),1269]
-  track_h.null <- out_null[nrow(out_null),1290]
-  cases.null <- out_null[nrow(out_null),1270]
-  cases.l.null <- out_null[nrow(out_null),1271]
-  cases.h.null <- out_null[nrow(out_null),1267]
+  track_infected.null <- sum(diff(out_null[indexing,1268]))
+  track_l.null <- sum(diff(out_null[indexing,1269]))
+  track_h.null <- sum(diff(out_null[indexing,1290]))
+  cases.null <- sum(diff(out_null[indexing,1270]))
+  cases.l.null <- sum(diff(out_null[indexing,1271]))
+  cases.h.null <- sum(diff(out_null[indexing,1267]))
   }
 # 
 # #Averted calculations, NEED TO CHECK THIS
@@ -1263,33 +1262,37 @@ out_null <- out_null[,2:ncol(out_null)]
                        cases_averted.h, cases_averted, cases_averted.l)
 }
 # 
- save(output, file = paste('output.newparms_', x[input], '.RData', sep = ''))
+ save(output, file = paste('output.newparms_', input, '.RData', sep = ''))
 
  
-##time series
-# infections_h.vac <- c()
-# infections_l.vac <- c()
-# 
-# for(i in 1:nrow(out)){
-#   infections_h.vac[i] <- sum(c(sum(out[i,29:56]), sum(out[i,113:140]), sum(out[i,197:224]), sum(out[i,281:308]), sum(out[i,393:420]), sum(out[i,477:504]), sum(out[i,561:588])))
-#   infections_l.vac[i] <- sum(c(sum(out[i,645:672]), sum(out[i,729:756]), sum(out[i,813:840]), sum(out[i,897:924]), sum(out[i,1009:1036]), sum(out[i,1093:1120]), sum(out[i,1177:1204])))
-#   
-# }
-#   
-# infections_h <- c()
-# infections_l <- c()
-# 
-# for(i in 1:nrow(out_null)){
-#   infections_h[i] <- sum(c(sum(out_null[i,29:56]), sum(out_null[i,113:140]), sum(out_null[i,197:224]), sum(out_null[i,281:308]), sum(out_null[i,393:420]), sum(out_null[i,477:504]), sum(out_null[i,561:588])))
-#   infections_l[i] <- sum(c(sum(out_null[i,645:672]), sum(out_null[i,729:756]), sum(out_null[i,813:840]), sum(out_null[i,897:924]), sum(out_null[i,1009:1036]), sum(out_null[i,1093:1120]), sum(out_null[i,1177:1204])))
-#   
-# }
-# 
-# ts_inf <- list(infections_h.vac, infections_l.vac, infections_h, infections_l)
-# names(ts_inf) <- c('high ses, vac', 'low ses, vac', 
-#                    'high ses, nvac', 'low ses, nvac')
-# 
-# save(ts_inf, file = paste('ts_inf_', x[input], '.RData', sep = ''))
+##time series, do for input 120
+if(input == 120){
+  infections_h.vac <- c()
+  infections_l.vac <- c()
+  
+  for(i in 1:nrow(out)){
+    infections_h.vac[i] <- sum(c(sum(out[i,29:56]), sum(out[i,113:140]), sum(out[i,197:224]), sum(out[i,281:308]), sum(out[i,393:420]), sum(out[i,477:504]), sum(out[i,561:588])))
+    infections_l.vac[i] <- sum(c(sum(out[i,645:672]), sum(out[i,729:756]), sum(out[i,813:840]), sum(out[i,897:924]), sum(out[i,1009:1036]), sum(out[i,1093:1120]), sum(out[i,1177:1204])))
+    
+  }
+  
+  infections_h <- c()
+  infections_l <- c()
+  
+  for(i in 1:nrow(out_null)){
+    infections_h[i] <- sum(c(sum(out_null[i,29:56]), sum(out_null[i,113:140]), sum(out_null[i,197:224]), sum(out_null[i,281:308]), sum(out_null[i,393:420]), sum(out_null[i,477:504]), sum(out_null[i,561:588])))
+    infections_l[i] <- sum(c(sum(out_null[i,645:672]), sum(out_null[i,729:756]), sum(out_null[i,813:840]), sum(out_null[i,897:924]), sum(out_null[i,1009:1036]), sum(out_null[i,1093:1120]), sum(out_null[i,1177:1204])))
+    
+  }
+  
+  ts_inf <- list(infections_h.vac, infections_l.vac, infections_h, infections_l)
+  names(ts_inf) <- c('high ses, vac', 'low ses, vac',
+                     'high ses, nvac', 'low ses, nvac')
+  
+  save(ts_inf, file = paste('ts_inf_', input, '.RData', sep = ''))
+}
+ 
+
 
 
 {
