@@ -1271,7 +1271,7 @@ indexing <- c((3650 * years_vac + 1):(nrow(out) - 1))
   infections_h.vac <- c()
   infections_l.vac <- c()
 
-  for(i in 1 : max(indexing)){
+  for(i in 1 : 182500){
     #place <- i - min(indexing) + 1
     infections_h.vac[i] <- sum(c(sum(out[i,29:56]), sum(out[i,113:140]), sum(out[i,197:224]), sum(out[i,281:308]), sum(out[i,393:420]), sum(out[i,477:504]), sum(out[i,561:588])))
     infections_l.vac[i] <- sum(c(sum(out[i,645:672]), sum(out[i,729:756]), sum(out[i,813:840]), sum(out[i,897:924]), sum(out[i,1009:1036]), sum(out[i,1093:1120]), sum(out[i,1177:1204])))
@@ -1281,7 +1281,7 @@ indexing <- c((3650 * years_vac + 1):(nrow(out) - 1))
   infections_h <- c()
   infections_l <- c()
 
-  for(i in  1 : max(indexing)){
+  for(i in  1 : 182500){
     #place <- i - min(indexing) + 1
     infections_h[i] <- sum(c(sum(out_null[i,29:56]), sum(out_null[i,113:140]), sum(out_null[i,197:224]), sum(out_null[i,281:308]), sum(out_null[i,393:420]), sum(out_null[i,477:504]), sum(out_null[i,561:588])))
     infections_l[i] <- sum(c(sum(out_null[i,645:672]), sum(out_null[i,729:756]), sum(out_null[i,813:840]), sum(out_null[i,897:924]), sum(out_null[i,1009:1036]), sum(out_null[i,1093:1120]), sum(out_null[i,1177:1204])))
