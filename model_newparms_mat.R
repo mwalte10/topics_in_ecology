@@ -1231,7 +1231,7 @@ out_null <- out_null[,2:ncol(out_null)]
 # 
 indexing <- c((3650 * years_vac + 1):(nrow(out) - 1))
 # # 
- {
+ 
 #   #out_last <- out[nrow(out),(2:(ncol(out) - 4))]
 #   track_infected <- sum(diff(out[indexing, 1268]))
 #   track_l <- sum(diff(out[indexing,1269]))
