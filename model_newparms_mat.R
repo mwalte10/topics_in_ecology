@@ -1268,6 +1268,9 @@ indexing <- c((3650 * years_vac + 1):(nrow(out) - 1))
  
 ##time series, do for input 120
 
+# infections_h.save.vac <- out[,c(29:56, 113:140, 197:224, 281:308, 393:420, 477:504, 561:588)]
+# infections_l.save.vac <- 
+
   infections_h.vac <- rowSums(out[,c(29:56, 113:140, 197:224, 281:308, 393:420, 477:504, 561:588)], na.rm=TRUE)
   infections_l.vac <- rowSums(out[,c(645:672, 729:756, 813:840, 897:924, 1009:1036, 1093:1120, 1177:1204)], na.rm=TRUE)
 
