@@ -1328,6 +1328,47 @@ save(prop.l, file = paste('prop.l_', x[input], '.RData', sep = ''))
 
 
 
+zero.h <- out[years * 3650, 1:28]
+one.h <- out[years * 3650, 29: 56] + out[years * 3650, 57: 84] + 
+  out[years * 3650, 85 : 112] + out[years * 3650, 337:364] +
+  out[years * 3650, 365:392] 
+two.h <- out[years * 3650, 113:140] + out[years * 3650, 141:168] +
+  out[years * 3650, 169:196] + out[years * 3650, 393:420] + 
+  out[years * 3650, 421:448] + out[years * 3650, 449:476]
+three.h <- out[years * 3650, 197:224] + out[years * 3650, 225:252] +
+  out[years * 3650, 253:280] + out[years * 3650, 477:504] + 
+  out[years * 3650, 505:532] + out[years * 3650, 533:560]
+four.h <- out[years * 3650, 281:308] + out[years * 3650, 309:336] + 
+  out[years * 3650, 561:588] + out[years * 3650, 589:616]
+
+population.h <- sum(sum(zero.h), sum(one.h), sum(two.h), sum(three.h), sum(four.h))
+prop.h.end <- list(zero.h / population.h, one.h / population.h, 
+               two.h / population.h, three.h / population.h, 
+               four.h / population.h)  
+
+
+zero.l <- out[years * 3650, (1:28) + 616]
+one.l <- out[years * 3650, (29: 56) + 616] + out[years * 3650, (57: 84) + 616] + 
+  out[years * 3650, (85 : 112) + 616] + out[years * 3650, (337:364) + 616] +
+  out[years * 3650, (365:392) + 616] 
+two.l <- out[years * 3650, (113:140) + 616] + out[years * 3650, (141:168) + 616] +
+  out[years * 3650, (169:196) + 616] + out[years * 3650, (393:420) + 616] + 
+  out[years * 3650, (421:448) + 616] + out[years * 3650, (449:476) + 616]
+three.l <- out[years * 3650, (197:224) + 616] + out[years * 3650, (225:252) + 616] +
+  out[years * 3650, (253:280)+ 616] + out[years * 3650, (477:504) + 616] + 
+  out[years * 3650, (505:532) + 616] + out[years * 3650, (533:560) + 616]
+four.l <- out[years * 3650, (281:308) + 616] + out[years * 3650, (309:336) + 616] + 
+  out[years * 3650, (561:588) + 616] + out[years * 3650, (589:616) + 616]
+
+population.l <- sum(sum(zero.l), sum(one.l), sum(two.l), sum(three.l), sum(four.l))
+prop.l.end <- list(zero.l / population.l, one.l / population.l, 
+               two.l / population.l, three.l / population.l, 
+               four.l / population.l)  
+
+save(prop.h.end, file = paste('prop.h.end_', x[input], '.RData', sep = ''))
+save(prop.l.end, file = paste('prop.l.end_', x[input], '.RData', sep = ''))
+
+
 {
 # #Secondary averted calculations, CHECK THIS
 # track_sec_infected <- out[,(ncol(out) - 10)]
