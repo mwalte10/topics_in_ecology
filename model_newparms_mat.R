@@ -1271,22 +1271,60 @@ indexing <- c((3650 * years_vac + 1):(nrow(out) - 1))
 # infections_h.save.vac <- out[,c(29:56, 113:140, 197:224, 281:308, 393:420, 477:504, 561:588)]
 # infections_l.save.vac <- 
 
-  infections_h.vac <- rowSums(out[,c(29:56, 113:140, 197:224, 281:308, 393:420, 477:504, 561:588)], na.rm=TRUE)
-  infections_l.vac <- rowSums(out[,c(645:672, 729:756, 813:840, 897:924, 1009:1036, 1093:1120, 1177:1204)], na.rm=TRUE)
+  # infections_h.vac <- rowSums(out[,c(29:56, 113:140, 197:224, 281:308, 393:420, 477:504, 561:588)], na.rm=TRUE)
+  # infections_l.vac <- rowSums(out[,c(645:672, 729:756, 813:840, 897:924, 1009:1036, 1093:1120, 1177:1204)], na.rm=TRUE)
+  # 
+  # 
+  # 
+  # infections_h <- rowSums(out_null[,c(29:56, 113:140, 197:224, 281:308, 393:420, 477:504, 561:588)], na.rm=TRUE)
+  # infections_l <- rowSums(out_null[,c(645:672, 729:756, 813:840, 897:924, 1009:1036, 1093:1120, 1177:1204)], na.rm=TRUE)
+  # 
+  # 
+  # ts_inf <- list(infections_h.vac, infections_l.vac, infections_h, infections_l)
+  # # names(ts_inf) <- c('high ses, vac', 'low ses, vac',
+  # #                    'high ses, nvac', 'low ses, nvac')
+  # 
+  # save(ts_inf, file = paste('ts_inf_', x[input], '.RData', sep = ''))
+
+ zero.h <- out[years_vac * 3650, 1:28]
+ one.h <- out[years_vac * 3650, 29: 56] + out[years_vac * 3650, 57: 84] + 
+   out[years_vac * 3650, 85 : 112] + out[years_vac * 3650, 337:364] +
+   out[years_vac * 3650, 365:392] 
+ two.h <- out[years_vac * 3650, 113:140] + out[years_vac * 3650, 141:168] +
+   out[years_vac * 3650, 169:196] + out[years_vac * 3650, 393:420] + 
+   out[years_vac * 3650, 421:448] + out[years_vac * 3650, 449:476]
+ three.h <- out[years_vac * 3650, 197:224] + out[years_vac * 3650, 225:252] +
+   out[years_vac * 3650, 253:280] + out[years_vac * 3650, 477:504] + 
+   out[years_vac * 3650, 505:532] + out[years_vac * 3650, 533:560]
+ four.h <- out[years_vac * 3650, 281:308] + out[years_vac * 3650, 309:336] + 
+   out[years_vac * 3650, 561:588] + out[years_vac * 3650, 589:616]
+
+population.h <- sum(sum(zero.h), sum(one.h), sum(two.h), sum(three.h), sum(four.h))
+prop.h <- list(zero.h / population.h, one.h / population.h, 
+               two.h / population.h, three.h / population.h, 
+               four.h / population.h)  
 
 
+zero.l <- out[years_vac * 3650, (1:28) + 616]
+one.l <- out[years_vac * 3650, (29: 56) + 616] + out[years_vac * 3650, (57: 84) + 616] + 
+  out[years_vac * 3650, (85 : 112) + 616] + out[years_vac * 3650, (337:364) + 616] +
+  out[years_vac * 3650, (365:392) + 616] 
+two.l <- out[years_vac * 3650, (113:140) + 616] + out[years_vac * 3650, (141:168) + 616] +
+  out[years_vac * 3650, (169:196) + 616] + out[years_vac * 3650, (393:420) + 616] + 
+  out[years_vac * 3650, (421:448) + 616] + out[years_vac * 3650, (449:476) + 616]
+three.l <- out[years_vac * 3650, (197:224) + 616] + out[years_vac * 3650, (225:252) + 616] +
+  out[years_vac * 3650, (253:280)+ 616] + out[years_vac * 3650, (477:504) + 616] + 
+  out[years_vac * 3650, (505:532) + 616] + out[years_vac * 3650, (533:560) + 616]
+four.l <- out[years_vac * 3650, (281:308) + 616] + out[years_vac * 3650, (309:336) + 616] + 
+  out[years_vac * 3650, (561:588) + 616] + out[years_vac * 3650, (589:616) + 616]
 
-  infections_h <- rowSums(out_null[,c(29:56, 113:140, 197:224, 281:308, 393:420, 477:504, 561:588)], na.rm=TRUE)
-  infections_l <- rowSums(out_null[,c(645:672, 729:756, 813:840, 897:924, 1009:1036, 1093:1120, 1177:1204)], na.rm=TRUE)
+population.l <- sum(sum(zero.l), sum(one.l), sum(two.l), sum(three.l), sum(four.l))
+prop.l <- list(zero.l / population.l, one.l / population.l, 
+               two.l / population.l, three.l / population.l, 
+               four.l / population.l)  
 
-
-  ts_inf <- list(infections_h.vac, infections_l.vac, infections_h, infections_l)
-  # names(ts_inf) <- c('high ses, vac', 'low ses, vac',
-  #                    'high ses, nvac', 'low ses, nvac')
-
-  save(ts_inf, file = paste('ts_inf_', x[input], '.RData', sep = ''))
-
- 
+save(prop.h, file = paste('prop.h_', x[input], '.RData', sep = ''))
+save(prop.l, file = paste('prop.l_', x[input], '.RData', sep = ''))
 
 
 
