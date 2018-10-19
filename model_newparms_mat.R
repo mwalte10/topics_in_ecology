@@ -1300,6 +1300,7 @@ indexing <- c((3650 * years_vac + 1):(nrow(out) - 1))
    out[years_vac * 3650, 561:588] + out[years_vac * 3650, 589:616]
 
 population.h <- sum(sum(zero.h), sum(one.h), sum(two.h), sum(three.h), sum(four.h))
+summary.h <- list(zero.h, one.h, two.h, three.h, four.h)
 prop.h <- list(zero.h / population.h, one.h / population.h, 
                two.h / population.h, three.h / population.h, 
                four.h / population.h)  
@@ -1319,14 +1320,15 @@ four.l <- out[years_vac * 3650, (281:308) + 616] + out[years_vac * 3650, (309:33
   out[years_vac * 3650, (561:588) + 616] + out[years_vac * 3650, (589:616) + 616]
 
 population.l <- sum(sum(zero.l), sum(one.l), sum(two.l), sum(three.l), sum(four.l))
+summary.l <- list(zero.l, one.l, two.l, three.l, four.l)
 prop.l <- list(zero.l / population.l, one.l / population.l, 
                two.l / population.l, three.l / population.l, 
                four.l / population.l)  
 
-save(prop.h, file = paste('prop.h_', x[input], '.RData', sep = ''))
-save(prop.l, file = paste('prop.l_', x[input], '.RData', sep = ''))
-
-
+# save(prop.h, file = paste('prop.h_', x[input], '.RData', sep = ''))
+# save(prop.l, file = paste('prop.l_', x[input], '.RData', sep = ''))
+save(summary.h, file = paste('summary.h_', x[input], '.RData', sep = ''))
+save(summary.l, file = paste('summary.l_', x[input], '.RData', sep = ''))
 
 zero.h.end <- out[years * 3650, 1:28]
 one.h.end <- out[years * 3650, 29: 56] + out[years * 3650, 57: 84] + 
@@ -1342,6 +1344,7 @@ four.h.end <- out[years * 3650, 281:308] + out[years * 3650, 309:336] +
   out[years * 3650, 561:588] + out[years * 3650, 589:616]
 
 population.h.end <- sum(sum(zero.h.end), sum(one.h.end), sum(two.h.end), sum(three.h.end), sum(four.h.end))
+summary.h.end <- list(zero.h.end, one.h.end, two.h.end, three.h.end, four.h.end)
 prop.h.end <- list(zero.h.end / population.h.end, one.h.end / population.h.end, 
                two.h.end / population.h.end, three.h.end / population.h.end, 
                four.h.end / population.h.end)  
@@ -1361,13 +1364,15 @@ four.l.end <- out[years * 3650, (281:308) + 616] + out[years * 3650, (309:336) +
   out[years * 3650, (561:588) + 616] + out[years * 3650, (589:616) + 616]
 
 population.l.end <- sum(sum(zero.l.end), sum(one.l.end), sum(two.l.end), sum(three.l.end), sum(four.l.end))
+summary.l.end <- list(zero.l.end, one.l.end, two.l.end, three.l.end, four.l.end)
 prop.l.end <- list(zero.l.end / population.l.end, one.l.end / population.l.end, 
                two.l.end / population.l.end, three.l.end / population.l.end, 
                four.l.end / population.l.end)  
 
-save(prop.h.end, file = paste('prop.h.end_', x[input], '.RData', sep = ''))
-save(prop.l.end, file = paste('prop.l.end_', x[input], '.RData', sep = ''))
-
+# save(prop.h.end, file = paste('prop.h.end_', x[input], '.RData', sep = ''))
+# save(prop.l.end, file = paste('prop.l.end_', x[input], '.RData', sep = ''))
+save(summary.h.end, file = paste('summary.h.end_', x[input], '.RData', sep = ''))
+save(summary.l.end, file = paste('summary.l.end_', x[input], '.RData', sep = ''))
 
 {
 # #Secondary averted calculations, CHECK THIS
