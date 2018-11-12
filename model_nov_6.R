@@ -150,6 +150,7 @@ parms_notest_null <- list(beta_h = beta_h,
 years = 50
 years_vac = 30
 times <- seq(from = 0, to = 365 * years, by = .1)
+times <- times[1:(length(times) - 1)]
 
 ############################
 #MODEL
