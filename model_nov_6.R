@@ -93,6 +93,7 @@ population_h <- sum(susceptible_total_h + infected_total_h + recovered_total_h)
 population_l <- sum(susceptible_total_l + infected_total_l + recovered_total_l)
 
 
+
 parms <- list(beta_h = beta_h,
            beta_l = beta_l,
            gamma = 1/4,
@@ -159,8 +160,8 @@ model <- function(t, y, parms){
   beta_l <- parms[[2]]
   gamma <- parms[[3]]
   sigma <- parms[[4]]
-  mu <- parms[[5]][floor(which(round(t) == times) / 3650) + 1]
-  delta <- parms[[6]][[floor(which(round(t) == times) / 3650) + 1]]
+  mu <- parms[[5]][floor(t / 365) + 1]
+  delta <- parms[[6]][[floor(t / 365) + 1]]
   age_window <- parms[[7]]
   native <- parms[[8]]
   travel <- parms[[9]]
