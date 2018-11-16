@@ -5,4 +5,4 @@
 
 module load bio/R/3.3.1-gcc
 
-Rscript model_nov_6.R $SGE_TASK_ID
+Rscript model_nov_6_temp.R $SGE_TASK_ID
