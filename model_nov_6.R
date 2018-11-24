@@ -16,8 +16,8 @@ native <- rep(1, 100)
 vac_h <- 0.8
 vac_l <- 0.8
 load('pop.RData')
-load('birth.RData')
-load('death.RData')
+load('birth_sixty.RData')
+load('death_zixty.RData')
 
 
 
