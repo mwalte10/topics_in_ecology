@@ -17,7 +17,7 @@ vac_h <- 0.8
 vac_l <- 0.8
 load('pop.RData')
 load('birth_sixty.RData')
-load('death_zixty.RData')
+load('death_sixty.RData')
 
 
 
