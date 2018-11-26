@@ -1211,7 +1211,7 @@ out_initial_conditions <- out[nrow(out), 2:ncol(out)]
 out_null_initial_conditions <- out_null[nrow(out_null), 2:ncol(out_null)]
 
 save(out_initial_conditions, file = paste('initial_conditions_', new.parms.mat[input, 3], sep = ''))
-save(out_null_initial_conditions file = paste('initial_conditions_null_', new.parms.mat[input, 3], sep = ''))
+save(out_null_initial_conditions, file = paste('initial_conditions_null_', new.parms.mat[input, 3], sep = ''))
 
 
 
