@@ -1138,7 +1138,7 @@ model <- function(t, y, parms){
 ############################
 #RUN MODEL
 ############################
-y_init <- c(new.parms.mat[input, 6:4458])
+y_init <- c(new.parms.mat[input, 6:4463])
 names(y_init) <- c(rep('sh1', 100), rep('ih1', 100), rep('rh1', 100),
                    rep('sh2', 100), rep('ih2', 100), rep('rh2', 100),
                    rep('sh3', 100), rep('ih3', 100), rep('rh3', 100),
