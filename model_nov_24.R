@@ -1189,8 +1189,8 @@ years = 30
 years_vac = 0
 out <- ode(times = times, y = y_init, func = model, parms = parms)
 out_null <- ode(times = times, y = y_init, func = model, parms = parms_null)
-#out_notest <-  ode(times = times, y = y_init, func = model, parms = parms_notest)
-#out_notest_null <-  ode(times = times, y = y_init, func = model, parms = parms_notest_null)
+out_notest <-  ode(times = times, y = y_init, func = model, parms = parms_notest)
+out_notest_null <-  ode(times = times, y = y_init, func = model, parms = parms_notest_null)
 
 
 
@@ -1236,8 +1236,8 @@ orrr.l_calc <- function(out_mat){
 rr_or_vec <- c(orrr.h_calc(out), orrr.l_calc(out))
 save(rr_or_vec, file = paste('rr_or_', input, '.RData', sep = ''))
 
-# rr_or_vac.notest <- c(orrr.h_calc(out_notest), orrr.l_calc(out_notest))
-# save(rr_or_vac.notest, file = paste('rr_or.notest_', input, '.RData', sep = ''))
+rr_or_vac.notest <- c(orrr.h_calc(out_notest), orrr.l_calc(out_notest))
+save(rr_or_vac.notest, file = paste('rr_or.notest_', input, '.RData', sep = ''))
 
 
 indexing <- c((3650 * years_vac + 1):(nrow(out) - 1))
@@ -1275,8 +1275,8 @@ cases_averted.func <- function(out_mat, out_mat_null){
 output <- cases_averted.func(out, out_null)
 save(output, file = paste('output_', input, '.RData', sep = ''))
 
-# output.notest <- cases_averted.func(out_notest, out_notest_null)
-# save(output.notest, file = paste('output.notest_', input, '.RData', sep = ''))
+output.notest <- cases_averted.func(out_notest, out_notest_null)
+save(output.notest, file = paste('output.notest_', input, '.RData', sep = ''))
 
  
 ##time series, do for input 120
