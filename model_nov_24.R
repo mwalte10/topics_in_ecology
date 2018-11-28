@@ -149,8 +149,8 @@ parms_notest_null <- list(beta_h = beta_h,
                      sens = 0,
                      spec = 0)
 
-years = 60
-years_vac = 30
+years = 30
+years_vac = 0
 times <- seq(from = 0, to = 365 * years, by = .1)
 times <- times[1:(length(times) - 1)]
 
@@ -168,10 +168,10 @@ model <- function(t, y, parms){
   age_window <- parms[[7]]
   native <- parms[[8]]
   travel <- parms[[9]]
-  t_vac.h <- ifelse((t>(365*(years_vac))), parms[[10]] / 365, 0)
-  t_vac.l <- ifelse((t>(365*(years_vac))), parms[[11]] / 365, 0)
-  vac_h <- c(rep(0,8), rep(t_vac.h, 36), rep(0,56))
-  vac_l <- c(rep(0,8), rep(t_vac.l, 36), rep(0,56))
+  # t_vac.h <- ifelse((t>(365*(years_vac))), parms[[10]] / 365, 0)
+  # t_vac.l <- ifelse((t>(365*(years_vac))), parms[[11]] / 365, 0)
+  vac_h <- c(rep(0,8), rep(vac_h, 36), rep(0,56))
+  vac_l <- c(rep(0,8), rep(vac_l, 36), rep(0,56))
   sens <- parms[[12]]
   spec <- parms[[13]]
   
