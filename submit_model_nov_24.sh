@@ -1,7 +1,7 @@
 #!/bin/csh
 
 #$ -N test_
-#$ -t 1-2020
+#$ -t 1000-2020
 
 module load bio/R/3.3.1-gcc
 

@@ -9,13 +9,13 @@ input = as.numeric(args[1])
 ##########################
 #IF DOING VAC COVERAGE
 ##########################
-load('parms.mat.RData')
+load('parms.mat_ic.RData')
 beta_h <- new.parms.mat[input, 1]
 beta_l <- new.parms.mat[input, 2]
 native <- rep(new.parms.mat[input, 3], 100)
 vac_h <- new.parms.mat[input, 4]
 vac_l <- new.parms.mat[input, 5]
-load('pop.RData')
+#load('pop.RData')
 load('birth_sixty.RData')
 load('death_sixty.RData')
 
@@ -28,71 +28,71 @@ library(deSolve)
 ############################
 #Initial conidtions and parameters
 ############################
-initial_conditions <- as.data.frame(matrix(NA, nrow = 100*4, ncol = 3))
-initial_conditions[,2] <- rep(0:99,4)
-for(i in 1:4){
-  x <- i - 1
-  initial_conditions[x*(100) + (1:100),1] <- rep(i,100)
-}
-initial_conditions[,3] <- rep(pop,4)
-
-susceptible_init_h <- cbind(initial_conditions[,1], initial_conditions[,2], rep(NA, 400))
-susceptible_init_h[,3] <- c(initial_conditions[1:100,3] * 0.5, initial_conditions[101:200,3] * 0, 
-                            initial_conditions[201:300,3] * 0, initial_conditions[301:400,3] * 0)
-susceptible_init_l <- cbind(initial_conditions[,1], initial_conditions[,2], rep(NA, 400))
-susceptible_init_l[,3] <- c(initial_conditions[1:100,3] * 0.5, initial_conditions[101:200,3] * 0, 
-                            initial_conditions[201:300,3] * 0, initial_conditions[301:400,3] * 0)
-
-infected_init_h <- cbind(initial_conditions[,1], initial_conditions[,2], rep(NA, 400))
-infected_init_h[,3] <- c(rep(0.01, 100), initial_conditions[101:200,3] * 0, 
-                         initial_conditions[201:300,3] * 0, initial_conditions[301:400,3] * 0)
-infected_init_l <- cbind(initial_conditions[,1], initial_conditions[,2], rep(NA, 400))
-infected_init_l[,3] <- c(rep(0.01, 100), initial_conditions[101:200,3] * 0, 
-                         initial_conditions[201:300,3] * 0, initial_conditions[301:400,3] * 0)
-
-recovered_init_h <- cbind(initial_conditions[,1], initial_conditions[,2], rep(NA, 400))
-recovered_init_h[,3] <- c(initial_conditions[1:100,3] * 0, initial_conditions[101:200,3] * 0, 
-                          initial_conditions[201:300,3] * 0, initial_conditions[301:400,3] * 0)
-recovered_init_l <- cbind(initial_conditions[,1], initial_conditions[,2], rep(NA, 400))
-recovered_init_l[,3] <- c(initial_conditions[1:100,3] * 0, initial_conditions[101:200,3] * 0, 
-                          initial_conditions[201:300,3] * 0, initial_conditions[301:400,3] * 0)
-
-
-susceptible_h <- function(exposure){
-  x <- exposure - 1
-  susceptible <- c(susceptible_init_h[(x * 100) + 1:100,3])
-}
-susceptible_total_h <- sum(susceptible_h(1) + susceptible_h(2) + susceptible_h(3) + susceptible_h(4))
-susceptible_l <- function(exposure){
-  x <- exposure - 1
-  susceptible <- c(susceptible_init_l[(x * 100) + 1:100,3])
-}
-susceptible_total_l <- sum(susceptible_l(1) + susceptible_l(2) + susceptible_l(3) + susceptible_l(4))
-
-infected_h <- function(exposure){
-  x <- exposure - 1
-  infected <- c(infected_init_h[(x * 100) + 1:100,3])
-} 
-infected_total_h <- sum(infected_h(1) + infected_h(2) + infected_h(3) + infected_h(4))
-infected_l <- function(exposure){
-  x <- exposure - 1
-  infected <- c(infected_init_l[(x * 100) + 1:100,3])
-} 
-infected_total_l <- sum(infected_l(1) + infected_l(2) + infected_l(3) + infected_l(4))
-
-recovered_h <- function(exposure){
-  x <- exposure - 1
-  recovered <- c(recovered_init_h[(x * 100) + 1:100,3])
-} 
-recovered_total_h <- sum(recovered_h(1) + recovered_h(2) + recovered_h(3) + recovered_h(4))
-recovered_l <- function(exposure){
-  x <- exposure - 1
-  recovered <- c(recovered_init_l[(x * 100) + 1:100,3])
-} 
-recovered_total_l <- sum(recovered_l(1) + recovered_l(2) + recovered_l(3) + recovered_l(4))
-
-population_h <- sum(susceptible_total_h + infected_total_h + recovered_total_h)
-population_l <- sum(susceptible_total_l + infected_total_l + recovered_total_l)
+# initial_conditions <- as.data.frame(matrix(NA, nrow = 100*4, ncol = 3))
+# initial_conditions[,2] <- rep(0:99,4)
+# for(i in 1:4){
+#   x <- i - 1
+#   initial_conditions[x*(100) + (1:100),1] <- rep(i,100)
+# }
+# initial_conditions[,3] <- rep(pop,4)
+# 
+# susceptible_init_h <- cbind(initial_conditions[,1], initial_conditions[,2], rep(NA, 400))
+# susceptible_init_h[,3] <- c(initial_conditions[1:100,3] * 0.5, initial_conditions[101:200,3] * 0, 
+#                             initial_conditions[201:300,3] * 0, initial_conditions[301:400,3] * 0)
+# susceptible_init_l <- cbind(initial_conditions[,1], initial_conditions[,2], rep(NA, 400))
+# susceptible_init_l[,3] <- c(initial_conditions[1:100,3] * 0.5, initial_conditions[101:200,3] * 0, 
+#                             initial_conditions[201:300,3] * 0, initial_conditions[301:400,3] * 0)
+# 
+# infected_init_h <- cbind(initial_conditions[,1], initial_conditions[,2], rep(NA, 400))
+# infected_init_h[,3] <- c(rep(0.01, 100), initial_conditions[101:200,3] * 0, 
+#                          initial_conditions[201:300,3] * 0, initial_conditions[301:400,3] * 0)
+# infected_init_l <- cbind(initial_conditions[,1], initial_conditions[,2], rep(NA, 400))
+# infected_init_l[,3] <- c(rep(0.01, 100), initial_conditions[101:200,3] * 0, 
+#                          initial_conditions[201:300,3] * 0, initial_conditions[301:400,3] * 0)
+# 
+# recovered_init_h <- cbind(initial_conditions[,1], initial_conditions[,2], rep(NA, 400))
+# recovered_init_h[,3] <- c(initial_conditions[1:100,3] * 0, initial_conditions[101:200,3] * 0, 
+#                           initial_conditions[201:300,3] * 0, initial_conditions[301:400,3] * 0)
+# recovered_init_l <- cbind(initial_conditions[,1], initial_conditions[,2], rep(NA, 400))
+# recovered_init_l[,3] <- c(initial_conditions[1:100,3] * 0, initial_conditions[101:200,3] * 0, 
+#                           initial_conditions[201:300,3] * 0, initial_conditions[301:400,3] * 0)
+# 
+# 
+# susceptible_h <- function(exposure){
+#   x <- exposure - 1
+#   susceptible <- c(susceptible_init_h[(x * 100) + 1:100,3])
+# }
+# susceptible_total_h <- sum(susceptible_h(1) + susceptible_h(2) + susceptible_h(3) + susceptible_h(4))
+# susceptible_l <- function(exposure){
+#   x <- exposure - 1
+#   susceptible <- c(susceptible_init_l[(x * 100) + 1:100,3])
+# }
+# susceptible_total_l <- sum(susceptible_l(1) + susceptible_l(2) + susceptible_l(3) + susceptible_l(4))
+# 
+# infected_h <- function(exposure){
+#   x <- exposure - 1
+#   infected <- c(infected_init_h[(x * 100) + 1:100,3])
+# } 
+# infected_total_h <- sum(infected_h(1) + infected_h(2) + infected_h(3) + infected_h(4))
+# infected_l <- function(exposure){
+#   x <- exposure - 1
+#   infected <- c(infected_init_l[(x * 100) + 1:100,3])
+# } 
+# infected_total_l <- sum(infected_l(1) + infected_l(2) + infected_l(3) + infected_l(4))
+# 
+# recovered_h <- function(exposure){
+#   x <- exposure - 1
+#   recovered <- c(recovered_init_h[(x * 100) + 1:100,3])
+# } 
+# recovered_total_h <- sum(recovered_h(1) + recovered_h(2) + recovered_h(3) + recovered_h(4))
+# recovered_l <- function(exposure){
+#   x <- exposure - 1
+#   recovered <- c(recovered_init_l[(x * 100) + 1:100,3])
+# } 
+# recovered_total_l <- sum(recovered_l(1) + recovered_l(2) + recovered_l(3) + recovered_l(4))
+# 
+# population_h <- sum(susceptible_total_h + infected_total_h + recovered_total_h)
+# population_l <- sum(susceptible_total_l + infected_total_l + recovered_total_l)
 
 
 
@@ -100,8 +100,8 @@ parms <- list(beta_h = beta_h,
            beta_l = beta_l,
            gamma = 1/4,
            sigma = 1/(365 * 1.2),
-           mu = birth,
-           delta = death,
+           mu = birth[31:60],
+           delta = death[31:60],
            age_window = rep(1, 100),
            native = native,
            travel = 1 - native,
@@ -1138,21 +1138,7 @@ model <- function(t, y, parms){
 ############################
 #RUN MODEL
 ############################
-y_init <- c(susceptible_h(1), infected_h(1), recovered_h(1),
-            susceptible_h(2), infected_h(2), recovered_h(2),
-            susceptible_h(3), infected_h(3), recovered_h(3),
-            susceptible_h(4), infected_h(4), recovered_h(4),
-            rep(0, 100), rep(0, 100), rep(0, 100), rep(0, 100), rep(0, 100),
-            rep(0, 100), rep(0, 100), rep(0, 100), rep(0, 100), rep(0, 100),
-            susceptible_l(1), infected_l(1), recovered_l(1),
-            susceptible_l(2), infected_l(2), recovered_l(2),
-            susceptible_l(3), infected_l(3), recovered_l(3),
-            susceptible_l(4), infected_l(4), recovered_l(4),
-            rep(0, 100), rep(0, 100), rep(0, 100), rep(0, 100), rep(0, 100),
-            rep(0, 100), rep(0, 100), rep(0, 100), rep(0, 100), rep(0, 100),
-            0,
-            rep(0, 30),
-            rep(0,27))
+y_init <- c(new.parms.mat[input, 6:4458])
 names(y_init) <- c(rep('sh1', 100), rep('ih1', 100), rep('rh1', 100),
                    rep('sh2', 100), rep('ih2', 100), rep('rh2', 100),
                    rep('sh3', 100), rep('ih3', 100), rep('rh3', 100),
@@ -1199,8 +1185,8 @@ names(y_init) <- c(rep('sh1', 100), rep('ih1', 100), rep('rh1', 100),
                    'prim_inf', 'sec_inf', 'psec_inf',
                    'prim.l.inf', 'sec.l.inf', 'psec.l.inf',
                    'ih')
-years = 60
-years_vac = 30
+years = 30
+years_vac = 0
 out <- ode(times = times, y = y_init, func = model, parms = parms)
 out_null <- ode(times = times, y = y_init, func = model, parms = parms_null)
 #out_notest <-  ode(times = times, y = y_init, func = model, parms = parms_notest)
