@@ -1274,10 +1274,10 @@ sp9.vec <- c()
 for(i in 1:nrow(out)){
   no_exposure <- out[i, nines[1]] + out[i, nines[13]] + out[i, nines[14]] +
     out[i, nines[23]] + out[i, nines[35]] + out[i, nines[36]]
-  sp9.vex[i] <- 1 - (no_exposure / sum(out[i, nines]))
+  sp9.vec[i] <- 1 - (no_exposure / sum(out[i, nines]))
 }
 
-save(sp9.vec, file = paste('sp9.test_', input, '.RData', sep = ''))
+save(sp9.vec, file = paste('sp9.test.vec_', input, '.RData', sep = ''))
 
 
 
