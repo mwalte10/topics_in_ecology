@@ -1249,7 +1249,7 @@ for(timepoint_year in 31:60){
 
 # #
 
-save(output.vec, file = paste('output_', input, '.RData', sep = ''))
+save(output.vec, file = paste('output_timeseries_', input, '.RData', sep = ''))
 
 {
   
