@@ -1212,10 +1212,9 @@ out <- out[,2:ncol(out)]
 out_null <- out_null[,2:ncol(out_null)]
 
 
-
-indexing <- c((3650 * years_vac + 1):(nrow(out) - 1))
 # # # 
-cases_averted.func <- function(out_mat, out_mat_null){
+cases_averted.func <- function(out_mat, out_mat_null, timepoint_year){
+  indexing <- c((3650 * years_vac + 1):(nrow(out) - timepoint_year * 3650 - 1))
   track_infected <- sum(diff(out_mat[indexing, which(colnames(out_mat) == 'i_total')]))
   track_l <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'il')]))
   track_h <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'ih')]))
@@ -1243,10 +1242,14 @@ cases_averted.func <- function(out_mat, out_mat_null){
   return(output)
 }
 
+output.vec <- c()
+for(timepoint_year in 31:60){
+  output.list[i] <- cases_averted.func(out, out_null, timepoint_year)[5]
+}
+
 # #
 
-output <- cases_averted.func(out, out_null)
-save(output, file = paste('output_', input, '.RData', sep = ''))
+save(output.vec, file = paste('output_', input, '.RData', sep = ''))
 
 {
   
