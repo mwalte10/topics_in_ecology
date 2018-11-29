@@ -1,7 +1,7 @@
 #!/bin/csh
 
 #$ -N test_
-#$ -t 4
+#$ -t 1-5
 
 module load bio/R/3.3.1-gcc
 
