@@ -122,32 +122,32 @@ parms_null <- list(beta_h = beta_h,
               vac_l = 0,
               sens = 0,
               spec = 0)
-parms_notest <- list(beta_h = beta_h,
-              beta_l = beta_l,
-              gamma = 1/4,
-              sigma = 1/(365 * 1.2),
-              mu = birth,
-              delta = death,
-              age_window = rep(1, 100),
-              native = native,
-              travel = 1 - native,
-              vac_h = vac_h,
-              vac_l = vac_l,
-              sens = 0,
-              spec = 0)
-parms_notest_null <- list(beta_h = beta_h,
-                     beta_l = beta_l,
-                     gamma = 1/4,
-                     sigma = 1/(365 * 1.2),
-                     mu = birth,
-                     delta = death,
-                     age_window = rep(1, 100),
-                     native = native,
-                     travel = 1 - native,
-                     vac_h = 0,
-                     vac_l = 0,
-                     sens = 0,
-                     spec = 0)
+# parms_notest <- list(beta_h = beta_h,
+#               beta_l = beta_l,
+#               gamma = 1/4,
+#               sigma = 1/(365 * 1.2),
+#               mu = birth,
+#               delta = death,
+#               age_window = rep(1, 100),
+#               native = native,
+#               travel = 1 - native,
+#               vac_h = vac_h,
+#               vac_l = vac_l,
+#               sens = 0,
+#               spec = 0)
+# parms_notest_null <- list(beta_h = beta_h,
+#                      beta_l = beta_l,
+#                      gamma = 1/4,
+#                      sigma = 1/(365 * 1.2),
+#                      mu = birth,
+#                      delta = death,
+#                      age_window = rep(1, 100),
+#                      native = native,
+#                      travel = 1 - native,
+#                      vac_h = 0,
+#                      vac_l = 0,
+#                      sens = 0,
+#                      spec = 0)
 
 years = 60
 years_vac = 30
@@ -1213,40 +1213,40 @@ out_null <- out_null[,2:ncol(out_null)]
 
 
 
-# indexing <- c((3650 * years_vac + 1):(nrow(out) - 1))
+indexing <- c((3650 * years_vac + 1):(nrow(out) - 1))
 # # # 
-# cases_averted.func <- function(out_mat, out_mat_null){
-#   track_infected <- sum(diff(out_mat[indexing, which(colnames(out_mat) == 'i_total')]))
-#   track_l <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'il')]))
-#   track_h <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'ih')]))
-#   cases <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'cases')]))
-#   cases.l <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'cases.l')]))
-#   cases.h <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'cases.h')]))
-#   
-#   track_infected.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'i_total')]))
-#   track_l.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'il')]))
-#   track_h.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'ih')]))
-#   cases.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'cases')]))
-#   cases.l.null <- sum(diff(out_mat_null[indexing,which(colnames(out) == 'cases.l')]))
-#   cases.h.null <- sum(diff(out_mat_null[indexing,which(colnames(out) == 'cases.h')]))
-#   
-#   
-#   infections_averted <- ((track_infected.null - track_infected) / track_infected.null) * 100
-#   infections_averted.h <- ((track_h.null - track_h) / track_h.null) * 100
-#   infections_averted.l <- ((track_l.null - track_l) / track_l.null) * 100
-#   cases_averted <- ((cases.null - cases) / cases.null) * 100
-#   cases_averted.h <- ((cases.h.null - cases.h) / cases.h.null) * 100
-#   cases_averted.l <- ((cases.l.null - cases.l) / cases.l.null) * 100
-#   output <- c(infections_averted.h, infections_averted, infections_averted.l,
-#               cases_averted.h, cases_averted, cases_averted.l)
-#   
-#   return(output)
-# }
-# 
-# # #
-# 
-# output <- cases_averted.func(out, out_null)
-# save(output, file = paste('output_', input, '.RData', sep = ''))
+cases_averted.func <- function(out_mat, out_mat_null){
+  track_infected <- sum(diff(out_mat[indexing, which(colnames(out_mat) == 'i_total')]))
+  track_l <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'il')]))
+  track_h <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'ih')]))
+  cases <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'cases')]))
+  cases.l <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'cases.l')]))
+  cases.h <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'cases.h')]))
+
+  track_infected.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'i_total')]))
+  track_l.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'il')]))
+  track_h.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'ih')]))
+  cases.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'cases')]))
+  cases.l.null <- sum(diff(out_mat_null[indexing,which(colnames(out) == 'cases.l')]))
+  cases.h.null <- sum(diff(out_mat_null[indexing,which(colnames(out) == 'cases.h')]))
+
+
+  infections_averted <- ((track_infected.null - track_infected) / track_infected.null) * 100
+  infections_averted.h <- ((track_h.null - track_h) / track_h.null) * 100
+  infections_averted.l <- ((track_l.null - track_l) / track_l.null) * 100
+  cases_averted <- ((cases.null - cases) / cases.null) * 100
+  cases_averted.h <- ((cases.h.null - cases.h) / cases.h.null) * 100
+  cases_averted.l <- ((cases.l.null - cases.l) / cases.l.null) * 100
+  output <- c(infections_averted.h, infections_averted, infections_averted.l,
+              cases_averted.h, cases_averted, cases_averted.l)
+
+  return(output)
+}
+
+# #
+
+output <- cases_averted.func(out, out_null)
+save(output, file = paste('output_', input, '.RData', sep = ''))
 
 {
   
