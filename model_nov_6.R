@@ -1213,74 +1213,90 @@ out_null <- out_null[,2:ncol(out_null)]
 
 
 # # # 
-cases_averted.func <- function(out_mat, out_mat_null, timepoint_year){
-  indexing <- c((3650 * years_vac + 1):(timepoint_year * 3650 ))
-  track_infected <- sum(diff(out_mat[indexing, which(colnames(out_mat) == 'i_total')]))
-  track_l <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'il')]))
-  track_h <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'ih')]))
-  cases <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'cases')]))
-  cases.l <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'cases.l')]))
-  cases.h <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'cases.h')]))
+# cases_averted.func <- function(out_mat, out_mat_null, timepoint_year){
+#   indexing <- c((3650 * years_vac + 1):(timepoint_year * 3650 ))
+#   track_infected <- sum(diff(out_mat[indexing, which(colnames(out_mat) == 'i_total')]))
+#   track_l <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'il')]))
+#   track_h <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'ih')]))
+#   cases <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'cases')]))
+#   cases.l <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'cases.l')]))
+#   cases.h <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'cases.h')]))
+# 
+#   track_infected.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'i_total')]))
+#   track_l.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'il')]))
+#   track_h.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'ih')]))
+#   cases.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'cases')]))
+#   cases.l.null <- sum(diff(out_mat_null[indexing,which(colnames(out) == 'cases.l')]))
+#   cases.h.null <- sum(diff(out_mat_null[indexing,which(colnames(out) == 'cases.h')]))
+# 
+# 
+#   infections_averted <- ((track_infected.null - track_infected) / track_infected.null) * 100
+#   infections_averted.h <- ((track_h.null - track_h) / track_h.null) * 100
+#   infections_averted.l <- ((track_l.null - track_l) / track_l.null) * 100
+#   cases_averted <- ((cases.null - cases) / cases.null) * 100
+#   cases_averted.h <- ((cases.h.null - cases.h) / cases.h.null) * 100
+#   cases_averted.l <- ((cases.l.null - cases.l) / cases.l.null) * 100
+#   output <- c(infections_averted.h, infections_averted, infections_averted.l,
+#               cases_averted.h, cases_averted, cases_averted.l)
+# 
+#   return(output)
+# }
+# 
+# output.vec <- c()
+# for(timepoint_year in 31:60){
+#   output.vec[timepoint_year - 30] <- cases_averted.func(out, out_null, timepoint_year)[5]
+# }
+# 
+# # #
+# 
+# save(output.vec, file = paste('output_timeseries_', input, '.RData', sep = ''))
+# 
+# {
+#   
+#   nines_h <- c(which(colnames(out) == 'sh1')[10], which(colnames(out) == 'ih1')[10], which(colnames(out) == 'rh1')[10],
+#                which(colnames(out) == 'sh2')[10], which(colnames(out) == 'ih2')[10], which(colnames(out) == 'rh2')[10],
+#                which(colnames(out) == 'sh3')[10], which(colnames(out) == 'ih3')[10], which(colnames(out) == 'rh3')[10],
+#                which(colnames(out) == 'sh4')[10], which(colnames(out) == 'ih4')[10], which(colnames(out) == 'rh4')[10],
+#                which(colnames(out) == 'rh1.v')[10],
+#                which(colnames(out) == 'sh2.v')[10], which(colnames(out) == 'ih2.v')[10], which(colnames(out) == 'rh2.v')[10],
+#                which(colnames(out) == 'sh3.v')[10], which(colnames(out) == 'ih3.v')[10], which(colnames(out) == 'rh3.v')[10],
+#                which(colnames(out) == 'sh4.v')[10], which(colnames(out) == 'ih4.v')[10], which(colnames(out) == 'rh4.v')[10])
+#   nines_l <- c(which(colnames(out) == 'sl1')[10], which(colnames(out) == 'il1')[10], which(colnames(out) == 'rl1')[10],
+#                which(colnames(out) == 'sl2')[10], which(colnames(out) == 'il2')[10], which(colnames(out) == 'rl2')[10],
+#                which(colnames(out) == 'sl3')[10], which(colnames(out) == 'il3')[10], which(colnames(out) == 'rl3')[10],
+#                which(colnames(out) == 'sl4')[10], which(colnames(out) == 'il4')[10], which(colnames(out) == 'rl4')[10],
+#                which(colnames(out) == 'rl1.v')[10],
+#                which(colnames(out) == 'sl2.v')[10], which(colnames(out) == 'il2.v')[10], which(colnames(out) == 'rl2.v')[10],
+#                which(colnames(out) == 'sl3.v')[10], which(colnames(out) == 'il3.v')[10], which(colnames(out) == 'rl3.v')[10],
+#                which(colnames(out) == 'sl4.v')[10], which(colnames(out) == 'il4.v')[10], which(colnames(out) == 'rl4.v')[10])
+#   nines <- c(nines_h, nines_l)
+# }
+# 
+# 
+# sp9.vec <- c()
+# for(i in 1:nrow(out)){
+#   no_exposure <- out[i, nines[1]] + out[i, nines[13]] + out[i, nines[14]] +
+#     out[i, nines[23]] + out[i, nines[35]] + out[i, nines[36]]
+#   sp9.vec[i] <- 1 - (no_exposure / sum(out[i, nines]))
+# }
+# 
+# save(sp9.vec, file = paste('sp9.test.vec_', input, '.RData', sep = ''))
 
-  track_infected.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'i_total')]))
-  track_l.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'il')]))
-  track_h.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'ih')]))
-  cases.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'cases')]))
-  cases.l.null <- sum(diff(out_mat_null[indexing,which(colnames(out) == 'cases.l')]))
-  cases.h.null <- sum(diff(out_mat_null[indexing,which(colnames(out) == 'cases.h')]))
+cases_vac <- out[, which(colnames(out) == 'cases')]
+prim_vac <- out[, which(colnames(out) == 'prim')]
+sec_vac <- out[, which(colnames(out) == 'sec')]
+psec_vac <- out[, which(colnames(out) == 'psec')]
 
+cases_nvac <- out_null[, which(colnames(out_null) == 'cases')]
+prim_nvac <- out_null[, which(colnames(out_null) == 'prim')]
+sec_nvac <- out_null[, which(colnames(out_null) == 'sec')]
+psec_nvac <- out_null[, which(colnames(out_null) == 'psec')]
 
-  infections_averted <- ((track_infected.null - track_infected) / track_infected.null) * 100
-  infections_averted.h <- ((track_h.null - track_h) / track_h.null) * 100
-  infections_averted.l <- ((track_l.null - track_l) / track_l.null) * 100
-  cases_averted <- ((cases.null - cases) / cases.null) * 100
-  cases_averted.h <- ((cases.h.null - cases.h) / cases.h.null) * 100
-  cases_averted.l <- ((cases.l.null - cases.l) / cases.l.null) * 100
-  output <- c(infections_averted.h, infections_averted, infections_averted.l,
-              cases_averted.h, cases_averted, cases_averted.l)
+vac.list <- list(cases_vac, prim_vac, sec_vac, psec_vac)
+nvac.list <- list(cases_nvac, prim_nvac, sec_nvac, psec_nvac)
 
-  return(output)
-}
-
-output.vec <- c()
-for(timepoint_year in 31:60){
-  output.vec[timepoint_year - 30] <- cases_averted.func(out, out_null, timepoint_year)[5]
-}
-
-# #
-
-save(output.vec, file = paste('output_timeseries_', input, '.RData', sep = ''))
-
-{
-  
-  nines_h <- c(which(colnames(out) == 'sh1')[10], which(colnames(out) == 'ih1')[10], which(colnames(out) == 'rh1')[10],
-               which(colnames(out) == 'sh2')[10], which(colnames(out) == 'ih2')[10], which(colnames(out) == 'rh2')[10],
-               which(colnames(out) == 'sh3')[10], which(colnames(out) == 'ih3')[10], which(colnames(out) == 'rh3')[10],
-               which(colnames(out) == 'sh4')[10], which(colnames(out) == 'ih4')[10], which(colnames(out) == 'rh4')[10],
-               which(colnames(out) == 'rh1.v')[10],
-               which(colnames(out) == 'sh2.v')[10], which(colnames(out) == 'ih2.v')[10], which(colnames(out) == 'rh2.v')[10],
-               which(colnames(out) == 'sh3.v')[10], which(colnames(out) == 'ih3.v')[10], which(colnames(out) == 'rh3.v')[10],
-               which(colnames(out) == 'sh4.v')[10], which(colnames(out) == 'ih4.v')[10], which(colnames(out) == 'rh4.v')[10])
-  nines_l <- c(which(colnames(out) == 'sl1')[10], which(colnames(out) == 'il1')[10], which(colnames(out) == 'rl1')[10],
-               which(colnames(out) == 'sl2')[10], which(colnames(out) == 'il2')[10], which(colnames(out) == 'rl2')[10],
-               which(colnames(out) == 'sl3')[10], which(colnames(out) == 'il3')[10], which(colnames(out) == 'rl3')[10],
-               which(colnames(out) == 'sl4')[10], which(colnames(out) == 'il4')[10], which(colnames(out) == 'rl4')[10],
-               which(colnames(out) == 'rl1.v')[10],
-               which(colnames(out) == 'sl2.v')[10], which(colnames(out) == 'il2.v')[10], which(colnames(out) == 'rl2.v')[10],
-               which(colnames(out) == 'sl3.v')[10], which(colnames(out) == 'il3.v')[10], which(colnames(out) == 'rl3.v')[10],
-               which(colnames(out) == 'sl4.v')[10], which(colnames(out) == 'il4.v')[10], which(colnames(out) == 'rl4.v')[10])
-  nines <- c(nines_h, nines_l)
-}
-
-
-sp9.vec <- c()
-for(i in 1:nrow(out)){
-  no_exposure <- out[i, nines[1]] + out[i, nines[13]] + out[i, nines[14]] +
-    out[i, nines[23]] + out[i, nines[35]] + out[i, nines[36]]
-  sp9.vec[i] <- 1 - (no_exposure / sum(out[i, nines]))
-}
-
-save(sp9.vec, file = paste('sp9.test.vec_', input, '.RData', sep = ''))
+save(vac.list, file = paste('vac.list_', input, '.RData', sep = ''))
+save(nvac.list, file = paste('nvac.list_', input, '.RData', sep = ''))
 
 
 
