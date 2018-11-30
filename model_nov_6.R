@@ -1244,7 +1244,7 @@ cases_averted.func <- function(out_mat, out_mat_null, timepoint_year){
 
 output.vec <- c()
 for(timepoint_year in 31:60){
-  output.list[i] <- cases_averted.func(out, out_null, timepoint_year)[5]
+  output.vec[i] <- cases_averted.func(out, out_null, timepoint_year)[5]
 }
 
 # #
