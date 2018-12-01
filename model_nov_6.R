@@ -149,8 +149,8 @@ parms_null <- list(beta_h = beta_h,
 #                      sens = 0,
 #                      spec = 0)
 
-years = 60
-years_vac = 30
+years = 100
+years_vac = 100
 times <- seq(from = 0, to = 365 * years, by = .1)
 times <- times[1:(length(times) - 1)]
 
@@ -1199,8 +1199,8 @@ names(y_init) <- c(rep('sh1', 100), rep('ih1', 100), rep('rh1', 100),
                    'prim_inf', 'sec_inf', 'psec_inf',
                    'prim.l.inf', 'sec.l.inf', 'psec.l.inf',
                    'ih')
-years = 60
-years_vac = 30
+years = 100
+years_vac = 100
 out <- ode(times = times, y = y_init, func = model, parms = parms)
 # out_null <- ode(times = times, y = y_init, func = model, parms = parms_null)
 
