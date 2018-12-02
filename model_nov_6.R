@@ -20,8 +20,15 @@ load('birth_sixty.RData')
 load('death_sixty.RData')
 
 
-
-
+###temporary birth and death
+birth.temp <- c(birth, rep(birth[length(birth)], 40))
+birth <- birth.temp
+death.temp <- list()
+death.temp[1:60] <- death
+for(i in 41:100){
+  death.temp[[i]] <- death[[length(death)]]
+}
+death <- death.temp
 
 library(deSolve)
 
