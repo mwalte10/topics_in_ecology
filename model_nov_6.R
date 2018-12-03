@@ -9,8 +9,10 @@ input = as.numeric(args[1])
 ##########################
 #IF DOING VAC COVERAGE
 ##########################
-load('validation_parms.RData')
-beta_h <- validation_parms[input]
+#load('validation_parms.RData')
+#beta_h <- validation_parms[input]
+beta_h.vec <- seq(0.05, 1, length.out = 400)
+beta_h <- beta_h.vec[input]
 beta_l <- beta_h
 native <- rep(1, 100)
 vac_h <- 0.8
@@ -1258,36 +1260,35 @@ out <- out[,2:ncol(out)]
 # 
 # save(output.vec, file = paste('output_timeseries_', input, '.RData', sep = ''))
 # 
-# {
-# 
-#   nines_h <- c(which(colnames(out) == 'sh1')[10], which(colnames(out) == 'ih1')[10], which(colnames(out) == 'rh1')[10],
-#                which(colnames(out) == 'sh2')[10], which(colnames(out) == 'ih2')[10], which(colnames(out) == 'rh2')[10],
-#                which(colnames(out) == 'sh3')[10], which(colnames(out) == 'ih3')[10], which(colnames(out) == 'rh3')[10],
-#                which(colnames(out) == 'sh4')[10], which(colnames(out) == 'ih4')[10], which(colnames(out) == 'rh4')[10],
-#                which(colnames(out) == 'rh1.v')[10],
-#                which(colnames(out) == 'sh2.v')[10], which(colnames(out) == 'ih2.v')[10], which(colnames(out) == 'rh2.v')[10],
-#                which(colnames(out) == 'sh3.v')[10], which(colnames(out) == 'ih3.v')[10], which(colnames(out) == 'rh3.v')[10],
-#                which(colnames(out) == 'sh4.v')[10], which(colnames(out) == 'ih4.v')[10], which(colnames(out) == 'rh4.v')[10])
-#   nines_l <- c(which(colnames(out) == 'sl1')[10], which(colnames(out) == 'il1')[10], which(colnames(out) == 'rl1')[10],
-#                which(colnames(out) == 'sl2')[10], which(colnames(out) == 'il2')[10], which(colnames(out) == 'rl2')[10],
-#                which(colnames(out) == 'sl3')[10], which(colnames(out) == 'il3')[10], which(colnames(out) == 'rl3')[10],
-#                which(colnames(out) == 'sl4')[10], which(colnames(out) == 'il4')[10], which(colnames(out) == 'rl4')[10],
-#                which(colnames(out) == 'rl1.v')[10],
-#                which(colnames(out) == 'sl2.v')[10], which(colnames(out) == 'il2.v')[10], which(colnames(out) == 'rl2.v')[10],
-#                which(colnames(out) == 'sl3.v')[10], which(colnames(out) == 'il3.v')[10], which(colnames(out) == 'rl3.v')[10],
-#                which(colnames(out) == 'sl4.v')[10], which(colnames(out) == 'il4.v')[10], which(colnames(out) == 'rl4.v')[10])
-#   nines <- c(nines_h, nines_l)
-# }
-# 
-# 
-# sp9.vec <- c()
-# for(i in 1:nrow(out)){
-#   no_exposure <- out[i, nines[1]] + out[i, nines[13]] + out[i, nines[14]] +
-#     out[i, nines[23]] + out[i, nines[35]] + out[i, nines[36]]
-#   sp9.vec[i] <- 1 - (no_exposure / sum(out[i, nines]))
-# }
-# 
-# save(sp9.vec, file = paste('sp9.test.vec_', input, '.RData', sep = ''))
+{
+
+  nines_h <- c(which(colnames(out) == 'sh1')[10], which(colnames(out) == 'ih1')[10], which(colnames(out) == 'rh1')[10],
+               which(colnames(out) == 'sh2')[10], which(colnames(out) == 'ih2')[10], which(colnames(out) == 'rh2')[10],
+               which(colnames(out) == 'sh3')[10], which(colnames(out) == 'ih3')[10], which(colnames(out) == 'rh3')[10],
+               which(colnames(out) == 'sh4')[10], which(colnames(out) == 'ih4')[10], which(colnames(out) == 'rh4')[10],
+               which(colnames(out) == 'rh1.v')[10],
+               which(colnames(out) == 'sh2.v')[10], which(colnames(out) == 'ih2.v')[10], which(colnames(out) == 'rh2.v')[10],
+               which(colnames(out) == 'sh3.v')[10], which(colnames(out) == 'ih3.v')[10], which(colnames(out) == 'rh3.v')[10],
+               which(colnames(out) == 'sh4.v')[10], which(colnames(out) == 'ih4.v')[10], which(colnames(out) == 'rh4.v')[10])
+  nines_l <- c(which(colnames(out) == 'sl1')[10], which(colnames(out) == 'il1')[10], which(colnames(out) == 'rl1')[10],
+               which(colnames(out) == 'sl2')[10], which(colnames(out) == 'il2')[10], which(colnames(out) == 'rl2')[10],
+               which(colnames(out) == 'sl3')[10], which(colnames(out) == 'il3')[10], which(colnames(out) == 'rl3')[10],
+               which(colnames(out) == 'sl4')[10], which(colnames(out) == 'il4')[10], which(colnames(out) == 'rl4')[10],
+               which(colnames(out) == 'rl1.v')[10],
+               which(colnames(out) == 'sl2.v')[10], which(colnames(out) == 'il2.v')[10], which(colnames(out) == 'rl2.v')[10],
+               which(colnames(out) == 'sl3.v')[10], which(colnames(out) == 'il3.v')[10], which(colnames(out) == 'rl3.v')[10],
+               which(colnames(out) == 'sl4.v')[10], which(colnames(out) == 'il4.v')[10], which(colnames(out) == 'rl4.v')[10])
+  nines <- c(nines_h, nines_l)
+}
+
+sp9.vec <- c()
+i <- nrow(out)
+  no_exposure <- out[i, nines[1]] + out[i, nines[13]] + out[i, nines[14]] +
+    out[i, nines[23]] + out[i, nines[35]] + out[i, nines[36]]
+  sp9.vec <- 1 - (no_exposure / sum(out[i, nines]))
+
+
+save(sp9.vec, file = paste('sp9.test.vec_', input, '.RData', sep = ''))
 # 
 # cases_vac <- out[, which(colnames(out) == 'cases')]
 # prim_vac <- out[, which(colnames(out) == 'prim')]
@@ -1305,12 +1306,12 @@ out <- out[,2:ncol(out)]
 # save(vac.list, file = paste('vac.list_', input, '.RData', sep = ''))
 # save(nvac.list, file = paste('nvac.list_', input, '.RData', sep = ''))
 
-infected <- rowSums(out[, c(which(colnames(out) == 'ih1'), which(colnames(out) == 'ih2'), 
-                            which(colnames(out) == 'ih3'), which(colnames(out) == 'ih4'),
-                            which(colnames(out) == 'il1'), which(colnames(out) == 'il2'), 
-                            which(colnames(out) == 'il3'), which(colnames(out) == 'il4'))])
-
-save(infected, file = paste('infected_', input, '.RData', sep = ''))
+# infected <- rowSums(out[, c(which(colnames(out) == 'ih1'), which(colnames(out) == 'ih2'), 
+#                             which(colnames(out) == 'ih3'), which(colnames(out) == 'ih4'),
+#                             which(colnames(out) == 'il1'), which(colnames(out) == 'il2'), 
+#                             which(colnames(out) == 'il3'), which(colnames(out) == 'il4'))])
+# 
+# save(infected, file = paste('infected_', input, '.RData', sep = ''))
 
 
 
