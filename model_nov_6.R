@@ -11,7 +11,7 @@ input = as.numeric(args[1])
 ##########################
 #load('validation_parms.RData')
 #beta_h <- validation_parms[input]
-beta_h.vec <- seq(0.05, 1, length.out = 400)
+beta_h.vec <- seq(0.2, 5, length.out = 400)
 beta_h <- beta_h.vec[input]
 beta_l <- beta_h
 native <- rep(1, 100)
