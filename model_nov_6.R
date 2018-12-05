@@ -9,10 +9,10 @@ input = as.numeric(args[1])
 ##########################
 #IF DOING VAC COVERAGE
 ##########################
-#load('validation_parms.RData')
-#beta_h <- validation_parms[input]
-beta_h.vec <- seq(0, 1, length.out = 400)
-beta_h <- beta_h.vec[input]
+load('validation_parms.test.RData')
+beta_h <- validation_parms.test[input]
+# beta_h.vec <- seq(0, 1, length.out = 400)
+# beta_h <- beta_h.vec[input]
 beta_l <- beta_h
 native <- rep(1, 80)
 vac_h <- 0.8
@@ -148,7 +148,7 @@ parms_null <- list(beta_h = beta_h,
 #                      sens = 0,
 #                      spec = 0)
 
-years = 60
+years = 90
 years_vac = 60
 times <- seq(from = 0, to = 365 * years, by = .1)
 times <- times[1:(length(times) - 1)]
@@ -1198,57 +1198,57 @@ names(y_init) <- c(rep('sh1', 80), rep('ih1', 80), rep('rh1', 80),
                    'prim_inf', 'sec_inf', 'psec_inf',
                    'prim.l.inf', 'sec.l.inf', 'psec.l.inf',
                    'ih')
-years = 60
+years = 90
 years_vac = 60
 out <- ode(times = times, y = y_init, func = model, parms = parms)
-# out_null <- ode(times = times, y = y_init, func = model, parms = parms_null)
+out_null <- ode(times = times, y = y_init, func = model, parms = parms_null)
 
 
 
 ##incidence calcs 
 
 out <- out[,2:ncol(out)]
-# out_null <- out_null[,2:ncol(out_null)]
+out_null <- out_null[,2:ncol(out_null)]
 
 # 
 # # #
-# cases_averted.func <- function(out_mat, out_mat_null, timepoint_year){
-#   indexing <- c((3650 * years_vac + 1):(timepoint_year * 3650 ))
-#   track_infected <- sum(diff(out_mat[indexing, which(colnames(out_mat) == 'i_total')]))
-#   track_l <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'il')]))
-#   track_h <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'ih')]))
-#   cases <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'cases')]))
-#   cases.l <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'cases.l')]))
-#   cases.h <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'cases.h')]))
-# 
-#   track_infected.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'i_total')]))
-#   track_l.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'il')]))
-#   track_h.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'ih')]))
-#   cases.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'cases')]))
-#   cases.l.null <- sum(diff(out_mat_null[indexing,which(colnames(out) == 'cases.l')]))
-#   cases.h.null <- sum(diff(out_mat_null[indexing,which(colnames(out) == 'cases.h')]))
-# 
-# 
-#   infections_averted <- ((track_infected.null - track_infected) / track_infected.null) * 100
-#   infections_averted.h <- ((track_h.null - track_h) / track_h.null) * 100
-#   infections_averted.l <- ((track_l.null - track_l) / track_l.null) * 100
-#   cases_averted <- ((cases.null - cases) / cases.null) * 100
-#   cases_averted.h <- ((cases.h.null - cases.h) / cases.h.null) * 100
-#   cases_averted.l <- ((cases.l.null - cases.l) / cases.l.null) * 100
-#   output <- c(infections_averted.h, infections_averted, infections_averted.l,
-#               cases_averted.h, cases_averted, cases_averted.l)
-# 
-#   return(output)
-# }
-# 
-# output.vec <- c()
-# for(timepoint_year in 31:60){
-#   output.vec[timepoint_year - 30] <- cases_averted.func(out, out_null, timepoint_year)[5]
-# }
-# 
-# # #
-# 
-# save(output.vec, file = paste('output_timeseries_', input, '.RData', sep = ''))
+cases_averted.func <- function(out_mat, out_mat_null, timepoint_year){
+  indexing <- c((3650 * years_vac + 1):(timepoint_year * 3650 ))
+  track_infected <- sum(diff(out_mat[indexing, which(colnames(out_mat) == 'i_total')]))
+  track_l <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'il')]))
+  track_h <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'ih')]))
+  cases <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'cases')]))
+  cases.l <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'cases.l')]))
+  cases.h <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'cases.h')]))
+
+  track_infected.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'i_total')]))
+  track_l.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'il')]))
+  track_h.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'ih')]))
+  cases.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'cases')]))
+  cases.l.null <- sum(diff(out_mat_null[indexing,which(colnames(out) == 'cases.l')]))
+  cases.h.null <- sum(diff(out_mat_null[indexing,which(colnames(out) == 'cases.h')]))
+
+
+  infections_averted <- ((track_infected.null - track_infected) / track_infected.null) * 100
+  infections_averted.h <- ((track_h.null - track_h) / track_h.null) * 100
+  infections_averted.l <- ((track_l.null - track_l) / track_l.null) * 100
+  cases_averted <- ((cases.null - cases) / cases.null) * 100
+  cases_averted.h <- ((cases.h.null - cases.h) / cases.h.null) * 100
+  cases_averted.l <- ((cases.l.null - cases.l) / cases.l.null) * 100
+  output <- c(infections_averted.h, infections_averted, infections_averted.l,
+              cases_averted.h, cases_averted, cases_averted.l)
+
+  return(output)
+}
+
+output.vec <- c()
+for(timepoint_year in 61:90){
+  output.vec[timepoint_year - 60] <- cases_averted.func(out, out_null, timepoint_year)[5]
+}
+
+# #
+
+save(output.vec, file = paste('output_timeseries_', input, '.RData', sep = ''))
 # 
 {
 
