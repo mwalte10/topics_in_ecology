@@ -11,26 +11,17 @@ input = as.numeric(args[1])
 ##########################
 #load('validation_parms.RData')
 #beta_h <- validation_parms[input]
-beta_h.vec <- seq(0.2, 5, length.out = 400)
+beta_h.vec <- seq(0, 1, length.out = 400)
 beta_h <- beta_h.vec[input]
 beta_l <- beta_h
 native <- rep(1, 100)
 vac_h <- 0.8
 vac_l <- 0.8
-load('pop.RData')
-load('birth_sixty.RData')
-load('death_sixty.RData')
+load('pop_1950.RData')
+load('birth_1950.RData')
+load('death_1950.RData')
 
 
-###temporary birth and death
-birth.temp <- c(birth, rep(birth[length(birth)], 40))
-birth <- birth.temp
-death.temp <- list()
-death.temp[1:60] <- death
-for(i in 41:100){
-  death.temp[[i]] <- death[[length(death)]]
-}
-death <- death.temp
 
 library(deSolve)
 
@@ -158,8 +149,8 @@ parms_null <- list(beta_h = beta_h,
 #                      sens = 0,
 #                      spec = 0)
 
-years = 100
-years_vac = 100
+years = 60
+years_vac = 60
 times <- seq(from = 0, to = 365 * years, by = .1)
 times <- times[1:(length(times) - 1)]
 
@@ -1208,8 +1199,8 @@ names(y_init) <- c(rep('sh1', 100), rep('ih1', 100), rep('rh1', 100),
                    'prim_inf', 'sec_inf', 'psec_inf',
                    'prim.l.inf', 'sec.l.inf', 'psec.l.inf',
                    'ih')
-years = 100
-years_vac = 100
+years = 60
+years_vac = 60
 out <- ode(times = times, y = y_init, func = model, parms = parms)
 # out_null <- ode(times = times, y = y_init, func = model, parms = parms_null)
 
