@@ -1279,29 +1279,32 @@ i <- nrow(out)
 
 
 save(sp9.vec, file = paste('sp9.test.vec_', input, '.RData', sep = ''))
-# 
-# cases_vac <- out[, which(colnames(out) == 'cases')]
-# prim_vac <- out[, which(colnames(out) == 'prim')]
-# sec_vac <- out[, which(colnames(out) == 'sec')]
-# psec_vac <- out[, which(colnames(out) == 'psec')]
-# 
-# cases_nvac <- out_null[, which(colnames(out_null) == 'cases')]
-# prim_nvac <- out_null[, which(colnames(out_null) == 'prim')]
-# sec_nvac <- out_null[, which(colnames(out_null) == 'sec')]
-# psec_nvac <- out_null[, which(colnames(out_null) == 'psec')]
-# 
-# vac.list <- list(cases_vac, prim_vac, sec_vac, psec_vac)
-# nvac.list <- list(cases_nvac, prim_nvac, sec_nvac, psec_nvac)
-# 
-# save(vac.list, file = paste('vac.list_', input, '.RData', sep = ''))
-# save(nvac.list, file = paste('nvac.list_', input, '.RData', sep = ''))
 
-# infected <- rowSums(out[, c(which(colnames(out) == 'ih1'), which(colnames(out) == 'ih2'), 
-#                             which(colnames(out) == 'ih3'), which(colnames(out) == 'ih4'),
-#                             which(colnames(out) == 'il1'), which(colnames(out) == 'il2'), 
-#                             which(colnames(out) == 'il3'), which(colnames(out) == 'il4'))])
-# 
-# save(infected, file = paste('infected_', input, '.RData', sep = ''))
+sv.h <- sum(diff(out[,which(colnames(out) == 'sec_vac.cases.h')]), diff(out[,which(colnames(out) == 'psec_vac.cases.h')]))
+sn.h <- sum(diff(out[(3650 * years_vac + 1):nrow(out),which(colnames(out) == 'sec_cases.h')]), 
+             diff(out[(3650 * years_vac + 1):nrow(out),which(colnames(out) == 'prim_cases.h')]), 
+             diff(out[(3650 * years_vac + 1):nrow(out),which(colnames(out) == 'psec_cases.h')]))
+hv.h <- sum(diff(out[,which(colnames(out) == 'sec_vac.ncases.h')]), diff(out[,which(colnames(out) == 'psec_vac.ncases.h')]))
+hn.h <- sum(diff(out[(3650 * years_vac + 1):nrow(out),which(colnames(out) == 'prim_ncases.h')]), 
+            diff(out[(3650 * years_vac + 1):nrow(out),which(colnames(out) == 'sec_ncases.h')]), 
+            diff(out[(3650 * years_vac + 1):nrow(out),which(colnames(out) == 'psec_ncases.h')]))
 
+or.h <- (sv.h / sn.h) / (hv.h / hn.h)
+rr.h <- (sv.h / (sv.h + hv.h)) / (sn.h / (sn.h + hn.h))
+
+sv.l <- sum(diff(out[,which(colnames(out) == 'sec_vac.cases.l')]), diff(out[,which(colnames(out) == 'psec_vac.cases.l')]))
+sn.l <- sum(diff(out[(3650 * years_vac + 1):nrow(out),which(colnames(out) == 'sec_cases.l')]), 
+            diff(out[(3650 * years_vac + 1):nrow(out),which(colnames(out) == 'prim_cases.l')]), 
+            diff(out[(3650 * years_vac + 1):nrow(out),which(colnames(out) == 'psec_cases.l')]))
+hv.l <- sum(diff(out[,which(colnames(out) == 'sec_vac.ncases.l')]), diff(out[,which(colnames(out) == 'psec_vac.ncases.l')]))
+hn.l <- sum(diff(out[(3650 * years_vac + 1):nrow(out),which(colnames(out) == 'prim_ncases.l')]), 
+            diff(out[(3650 * years_vac + 1):nrow(out),which(colnames(out) == 'sec_ncases.l')]), 
+            diff(out[(3650 * years_vac + 1):nrow(out),which(colnames(out) == 'psec_ncases.l')]))  
+
+or.l <- (sv.l / sn.l) / (hv.l / hn.l)
+rr.l <- (sv.l / (sv.l + hv.l)) / (sn.l / (sn.l + hn.l))
+
+rr_or_vec <- c(or.h, rr.h, or.l, rr.l)
+save(rr_or_vec, file = paste('rr_or.newparms_', input, '.RData', sep = ''))
 
 
