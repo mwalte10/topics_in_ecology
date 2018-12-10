@@ -1305,6 +1305,52 @@ for(timepoint_year in 61:90){
 save(output.vec.h, file = paste('output_timeseries.h_', input, '.RData', sep = ''))
 save(output.vec.i, file = paste('output_timeseries.i_', input, '.RData', sep = ''))
 
+prop.cases <- function(out_mat){
+  indexing <- c((3650 * years_vac + 1):nrow(out_mat))
+  prim_unvac <- out_mat[indexing,which(colnames(out_mat) == 'prim_tot.cases')]
+  #prim_vac <- out_mat[indexing,which(colnames(out_mat) == 'prim_tot.cases.v')]
+  sec_unvac <- out_mat[indexing,which(colnames(out_mat) == 'sec_tot.cases')]
+  sec_vac <- out_mat[indexing,which(colnames(out_mat) == 'sec_tot.cases.v')]
+  psec_unvac <- out_mat[indexing,which(colnames(out_mat) == 'psec_tot.cases')]
+  psec_vac <- out_mat[indexing,which(colnames(out_mat) == 'psec_vac_tot.cases')]
+  
+  total <- c()
+  for(i in 1:length(indexing)){
+    total[i] <- sum(prim_unvac[i],
+                    sec_unvac[i], sec_vac[i],
+                    psec_unvac[i], psec_vac[i])
+  }
+  
+  sec <- c()
+  for(i in 1:length(indexing)){
+    sec[i] <- sum(
+                    sec_unvac[i], sec_vac[i])
+  }
+  
+  psec <- c()
+  for(i in 1:length(indexing)){
+    psec[i] <- sum(
+      psec_unvac[i], psec_vac[i])
+  }
+  
+  props <- list(prim_unvac / total,
+             sec / total, psec / total) 
+  
+  names(props) <- c('Primary Case Prop', 'Secondary Case Prop', 'Tertiary Case Prop')
+  return(props)
+}
+
+prop.h <- prop.cases(out.h)
+prop.h.null <- prop.cases(out_null.h)
+prop.i <- prop.cases(out.i)
+prop.i.null <- prop.cases(out_null.i)
+
+save(prop.h, file = paste('prop.h_', i, '.RData', sep = ''))
+save(prop.h.null, file = paste('prop.h.null_', i, '.RData', sep = ''))
+
+save(prop.i, file = paste('prop.i_', i, '.RData', sep = ''))
+save(prop.i.null, file = paste('prop.i.null_', i, '.RData', sep = ''))
+
 
 {# 
 # {
