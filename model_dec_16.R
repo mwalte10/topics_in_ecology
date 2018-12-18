@@ -9,9 +9,17 @@ input = as.numeric(args[1])
 ##########################
 #IF DOING VAC COVERAGE
 ##########################
-beta_h.vec <- seq(0.15, 0.7, length.out = 400)
-beta_h <- beta_h.vec[input]
-beta_l <- beta_h
+load('validation_parms.test_imperial.RData')
+imperial_beta <- validation_parms.test
+remove(validation_parms.test)
+load('validation_parms.test_huf.RData')
+huf_beta <- validation_parms.test
+remove(validation_parms.test)
+beta_h.i <- imperial_beta[input]
+beta_l.i <- imperial_beta[input]
+beta_h.huf <- huf_bet[input]
+beta_l.huf <- huf_beta[input]
+
 native <- rep(1, 80)
 vac_h <- 0.8
 vac_l <- 0.8
@@ -127,8 +135,8 @@ population_l <- sum(susceptible_total_l + infected_total_l + recovered_total_l)
 #               spec = 0)
 
 
-parms.h <- list(beta_h = beta_h,
-              beta_l = beta_l,
+parms.h <- list(beta_h = beta_h.huf,
+              beta_l = beta_l.huf,
               gamma = 1/4,
               sigma = 1/(365 * 1.2),
               mu = birth,
@@ -142,8 +150,8 @@ parms.h <- list(beta_h = beta_h,
               spec = 0,
               hopkins,
               hopkins_inverse)
-parms_null.h <- list(beta_h = beta_h,
-                   beta_l = beta_l,
+parms_null.h <- list(beta_h = beta_h.huf,
+                   beta_l = beta_l.huf,
                    gamma = 1/4,
                    sigma = 1/(365 * 1.2),
                    mu = birth,
@@ -158,8 +166,8 @@ parms_null.h <- list(beta_h = beta_h,
                    hopkins,
                    hopkins_inverse)
 
-parms.i <- list(beta_h = beta_h,
-                beta_l = beta_l,
+parms.i <- list(beta_h = beta_h.i,
+                beta_l = beta_l.i,
                 gamma = 1/4,
                 sigma = 1/(365 * 1.2),
                 mu = birth,
@@ -173,8 +181,8 @@ parms.i <- list(beta_h = beta_h,
                 spec = 0,
                 imperial,
                 imperial_inverse)
-parms_null.i <- list(beta_h = beta_h,
-                     beta_l = beta_l,
+parms_null.i <- list(beta_h = beta_h.i,
+                     beta_l = beta_l.i,
                      gamma = 1/4,
                      sigma = 1/(365 * 1.2),
                      mu = birth,
