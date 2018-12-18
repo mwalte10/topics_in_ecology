@@ -17,7 +17,7 @@ huf_beta <- validation_parms.test
 remove(validation_parms.test)
 beta_h.i <- imperial_beta[input]
 beta_l.i <- imperial_beta[input]
-beta_h.huf <- huf_bet[input]
+beta_h.huf <- huf_beta[input]
 beta_l.huf <- huf_beta[input]
 
 native <- rep(1, 80)
