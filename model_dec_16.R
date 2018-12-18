@@ -9,7 +9,7 @@ input = as.numeric(args[1])
 ##########################
 #IF DOING VAC COVERAGE
 ##########################
-beta_h.vec <- seq(0, 1, length.out = 400)
+beta_h.vec <- seq(0.15, 0.7, length.out = 400)
 beta_h <- beta_h.vec[input]
 beta_l <- beta_h
 native <- rep(1, 80)
