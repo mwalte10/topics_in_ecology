@@ -9,15 +9,15 @@ input = as.numeric(args[1])
 ##########################
 #IF DOING VAC COVERAGE
 ##########################
-x <- seq(0.1,0.7, length.out = 25)
+x <- seq(0.1,0.7, length.out = 20)
 x.list <- list()
-for(i in 1:25){
-  x.list[[i]] <- rep(x[i], 25)
+for(i in 1:20){
+  x.list[[i]] <- rep(x[i], 20)
 }
 x <- unlist(x.list)
-beta_table <- cbind(x, rep(seq(0.1,0.7, length.out = 25), 25))
+beta_table <- cbind(x, rep(seq(0.1,0.7, length.out = 20), 20))
 colnames(beta_table) <- c('beta_h', 'beta_l')
-travel <- seq(0,1, by = 0.02)
+travel <- seq(0,1, length.out = 20)
 new.list <- list()
 for(i in 1:length(travel)){
   new.list[[i]] <- cbind(beta_table, travel[i])
