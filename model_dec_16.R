@@ -1738,16 +1738,18 @@ out <- out.h
   nines <- c(nines_h, nines_l)
 
 
-sp9.vec <- c()
 i <- nrow(out)
-no_exposure.h <- out.h[i, nines[1]] + out.h[i, nines[13]] + out.h[i, nines[14]] + out.h[i, nines[23]] + out.h[i, nines[35]] + out.h[i, nines[36]]
-# no_exposure.i <- out.i[i, nines[1]] + out.i[i, nines[13]] + out.i[i, nines[14]] + out.i[i, nines[23]] + out.i[i, nines[35]] + out.i[i, nines[36]]
+no_exposure <- out.h[i, nines[1]] + out.h[i, nines[13]] + out.h[i, nines[14]] + out.h[i, nines[23]] + out.h[i, nines[35]] + out.h[i, nines[36]]
+no_exposure_h <- out.h[i, nines_h[1]] + out.h[i, nines_h[13]] + out.h[i, nines_h[14]] 
+no_exposure_l <- out.h[i, nines_l[1]] + out.h[i, nines_l[13]] + out.h[i, nines_l[14]] 
 
-sp9.vec.h <- 1 - (no_exposure.h / sum(out.h[i, nines]))
-# sp9.vec.i <- 1 - (no_exposure.i / sum(out.i[i, nines]))
+sp9 <- 1 - (no_exposure / sum(out.h[i, nines]))
+sp9_h <- 1 - (no_exposure_h / sum(out.h[i, nines_h]))
+sp9_l <- 1 - (no_exposure_l / sum(out.h[i, nines_l]))
 
+sp9.vec <- c(sp9, sp9_h, sp9_l)
+save(sp9.vec, file = paste('sp9_', input, '.RData', sep = ''))
 
-save(sp9.vec.h, file = paste('sp9.h_', input, '.RData', sep = ''))
 # save(sp9.vec.i, file = paste('sp9.i_', input, '.RData', sep = ''))
 
 # 
