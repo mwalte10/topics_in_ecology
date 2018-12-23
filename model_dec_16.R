@@ -17,7 +17,7 @@ for(i in 1:20){
 x <- unlist(x.list)
 beta_table <- cbind(x, rep(seq(0.1,0.7, length.out = 20), 20))
 colnames(beta_table) <- c('beta_h', 'beta_l')
-travel <- seq(0,1, length.out = 20)
+travel <- seq(0,0.05, length.out = 20)
 new.list <- list()
 for(i in 1:length(travel)){
   new.list[[i]] <- cbind(beta_table, travel[i])
@@ -28,7 +28,7 @@ final_table <- final_table[-which(final_table[,1] == final_table[,2]),]
 
 beta_h <- final_table[input,1]
 beta_l <- final_table[input,2]
-native <- final_table[input,3]
+native <- 1 - final_table[input,3]
 
 
 #native <- rep(1, 80)
