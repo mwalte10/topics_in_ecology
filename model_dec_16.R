@@ -9,23 +9,21 @@ input = as.numeric(args[1])
 ##########################
 #IF DOING VAC COVERAGE
 ##########################
-x <- seq(0.1,0.7, length.out = 20)
+beta_h <- seq(0, 0.2, length.out = 10)
+beta_l <- seq(0.2, 0.3, length.out = 10)
+travel <- seq(0,0.05, length.out = 10)
+
 x.list <- list()
-for(i in 1:20){
-  x.list[[i]] <- rep(x[i], 20)
+for(i in 1:10){
+  x.list[[i]] <- rep(beta_h[i], 10)
 }
 x <- unlist(x.list)
-beta_table <- cbind(x, rep(seq(0.1,0.7, length.out = 20), 20))
-colnames(beta_table) <- c('beta_h', 'beta_l')
-travel <- seq(0,0.05, length.out = 20)
+beta_table <- cbind(x, rep(beta_l, 10))
 new.list <- list()
 for(i in 1:length(travel)){
   new.list[[i]] <- cbind(beta_table, travel[i])
 }
 final_table <- do.call('rbind', new.list)
-final_table <- final_table[-which(final_table[,1] > final_table[,2]),]
-final_table <- final_table[-which(final_table[,1] == final_table[,2]),]
-
 beta_h <- final_table[input,1]
 beta_l <- final_table[input,2]
 native <- 1 - final_table[input,3]
