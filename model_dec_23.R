@@ -1824,9 +1824,9 @@ four.l.end <- out.h[years * 3650, which(colnames(out.h) == 'il4')] + out.h[years
 #population.l.end <- sum(sum(zero.l.end), sum(one.l.end), sum(two.l.end), sum(three.l.end), sum(four.l.end))
 summary.l.end <- list(zero.l.end, one.l.end, two.l.end, three.l.end, four.l.end)
 
-save(summary.h, file = paste('summary.h_', redo[input], '.RData', sep = ''))
-save(summary.l, file = paste('summary.l_', redo[input], '.RData', sep = ''))
-save(summary.h.end, file = paste('summary.h.end_', redo[input], '.RData', sep = ''))
-save(summary.l.end, file = paste('summary.l.end_', redo[input], '.RData', sep = ''))
+save(summary.h, file = paste('summary.h_', input, '.RData', sep = ''))
+save(summary.l, file = paste('summary.l_', input, '.RData', sep = ''))
+save(summary.h.end, file = paste('summary.h.end_', input, '.RData', sep = ''))
+save(summary.l.end, file = paste('summary.l.end_', input, '.RData', sep = ''))
 
 
