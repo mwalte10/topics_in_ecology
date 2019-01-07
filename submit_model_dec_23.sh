@@ -1,8 +1,8 @@
 #!/bin/csh
 
 #$ -N dec_23_
-#$ -t 1-400
+#$ -t 390-400
 
-module load bio/R/3.3.1-gcc
+module load bio/R/3.4.0
 
 Rscript model_dec_23.R $SGE_TASK_ID
