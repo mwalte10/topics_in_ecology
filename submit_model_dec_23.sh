@@ -1,5 +1,7 @@
 #!/bin/csh
 
+#$ -M mwalte10@nd.edu
+#$ -m abe
 #$ -N dec_23_
 #$ -t 390-400
 
