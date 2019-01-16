@@ -1,9 +1,7 @@
 #!/bin/csh
 
-#$ -M mwalte10@nd.edu
-#$ -m abe
 #$ -N dec_23_
-#$ -t 390-400
+#$ -t 1-20
 
 module load bio/R/3.4.0
 
