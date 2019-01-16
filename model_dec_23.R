@@ -1766,81 +1766,149 @@ orrr.l_calc <- function(out_mat, out_null){
   return(c(or.l, rr.l))
 }
 
+orrr_calc.vac <- function(out_mat, out_null){
+  sv.h <- sum(diff(out_mat[(3650 * years_vac + 1):nrow(out_mat),which(colnames(out_mat) == 'sec_vac.cases.h')]), diff(out_mat[(3650 * years_vac + 1):nrow(out_mat),which(colnames(out_mat) == 'psec_vac.cases.h')]))
+  sn.h <- sum(diff(out_null[(3650 * years_vac + 1):nrow(out_null),which(colnames(out_null) == 'sec_cases.h')]),
+              diff(out_null[(3650 * years_vac + 1):nrow(out_null),which(colnames(out_null) == 'prim_cases.h')]),
+              diff(out_null[(3650 * years_vac + 1):nrow(out_null),which(colnames(out_null) == 'psec_cases.h')]))
+  hv.h <- sum(diff(out_mat[(3650 * years_vac + 1):nrow(out_mat),which(colnames(out_mat) == 'sec_vac.ncases.h')]), diff(out_mat[(3650 * years_vac + 1):nrow(out_mat),which(colnames(out_mat) == 'psec_vac.ncases.h')]))
+  hn.h <- sum(diff(out_null[(3650 * years_vac + 1):nrow(out_null),which(colnames(out_null) == 'prim_ncases.h')]),
+              diff(out_null[(3650 * years_vac + 1):nrow(out_null),which(colnames(out_null) == 'sec_ncases.h')]),
+              diff(out_null[(3650 * years_vac + 1):nrow(out_null),which(colnames(out_null) == 'psec_ncases.h')]))
+  rr.h <- (sv.h / (sv.h + hv.h)) / (sn.h / (sn.h + hn.h))
+  or.h <- (sv.h / sn.h) / (hv.h / hn.h)
+  
+  sv.l <- sum(diff(out_mat[(3650 * years_vac + 1):nrow(out_mat),which(colnames(out_mat) == 'sec_vac.cases.l')]), diff(out_mat[(3650 * years_vac + 1):nrow(out_mat),which(colnames(out_mat) == 'psec_vac.cases.l')]))
+  sn.l <- sum(diff(out_null[(3650 * years_vac + 1):nrow(out_null),which(colnames(out_null) == 'sec_cases.l')]),
+              diff(out_null[(3650 * years_vac + 1):nrow(out_null),which(colnames(out_null) == 'prim_cases.l')]),
+              diff(out_null[(3650 * years_vac + 1):nrow(out_null),which(colnames(out_null) == 'psec_cases.l')]))
+  hv.l <- sum(diff(out_mat[(3650 * years_vac + 1):nrow(out_mat),which(colnames(out_mat) == 'sec_vac.ncases.l')]), diff(out_mat[(3650 * years_vac + 1):nrow(out_mat),which(colnames(out_mat) == 'psec_vac.ncases.l')]))
+  hn.l <- sum(diff(out_null[(3650 * years_vac + 1):nrow(out_null),which(colnames(out_null) == 'prim_ncases.l')]),
+              diff(out_null[(3650 * years_vac + 1):nrow(out_null),which(colnames(out_null) == 'sec_ncases.l')]),
+              diff(out_null[(3650 * years_vac + 1):nrow(out_null),which(colnames(out_null) == 'psec_ncases.l')]))
+  rr.l <- (sv.l / (sv.l + hv.l)) / (sn.l / (sn.l + hn.l))
+  or.l <- (sv.l / sn.l) / (hv.l / hn.l)
+  
+  return(c(or.h, rr.h, or.l, rr.l))
+}
+
+
+orrr_calc.novac <- function(out_mat, out_null){
+  sv.h <- sum(diff(out_mat[(3650 * years_vac + 1):nrow(out_mat),which(colnames(out_mat) == 'sec_cases.h')]),
+              diff(out_mat[(3650 * years_vac + 1):nrow(out_mat),which(colnames(out_mat) == 'prim_cases.h')]),
+              diff(out_mat[(3650 * years_vac + 1):nrow(out_mat),which(colnames(out_mat) == 'psec_cases.h')]))
+  sn.h <- sum(diff(out_null[(3650 * years_vac + 1):nrow(out_null),which(colnames(out_null) == 'sec_cases.h')]),
+              diff(out_null[(3650 * years_vac + 1):nrow(out_null),which(colnames(out_null) == 'prim_cases.h')]),
+              diff(out_null[(3650 * years_vac + 1):nrow(out_null),which(colnames(out_null) == 'psec_cases.h')]))
+  hv.h <- sum(diff(out_mat[(3650 * years_vac + 1):nrow(out_mat),which(colnames(out_mat) == 'prim_ncases.h')]),
+              diff(out_mat[(3650 * years_vac + 1):nrow(out_mat),which(colnames(out_mat) == 'sec_ncases.h')]),
+              diff(out_mat[(3650 * years_vac + 1):nrow(out_mat),which(colnames(out_mat) == 'psec_ncases.h')]))
+  hn.h <- sum(diff(out_null[(3650 * years_vac + 1):nrow(out_null),which(colnames(out_null) == 'prim_ncases.h')]),
+              diff(out_null[(3650 * years_vac + 1):nrow(out_null),which(colnames(out_null) == 'sec_ncases.h')]),
+              diff(out_null[(3650 * years_vac + 1):nrow(out_null),which(colnames(out_null) == 'psec_ncases.h')]))
+  rr.h <- (sv.h / (sv.h + hv.h)) / (sn.h / (sn.h + hn.h))
+  or.h <- (sv.h / sn.h) / (hv.h / hn.h)
+  
+  sv.l <- sum(diff(out_mat[(3650 * years_vac + 1):nrow(out_mat),which(colnames(out_mat) == 'sec_cases.l')]),
+              diff(out_mat[(3650 * years_vac + 1):nrow(out_mat),which(colnames(out_mat) == 'prim_cases.l')]),
+              diff(out_mat[(3650 * years_vac + 1):nrow(out_mat),which(colnames(out_mat) == 'psec_cases.l')]))
+  sn.l <- sum(diff(out_null[(3650 * years_vac + 1):nrow(out_null),which(colnames(out_null) == 'sec_cases.l')]),
+              diff(out_null[(3650 * years_vac + 1):nrow(out_null),which(colnames(out_null) == 'prim_cases.l')]),
+              diff(out_null[(3650 * years_vac + 1):nrow(out_null),which(colnames(out_null) == 'psec_cases.l')]))
+  hv.l <- sum(diff(out_mat[(3650 * years_vac + 1):nrow(out_mat),which(colnames(out_mat) == 'prim_ncases.l')]),
+              diff(out_mat[(3650 * years_vac + 1):nrow(out_mat),which(colnames(out_mat) == 'sec_ncases.l')]),
+              diff(out_mat[(3650 * years_vac + 1):nrow(out_mat),which(colnames(out_mat) == 'psec_ncases.l')]))
+  hn.l <- sum(diff(out_null[(3650 * years_vac + 1):nrow(out_null),which(colnames(out_null) == 'prim_ncases.l')]),
+              diff(out_null[(3650 * years_vac + 1):nrow(out_null),which(colnames(out_null) == 'sec_ncases.l')]),
+              diff(out_null[(3650 * years_vac + 1):nrow(out_null),which(colnames(out_null) == 'psec_ncases.l')]))
+  rr.l <- (sv.l / (sv.l + hv.l)) / (sn.l / (sn.l + hn.l))
+  or.l <- (sv.l / sn.l) / (hv.l / hn.l)
+  return(c(or.h, rr.h, or.l, rr.l))
+}
+
+
+
 rr_or_vec <- c(orrr.h_calc(out.h, out_null.h), orrr.l_calc(out.h, out_null.h))
 save(rr_or_vec, file = paste('rr_or_', input, '.RData', sep = ''))
 
+rr_or_vec.vac <- c(orrr_calc.vac(out.h, out_null.h))
+rr_or_vec.novac <- c(orrr_calc.novac(out.h, out_null.h))
+save(rr_or_vec.vac, file = paste('rr_or.vac_', input, '.RData', sep = ''))
+save(rr_or_vec.novac, file = paste('rr_or.novac_', input, '.RData', sep = ''))
+
+
 ###prop by age
-zero.h <- out.h[years_vac * 3650, which(colnames(out.h) == 'sh1')]
-one.h <- out.h[years_vac * 3650, which(colnames(out.h) == 'ih1')] + out.h[years_vac * 3650, which(colnames(out.h) == 'rh1')] + 
-  out.h[years_vac * 3650, which(colnames(out.h) == 'sh2')] + out.h[years_vac * 3650, which(colnames(out.h) == 'rh1.v')] +
-  out.h[years_vac * 3650, which(colnames(out.h) == 'sh2.v')] 
-two.h <- out.h[years_vac * 3650, which(colnames(out.h) == 'ih2')] + out.h[years_vac * 3650, which(colnames(out.h) == 'rh2')] +
-  out.h[years_vac * 3650, which(colnames(out.h) == 'sh3')] + out.h[years_vac * 3650, which(colnames(out.h) == 'ih2.v')] + 
-  out.h[years_vac * 3650, which(colnames(out.h) == 'rh2.v')] + out.h[years_vac * 3650, which(colnames(out.h) == 'sh3.v')]
-three.h <- out.h[years_vac * 3650, which(colnames(out.h) == 'ih3')] + out.h[years_vac * 3650, which(colnames(out.h) == 'rh3')] +
-  out.h[years_vac * 3650, which(colnames(out.h) == 'sh4')] + out.h[years_vac * 3650, which(colnames(out.h) == 'ih3.v')] + 
-  out.h[years_vac * 3650, which(colnames(out.h) == 'rh3.v')] + out.h[years_vac * 3650, which(colnames(out.h) == 'sh4.v')]
-four.h <- out.h[years_vac * 3650, which(colnames(out.h) == 'ih4')] + out.h[years_vac * 3650, which(colnames(out.h) == 'rh4')] + 
-  out.h[years_vac * 3650, which(colnames(out.h) == 'ih4.v')] + out.h[years_vac * 3650, which(colnames(out.h) == 'rh4.v')]
+zero.h <- out_null.h[years * 3650, which(colnames(out_null.h) == 'sh1')]
+one.h <- out_null.h[years * 3650, which(colnames(out_null.h) == 'ih1')] + out_null.h[years * 3650, which(colnames(out_null.h) == 'rh1')] + 
+  out_null.h[years * 3650, which(colnames(out_null.h) == 'sh2')] + out_null.h[years * 3650, which(colnames(out_null.h) == 'rh1.v')] +
+  out_null.h[years * 3650, which(colnames(out_null.h) == 'sh2.v')] 
+two.h <- out_null.h[years * 3650, which(colnames(out_null.h) == 'ih2')] + out_null.h[years * 3650, which(colnames(out_null.h) == 'rh2')] +
+  out_null.h[years * 3650, which(colnames(out_null.h) == 'sh3')] + out_null.h[years * 3650, which(colnames(out_null.h) == 'ih2.v')] + 
+  out_null.h[years * 3650, which(colnames(out_null.h) == 'rh2.v')] + out_null.h[years * 3650, which(colnames(out_null.h) == 'sh3.v')]
+three.h <- out_null.h[years * 3650, which(colnames(out_null.h) == 'ih3')] + out_null.h[years * 3650, which(colnames(out_null.h) == 'rh3')] +
+  out_null.h[years * 3650, which(colnames(out_null.h) == 'sh4')] + out_null.h[years * 3650, which(colnames(out_null.h) == 'ih3.v')] + 
+  out_null.h[years * 3650, which(colnames(out_null.h) == 'rh3.v')] + out_null.h[years * 3650, which(colnames(out_null.h) == 'sh4.v')]
+four.h <- out_null.h[years * 3650, which(colnames(out_null.h) == 'ih4')] + out_null.h[years * 3650, which(colnames(out_null.h) == 'rh4')] + 
+  out_null.h[years * 3650, which(colnames(out_null.h) == 'ih4.v')] + out_null.h[years * 3650, which(colnames(out_null.h) == 'rh4.v')]
 
 #population.h <- sum(sum(zero.h), sum(one.h), sum(two.h), sum(three.h), sum(four.h))
-summary.h <- list(zero.h, one.h, two.h, three.h, four.h)
+summary.novac.h <- list(zero.h, one.h, two.h, three.h, four.h)
 
 
-zero.l <- out.h[years_vac * 3650, which(colnames(out.h) == 'sl1')]
-one.l <- out.h[years_vac * 3650, which(colnames(out.h) == 'il1')] + out.h[years_vac * 3650, which(colnames(out.h) == 'rl1')] + 
-  out.h[years_vac * 3650, which(colnames(out.h) == 'sl2')] + out.h[years_vac * 3650, which(colnames(out.h) == 'rl1.v')] +
-  out.h[years_vac * 3650, which(colnames(out.h) == 'sl2.v')] 
-two.l <- out.h[years_vac * 3650, which(colnames(out.h) == 'il2')] + out.h[years_vac * 3650, which(colnames(out.h) == 'rl2')] +
-  out.h[years_vac * 3650, which(colnames(out.h) == 'sl3')] + out.h[years_vac * 3650, which(colnames(out.h) == 'il2.v')] + 
-  out.h[years_vac * 3650, which(colnames(out.h) == 'rl2.v')] + out.h[years_vac * 3650, which(colnames(out.h) == 'sl3.v')]
-three.l <- out.h[years_vac * 3650, which(colnames(out.h) == 'il3')] + out.h[years_vac * 3650, which(colnames(out.h) == 'rl3')] +
-  out.h[years_vac * 3650, which(colnames(out.h) == 'sl4')] + out.h[years_vac * 3650, which(colnames(out.h) == 'il3.v')] + 
-  out.h[years_vac * 3650, which(colnames(out.h) == 'rl3.v')] + out.h[years_vac * 3650, which(colnames(out.h) == 'sl4.v')]
-four.l <- out.h[years_vac * 3650, which(colnames(out.h) == 'il4')] + out.h[years_vac * 3650, which(colnames(out.h) == 'rl4')] + 
-  out.h[years_vac * 3650, which(colnames(out.h) == 'il4.v')] + out.h[years_vac * 3650, which(colnames(out.h) == 'rl4.v')]
+zero.l <- out_null.h[years * 3650, which(colnames(out_null.h) == 'sl1')]
+one.l <- out_null.h[years * 3650, which(colnames(out_null.h) == 'il1')] + out_null.h[years * 3650, which(colnames(out_null.h) == 'rl1')] + 
+  out_null.h[years * 3650, which(colnames(out_null.h) == 'sl2')] + out_null.h[years * 3650, which(colnames(out_null.h) == 'rl1.v')] +
+  out_null.h[years * 3650, which(colnames(out_null.h) == 'sl2.v')] 
+two.l <- out_null.h[years * 3650, which(colnames(out_null.h) == 'il2')] + out_null.h[years * 3650, which(colnames(out_null.h) == 'rl2')] +
+  out_null.h[years * 3650, which(colnames(out_null.h) == 'sl3')] + out_null.h[years * 3650, which(colnames(out_null.h) == 'il2.v')] + 
+  out_null.h[years * 3650, which(colnames(out_null.h) == 'rl2.v')] + out_null.h[years * 3650, which(colnames(out_null.h) == 'sl3.v')]
+three.l <- out_null.h[years * 3650, which(colnames(out_null.h) == 'il3')] + out_null.h[years * 3650, which(colnames(out_null.h) == 'rl3')] +
+  out_null.h[years * 3650, which(colnames(out_null.h) == 'sl4')] + out_null.h[years * 3650, which(colnames(out_null.h) == 'il3.v')] + 
+  out_null.h[years * 3650, which(colnames(out_null.h) == 'rl3.v')] + out_null.h[years * 3650, which(colnames(out_null.h) == 'sl4.v')]
+four.l <- out_null.h[years * 3650, which(colnames(out_null.h) == 'il4')] + out_null.h[years * 3650, which(colnames(out_null.h) == 'rl4')] + 
+  out_null.h[years * 3650, which(colnames(out_null.h) == 'il4.v')] + out_null.h[years * 3650, which(colnames(out_null.h) == 'rl4.v')]
 
 #population.l <- sum(sum(zero.l), sum(one.l), sum(two.l), sum(three.l), sum(four.l))
-summary.l <- list(zero.l, one.l, two.l, three.l, four.l)
+summary.novac.l <- list(zero.l, one.l, two.l, three.l, four.l)
 
 
 
-zero.h.end <- out.h[years * 3650, which(colnames(out.h) == 'sh1')]
-one.h.end <- out.h[years* 3650, which(colnames(out.h) == 'ih1')] + out.h[years * 3650, which(colnames(out.h) == 'rh1')] + 
+zero.h.vac <- out.h[years * 3650, which(colnames(out.h) == 'sh1')]
+one.h.vac <- out.h[years* 3650, which(colnames(out.h) == 'ih1')] + out.h[years * 3650, which(colnames(out.h) == 'rh1')] + 
   out.h[years * 3650, which(colnames(out.h) == 'sh2')] + out.h[years * 3650, which(colnames(out.h) == 'rh1.v')] +
   out.h[years * 3650, which(colnames(out.h) == 'sh2.v')] 
-two.h.end <- out.h[years * 3650, which(colnames(out.h) == 'ih2')] + out.h[years * 3650, which(colnames(out.h) == 'rh2')] +
+two.h.vac <- out.h[years * 3650, which(colnames(out.h) == 'ih2')] + out.h[years * 3650, which(colnames(out.h) == 'rh2')] +
   out.h[years * 3650, which(colnames(out.h) == 'sh3')] + out.h[years * 3650, which(colnames(out.h) == 'ih2.v')] + 
   out.h[years * 3650, which(colnames(out.h) == 'rh2.v')] + out.h[years * 3650, which(colnames(out.h) == 'sh3.v')]
-three.h.end <- out.h[years * 3650, which(colnames(out.h) == 'ih3')] + out.h[years * 3650, which(colnames(out.h) == 'rh3')] +
+three.h.vac <- out.h[years * 3650, which(colnames(out.h) == 'ih3')] + out.h[years * 3650, which(colnames(out.h) == 'rh3')] +
   out.h[years * 3650, which(colnames(out.h) == 'sh4')] + out.h[years * 3650, which(colnames(out.h) == 'ih3.v')] + 
   out.h[years * 3650, which(colnames(out.h) == 'rh3.v')] + out.h[years * 3650, which(colnames(out.h) == 'sh4.v')]
-four.h.end <- out.h[years * 3650, which(colnames(out.h) == 'ih4')] + out.h[years * 3650, which(colnames(out.h) == 'rh4')] + 
+four.h.vac <- out.h[years * 3650, which(colnames(out.h) == 'ih4')] + out.h[years * 3650, which(colnames(out.h) == 'rh4')] + 
   out.h[years * 3650, which(colnames(out.h) == 'ih4.v')] + out.h[years * 3650, which(colnames(out.h) == 'rh4.v')]
 
-#population.h.end <- sum(sum(zero.h.end), sum(one.h.end), sum(two.h.end), sum(three.h.end), sum(four.h.end))
-summary.h.end <- list(zero.h.end, one.h.end, two.h.end, three.h.end, four.h.end)
+#population.h.vac <- sum(sum(zero.h.vac), sum(one.h.vac), sum(two.h.vac), sum(three.h.vac), sum(four.h.vac))
+summary.h.vac <- list(zero.h.vac, one.h.vac, two.h.vac, three.h.vac, four.h.vac)
 
 
-zero.l.end <- out.h[years * 3650, which(colnames(out.h) == 'sl1')]
-one.l.end <- out.h[years * 3650, which(colnames(out.h) == 'il1')] + out.h[years * 3650, which(colnames(out.h) == 'rl1')] + 
+zero.l.vac <- out.h[years * 3650, which(colnames(out.h) == 'sl1')]
+one.l.vac <- out.h[years * 3650, which(colnames(out.h) == 'il1')] + out.h[years * 3650, which(colnames(out.h) == 'rl1')] + 
   out.h[years * 3650, which(colnames(out.h) == 'sl2')] + out.h[years * 3650, which(colnames(out.h) == 'rl1.v')] +
   out.h[years * 3650, which(colnames(out.h) == 'sl2.v')] 
-two.l.end <- out.h[years * 3650, which(colnames(out.h) == 'il2')] + out.h[years * 3650, which(colnames(out.h) == 'rl2')] +
+two.l.vac <- out.h[years * 3650, which(colnames(out.h) == 'il2')] + out.h[years * 3650, which(colnames(out.h) == 'rl2')] +
   out.h[years * 3650, which(colnames(out.h) == 'sl3')] + out.h[years * 3650, which(colnames(out.h) == 'il2.v')] + 
   out.h[years * 3650, which(colnames(out.h) == 'rl2.v')] + out.h[years * 3650, which(colnames(out.h) == 'sl3.v')]
-three.l.end <- out.h[years * 3650, which(colnames(out.h) == 'il3')] + out.h[years * 3650, which(colnames(out.h) == 'rl3')] +
+three.l.vac <- out.h[years * 3650, which(colnames(out.h) == 'il3')] + out.h[years * 3650, which(colnames(out.h) == 'rl3')] +
   out.h[years * 3650, which(colnames(out.h) == 'sl4')] + out.h[years * 3650, which(colnames(out.h) == 'il3.v')] + 
   out.h[years * 3650, which(colnames(out.h) == 'rl3.v')] + out.h[years * 3650, which(colnames(out.h) == 'sl4.v')]
-four.l.end <- out.h[years * 3650, which(colnames(out.h) == 'il4')] + out.h[years * 3650, which(colnames(out.h) == 'rl4')] + 
+four.l.vac <- out.h[years * 3650, which(colnames(out.h) == 'il4')] + out.h[years * 3650, which(colnames(out.h) == 'rl4')] + 
   out.h[years * 3650, which(colnames(out.h) == 'il4.v')] + out.h[years * 3650, which(colnames(out.h) == 'rl4.v')]
 
-#population.l.end <- sum(sum(zero.l.end), sum(one.l.end), sum(two.l.end), sum(three.l.end), sum(four.l.end))
-summary.l.end <- list(zero.l.end, one.l.end, two.l.end, three.l.end, four.l.end)
+#population.l.vac <- sum(sum(zero.l.vac), sum(one.l.vac), sum(two.l.vac), sum(three.l.vac), sum(four.l.vac))
+summary.l.vac <- list(zero.l.vac, one.l.vac, two.l.vac, three.l.vac, four.l.vac)
 
-save(summary.h, file = paste('summary.h_', input, '.RData', sep = ''))
-save(summary.l, file = paste('summary.l_', input, '.RData', sep = ''))
-save(summary.h.end, file = paste('summary.h.end_', input, '.RData', sep = ''))
-save(summary.l.end, file = paste('summary.l.end_', input, '.RData', sep = ''))
+save(summary.novac.h, file = paste('summary.h_', input, '.RData', sep = ''))
+save(summary.novac.l, file = paste('summary.l_', input, '.RData', sep = ''))
+save(summary.h.vac, file = paste('summary.h.vac_', input, '.RData', sep = ''))
+save(summary.l.vac, file = paste('summary.l.vac_', input, '.RData', sep = ''))
 
 
