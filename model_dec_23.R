@@ -1796,6 +1796,7 @@ orrr_calc <- function(out_mat, out_null){
             diff(out_null[(3650 * years_vac + 1):nrow(out_null),which(colnames(out_null) == 'prim_ncases.l')]),
             diff(out_null[(3650 * years_vac + 1):nrow(out_null),which(colnames(out_null) == 'sec_ncases.l')]),
             diff(out_null[(3650 * years_vac + 1):nrow(out_null),which(colnames(out_null) == 'psec_ncases.l')]))
+
   rr <- (sv / (sv + hv)) / (sn / (sn + hn))
   or <- (sv / sn) / (hv / hn)
   return(c(or, rr))
@@ -1824,10 +1825,22 @@ orrr_calc.vac <- function(out_mat, out_null){
   rr.l <- (sv.l / (sv.l + hv.l)) / (sn.l / (sn.l + hn.l))
   or.l <- (sv.l / sn.l) / (hv.l / hn.l)
   
-  sv <- sum(sv.h, sv.l)
-  sn <- sum(sn.h, sn.l)
-  hv <- sum(hv.h, sn.l)
-  hn <- sum(hn.h, hn.l)
+  sv <- sum(diff(out_mat[(3650 * years_vac + 1):nrow(out_mat),which(colnames(out_mat) == 'sec_vac.cases.h')]), diff(out_mat[(3650 * years_vac + 1):nrow(out_mat),which(colnames(out_mat) == 'psec_vac.cases.h')]),
+              diff(out_mat[(3650 * years_vac + 1):nrow(out_mat),which(colnames(out_mat) == 'sec_vac.cases.l')]), diff(out_mat[(3650 * years_vac + 1):nrow(out_mat),which(colnames(out_mat) == 'psec_vac.cases.l')]))
+  sn <- sum(diff(out_null[(3650 * years_vac + 1):nrow(out_null),which(colnames(out_null) == 'sec_cases.h')]),
+              diff(out_null[(3650 * years_vac + 1):nrow(out_null),which(colnames(out_null) == 'prim_cases.h')]),
+              diff(out_null[(3650 * years_vac + 1):nrow(out_null),which(colnames(out_null) == 'psec_cases.h')]),
+            diff(out_null[(3650 * years_vac + 1):nrow(out_null),which(colnames(out_null) == 'sec_cases.l')]),
+            diff(out_null[(3650 * years_vac + 1):nrow(out_null),which(colnames(out_null) == 'prim_cases.l')]),
+            diff(out_null[(3650 * years_vac + 1):nrow(out_null),which(colnames(out_null) == 'psec_cases.l')]))
+  hv <- sum(diff(out_mat[(3650 * years_vac + 1):nrow(out_mat),which(colnames(out_mat) == 'sec_vac.ncases.h')]), diff(out_mat[(3650 * years_vac + 1):nrow(out_mat),which(colnames(out_mat) == 'psec_vac.ncases.h')]),
+            diff(out_mat[(3650 * years_vac + 1):nrow(out_mat),which(colnames(out_mat) == 'sec_vac.ncases.l')]), diff(out_mat[(3650 * years_vac + 1):nrow(out_mat),which(colnames(out_mat) == 'psec_vac.ncases.l')]))
+  hn <- sum(diff(out_null[(3650 * years_vac + 1):nrow(out_null),which(colnames(out_null) == 'prim_ncases.h')]),
+              diff(out_null[(3650 * years_vac + 1):nrow(out_null),which(colnames(out_null) == 'sec_ncases.h')]),
+              diff(out_null[(3650 * years_vac + 1):nrow(out_null),which(colnames(out_null) == 'psec_ncases.h')]),
+            diff(out_null[(3650 * years_vac + 1):nrow(out_null),which(colnames(out_null) == 'prim_ncases.l')]),
+            diff(out_null[(3650 * years_vac + 1):nrow(out_null),which(colnames(out_null) == 'sec_ncases.l')]),
+            diff(out_null[(3650 * years_vac + 1):nrow(out_null),which(colnames(out_null) == 'psec_ncases.l')]))
   
   rr <- (sv / (sv + hv)) / (sn / (sn + hn))
   or <- (sv / sn) / (hv / hn)
@@ -1867,11 +1880,32 @@ orrr_calc.novac <- function(out_mat, out_null){
   rr.l <- (sv.l / (sv.l + hv.l)) / (sn.l / (sn.l + hn.l))
   or.l <- (sv.l / sn.l) / (hv.l / hn.l)
   
-  sv <- sum(sv.h, sv.l)
-  sn <- sum(sn.h, sn.l)
-  hv <- sum(hv.h, sn.l)
-  hn <- sum(hn.h, hn.l)
+  sv <- sum(diff(out_mat[(3650 * years_vac + 1):nrow(out_mat),which(colnames(out_mat) == 'sec_cases.h')]),
+              diff(out_mat[(3650 * years_vac + 1):nrow(out_mat),which(colnames(out_mat) == 'prim_cases.h')]),
+              diff(out_mat[(3650 * years_vac + 1):nrow(out_mat),which(colnames(out_mat) == 'psec_cases.h')]),
+            diff(out_mat[(3650 * years_vac + 1):nrow(out_mat),which(colnames(out_mat) == 'sec_cases.l')]),
+            diff(out_mat[(3650 * years_vac + 1):nrow(out_mat),which(colnames(out_mat) == 'prim_cases.l')]),
+            diff(out_mat[(3650 * years_vac + 1):nrow(out_mat),which(colnames(out_mat) == 'psec_cases.l')]))
+  sn <- sum(diff(out_null[(3650 * years_vac + 1):nrow(out_null),which(colnames(out_null) == 'sec_cases.h')]),
+              diff(out_null[(3650 * years_vac + 1):nrow(out_null),which(colnames(out_null) == 'prim_cases.h')]),
+              diff(out_null[(3650 * years_vac + 1):nrow(out_null),which(colnames(out_null) == 'psec_cases.h')]),
+            diff(out_null[(3650 * years_vac + 1):nrow(out_null),which(colnames(out_null) == 'sec_cases.l')]),
+            diff(out_null[(3650 * years_vac + 1):nrow(out_null),which(colnames(out_null) == 'prim_cases.l')]),
+            diff(out_null[(3650 * years_vac + 1):nrow(out_null),which(colnames(out_null) == 'psec_cases.l')]))
+  hv <- sum(diff(out_mat[(3650 * years_vac + 1):nrow(out_mat),which(colnames(out_mat) == 'prim_ncases.h')]),
+              diff(out_mat[(3650 * years_vac + 1):nrow(out_mat),which(colnames(out_mat) == 'sec_ncases.h')]),
+              diff(out_mat[(3650 * years_vac + 1):nrow(out_mat),which(colnames(out_mat) == 'psec_ncases.h')]),
+            diff(out_mat[(3650 * years_vac + 1):nrow(out_mat),which(colnames(out_mat) == 'prim_ncases.l')]),
+            diff(out_mat[(3650 * years_vac + 1):nrow(out_mat),which(colnames(out_mat) == 'sec_ncases.l')]),
+            diff(out_mat[(3650 * years_vac + 1):nrow(out_mat),which(colnames(out_mat) == 'psec_ncases.l')]))
+  hn <- sum(diff(out_null[(3650 * years_vac + 1):nrow(out_null),which(colnames(out_null) == 'prim_ncases.h')]),
+              diff(out_null[(3650 * years_vac + 1):nrow(out_null),which(colnames(out_null) == 'sec_ncases.h')]),
+              diff(out_null[(3650 * years_vac + 1):nrow(out_null),which(colnames(out_null) == 'psec_ncases.h')]),
+            diff(out_null[(3650 * years_vac + 1):nrow(out_null),which(colnames(out_null) == 'prim_ncases.l')]),
+            diff(out_null[(3650 * years_vac + 1):nrow(out_null),which(colnames(out_null) == 'sec_ncases.l')]),
+            diff(out_null[(3650 * years_vac + 1):nrow(out_null),which(colnames(out_null) == 'psec_ncases.l')]))
   
+
   rr <- (sv / (sv + hv)) / (sn / (sn + hn))
   or <- (sv / sn) / (hv / hn)
   
