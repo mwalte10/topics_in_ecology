@@ -12,6 +12,8 @@ input = as.numeric(args[1])
 load("parms.mat.dec_16.RData")
 parse <- which(new.parms.mat[,3] == seq(0, 0.05, length.out = 20)[11])
 new.parms.mat <- new.parms.mat[parse,]
+redo <- c(6, 11, 15, 16)
+input <- redo[input]
 
 beta_h <- new.parms.mat[input,1]
 beta_l <- new.parms.mat[input,2]
