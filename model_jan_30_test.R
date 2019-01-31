@@ -10,7 +10,7 @@ input = as.numeric(args[1])
 #IF DOING VAC COVERAGE
 ##########################
 load("parms.mat.dec_16.RData")
-parse <- which(new.parms.mat[,3] == seq(0, 0.05, length.out = 20)[1])
+parse <- which(new.parms.mat[,3] == seq(0, 0.05, length.out = 20)[11])
 new.parms.mat <- new.parms.mat[parse,]
 
 beta_h <- new.parms.mat[input,1]
