@@ -1749,7 +1749,7 @@ output.vec.h <- list()
 for(timepoint_year in 61:90){
   output.vec.h[[timepoint_year - 60]] <- cases_averted.func(out.h, out_null.h, timepoint_year)
 }
-save(output.vec.h, file = paste('output_timeseries.h.notest_', input, '.RData', sep = ''))
+save(output.vec.h, file = paste('output_timeseries.h.test_', input, '.RData', sep = ''))
 
 
 }
