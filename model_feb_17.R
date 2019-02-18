@@ -118,8 +118,8 @@ parms.h <- list(beta_h = beta_h,
                 travel_l = travel_l,
                 vac_h = vac_h,
                 vac_l = vac_l,
-                sens = 0.85,
-                spec = 0.95,
+                sens = 1,
+                spec = 0,
                 hopkins,
                 hopkins_inverse)
 parms_null.h <- list(beta_h = beta_h,
@@ -135,8 +135,8 @@ parms_null.h <- list(beta_h = beta_h,
                      travel_l = travel_l,
                      vac_h = 0,
                      vac_l = 0,
-                     sens = 0.85,
-                     spec = 0.95,
+                     sens = 1,
+                     spec = 0,
                      hopkins,
                      hopkins_inverse)
 
@@ -1633,7 +1633,7 @@ out_null.h <- out_null.h[,2:ncol(out_null.h)]
   
   sp9.vec <- c(sp9, sp9_h, sp9_l)
   names(sp9.vec) <- c('SP9', 'SP9_h', 'SP9_l')
-  save(sp9.vec, file = paste('sp9_', input, '.RData', sep = ''))
+  save(sp9.vec, file = paste('sp9_notest_', input, '.RData', sep = ''))
   
 }
 
@@ -1739,7 +1739,7 @@ out_null.h <- out_null.h[,2:ncol(out_null.h)]
   for(timepoint_year in 61:90){
     output.vec.h[[timepoint_year - 60]] <- cases_averted.func(out.h, out_null.h, timepoint_year)
   }
-  save(output.vec.h, file = paste('output_mod_trav_', input, '.RData', sep = ''))
+  save(output.vec.h, file = paste('output_mod_trav_notest_', input, '.RData', sep = ''))
   
   
   # 
