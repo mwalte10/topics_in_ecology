@@ -11,9 +11,10 @@ input = as.numeric(args[1])
 ##########################
 load('parms.mat.feb_14.RData')
 parms.mat <- new.parms.mat
+names(new.parms.mat) <- c('beta_h', 'beta_l', 'travel_l', 'travel_h', 'vac_h', 'vac_l')
 
-beta_l <- parms.mat[input,1]
-beta_h <- parms.mat[input,2]
+beta_l <- parms.mat[input,2]
+beta_h <- parms.mat[input,1]
 travel_l <- parms.mat[input,3]
 travel_h <- parms.mat[input,4]
 native_l <- 1 - travel_l
