@@ -1005,7 +1005,7 @@ model <- function(t, y, parms){
     
     primary_ncases.l <- 
       travel_l * S1_l * 2 * beta_h * (native_h * (sym_inf_h)/ pop_h + travel_l * (sym_inf_l) / pop_l) +
-      travel_l * S1_l * beta_h * (native_h * (inf_h)/ pop_h + travel_l * (inf_l) / pop_l)
+      travel_l * S1_l * beta_h * (native_h * (inf_h)/ pop_h + travel_l * (inf_l) / pop_l) +
     native_l * S1_l * 2 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
       native_l * S1_l * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) 
     primary_ncases.l <- sum(primary_ncases.l) * ninf[1]
@@ -1122,14 +1122,14 @@ model <- function(t, y, parms){
     
     secondary_cases.l <-
       travel_l * S2_l * beta_h * 2 *  0.75 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
-      travel_l * S2_l * beta_h * 0.75 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l)
+      travel_l * S2_l * beta_h * 0.75 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) +
     native_l * S2_l * beta_l * 2 * 0.75 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
       native_l * S2_l * beta_l * 0.75 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) 
     secondary_cases.l <- sum(secondary_cases.l) * inf[2]
     
     secondary_ncases.l <-
       travel_l * S2_l * beta_h * 2 *  0.75 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
-      travel_l * S2_l * beta_h * 0.75 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l)
+      travel_l * S2_l * beta_h * 0.75 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) +
     native_l * S2_l * beta_l * 2 * 0.75 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
       native_l * S2_l * beta_l * 0.75 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) 
     secondary_ncases.l <- sum(secondary_ncases.l) * ninf[2]
