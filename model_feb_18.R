@@ -10,15 +10,16 @@ input = as.numeric(args[1])
 #IF DOING VAC COVERAGE
 ##########################
 
-beta_l.vec <- seq(0, 0.6, length.out = 50)
+
+beta_l.vec <- 0.1857143
 beta_l <- beta_l.vec[input]
 beta_h <- beta_l
 travel_l <- 0
 travel_h <- 0
 native_l <- 1 - travel_l
 native_h <- 1 - travel_h
-vac_h <- 0
-vac_l <- 0
+vac_h <- 0.5
+vac_l <- 0.5
 
 
 load('pop_1950.RData')
@@ -140,7 +141,7 @@ parms_null.h <- list(beta_h = beta_h,
                      hopkins_inverse)
 
 
-years = 60
+years = 90
 years_vac = 60
 times <- seq(from = 0, to = 365 * years, by = .1)
 times <- times[1:(length(times) - 1)]
@@ -1585,7 +1586,7 @@ names(y_init) <- c(rep('sh1', 80), rep('ih1', 80), rep('rh1', 80),
                    'prim_inf', 'sec_inf', 'psec_inf',
                    'prim.l.inf', 'sec.l.inf', 'psec.l.inf',
                    'ih')
-years = 60
+years = 90
 years_vac = 60
 out.h <- ode(times = times, y = y_init, func = model, parms = parms.h)
 out_null.h <- ode(times = times, y = y_init, func = model, parms = parms_null.h)
@@ -1637,111 +1638,111 @@ out_null.h <- out_null.h[,2:ncol(out_null.h)]
 }
 
 ####Cases averted calcs
-# {
-#   # 
-#   # # #
-#   cases_averted.func <- function(out_mat, out_mat_null, timepoint_year){
-#     indexing <- c((3650 * years_vac + 1):(timepoint_year * 3650 ))
-#     {  # track_infected <- sum(diff(out_mat[indexing, which(colnames(out_mat) == 'i_total')]))
-#       # track_l <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'il')]))
-#       # track_h <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'ih')]))
-#       # track_infected.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'i_total')]))
-#       # track_l.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'il')]))
-#       # track_h.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'ih')]))
-#       # infections_averted <- ((track_infected.null - track_infected) / track_infected.null) * 100
-#       # infections_averted.h <- ((track_h.null - track_h) / track_h.null) * 100
-#       # infections_averted.l <- ((track_l.null - track_l) / track_l.null) * 100
-#     }
-#     cases <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'cases')]))
-#     cases.l <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'cases.l')]))
-#     cases.h <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'cases.h')]))
-#     cases.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'cases')]))
-#     cases.l.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'cases.l')]))
-#     cases.h.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'cases.h')]))
-#     
-#     ##vaccinated, whole pop
-#     cases_vac<- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'sec_vac.cases.h')]),
-#                     diff(out_mat[indexing,which(colnames(out_mat) == 'psec_vac.cases.h')]),
-#                     diff(out_mat[indexing,which(colnames(out_mat) == 'sec_vac.cases.l')]),
-#                     diff(out_mat[indexing,which(colnames(out_mat) == 'psec_vac.cases.l')]))
-#     cases_vac.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'sec_vac.cases.h')]),
-#                           diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'psec_vac.cases.h')]),
-#                           diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'sec_vac.cases.l')]),
-#                           diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'psec_vac.cases.l')]))
-#     
-#     ##unvaccinated, whole pop
-#     cases_uvac <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'prim_cases.h')]),
-#                       diff(out_mat[indexing,which(colnames(out_mat) == 'sec_cases.h')]),
-#                       diff(out_mat[indexing,which(colnames(out_mat) == 'psec_cases.h')]),
-#                       diff(out_mat[indexing,which(colnames(out_mat) == 'prim_cases.l')]),
-#                       diff(out_mat[indexing,which(colnames(out_mat) == 'sec_cases.l')]),
-#                       diff(out_mat[indexing,which(colnames(out_mat) == 'psec_cases.l')]))
-#     cases_uvac.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'prim_cases.h')]),
-#                            diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'sec_cases.h')]),
-#                            diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'psec_cases.h')]),
-#                            diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'prim_cases.l')]),
-#                            diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'sec_cases.l')]),
-#                            diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'psec_cases.l')]))
-#     
-#     ##vaccinated, high
-#     cases_vac.h <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'sec_vac.cases.h')]),
-#                        diff(out_mat[indexing,which(colnames(out_mat) == 'psec_vac.cases.h')]))
-#     cases_vac.h.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'sec_vac.cases.h')]),
-#                             diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'psec_vac.cases.h')]))
-#     ##vaccinated, low
-#     cases_vac.l <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'sec_vac.cases.l')]),
-#                        diff(out_mat[indexing,which(colnames(out_mat) == 'psec_vac.cases.l')]))
-#     cases_vac.l.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'sec_vac.cases.l')]),
-#                             diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'psec_vac.cases.l')]))
-#     
-#     ##unvaccinaetd, high
-#     cases_uvac.h <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'prim_cases.h')]),
-#                         diff(out_mat[indexing,which(colnames(out_mat) == 'sec_cases.h')]),
-#                         diff(out_mat[indexing,which(colnames(out_mat) == 'psec_cases.h')]))
-#     cases_uvac.h.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'prim_cases.h')]),
-#                              diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'sec_cases.h')]),
-#                              diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'psec_cases.h')]))
-#     
-#     ##unvaccinated, low
-#     cases_uvac.l <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'prim_cases.l')]),
-#                         diff(out_mat[indexing,which(colnames(out_mat) == 'sec_cases.l')]),
-#                         diff(out_mat[indexing,which(colnames(out_mat) == 'psec_cases.l')]))
-#     cases_uvac.l.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'prim_cases.l')]),
-#                              diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'sec_cases.l')]),
-#                              diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'psec_cases.l')]))
-#     
-#     
-#     cases_averted <- ((cases.null - cases) / cases.null) * 100
-#     cases_averted.h <- ((cases.h.null - cases.h) / cases.h.null) * 100
-#     cases_averted.l <- ((cases.l.null - cases.l) / cases.l.null) * 100
-#     
-#     cases_av_vac.h <- ((cases_vac.h.null - cases_vac.h) / cases_vac.h.null) * 100
-#     cases_av_vac.l <- ((cases_vac.l.null - cases_vac.l) / cases_vac.l.null) * 100
-#     cases_av_vac <- ((cases_vac.null - cases_vac) / cases_vac.null) * 100
-#     
-#     cases_av_uvac.h <- ((cases_uvac.h.null - cases_uvac.h) / cases_uvac.h.null) * 100
-#     cases_av_uvac.l <- ((cases_uvac.l.null - cases_uvac.l) / cases_uvac.l.null) * 100
-#     cases_av_uvac <- ((cases_uvac.null - cases_uvac) / cases_uvac.null) * 100
-#     
-#     
-#     output <- c(cases_averted.h, cases_averted, cases_averted.l,
-#                 cases_av_vac.h, cases_av_vac, cases_av_vac.l,
-#                 cases_av_uvac.h, cases_av_uvac, cases_av_uvac.l)
-#     names(output) <- c('cases_averted.h', 'cases_averted', 'cases_averted.l',
-#                        'cases_av_vac.h', 'cases_av_vac', 'cases_av_vac.l',
-#                        'cases_av_uvac.h', 'cases_av_uvac', 'cases_av_uvac.l')
-#     
-#     return(output)
-#   }
-#   #
-#   output.vec.h <- list()
-#   for(timepoint_year in 61:90){
-#     output.vec.h[[timepoint_year - 60]] <- cases_averted.func(out.h, out_null.h, timepoint_year)
-#   }
-#   save(output.vec.h, file = paste('output_mod_trav_notest_', input, '.RData', sep = ''))
-#   
-#   
-#   # 
-# }
+{
+  #
+  # # #
+  cases_averted.func <- function(out_mat, out_mat_null, timepoint_year){
+    indexing <- c((3650 * years_vac + 1):(timepoint_year * 3650 ))
+    {  # track_infected <- sum(diff(out_mat[indexing, which(colnames(out_mat) == 'i_total')]))
+      # track_l <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'il')]))
+      # track_h <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'ih')]))
+      # track_infected.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'i_total')]))
+      # track_l.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'il')]))
+      # track_h.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'ih')]))
+      # infections_averted <- ((track_infected.null - track_infected) / track_infected.null) * 100
+      # infections_averted.h <- ((track_h.null - track_h) / track_h.null) * 100
+      # infections_averted.l <- ((track_l.null - track_l) / track_l.null) * 100
+    }
+    cases <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'cases')]))
+    cases.l <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'cases.l')]))
+    cases.h <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'cases.h')]))
+    cases.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'cases')]))
+    cases.l.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'cases.l')]))
+    cases.h.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'cases.h')]))
+
+    ##vaccinated, whole pop
+    cases_vac<- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'sec_vac.cases.h')]),
+                    diff(out_mat[indexing,which(colnames(out_mat) == 'psec_vac.cases.h')]),
+                    diff(out_mat[indexing,which(colnames(out_mat) == 'sec_vac.cases.l')]),
+                    diff(out_mat[indexing,which(colnames(out_mat) == 'psec_vac.cases.l')]))
+    cases_vac.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'sec_vac.cases.h')]),
+                          diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'psec_vac.cases.h')]),
+                          diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'sec_vac.cases.l')]),
+                          diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'psec_vac.cases.l')]))
+
+    ##unvaccinated, whole pop
+    cases_uvac <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'prim_cases.h')]),
+                      diff(out_mat[indexing,which(colnames(out_mat) == 'sec_cases.h')]),
+                      diff(out_mat[indexing,which(colnames(out_mat) == 'psec_cases.h')]),
+                      diff(out_mat[indexing,which(colnames(out_mat) == 'prim_cases.l')]),
+                      diff(out_mat[indexing,which(colnames(out_mat) == 'sec_cases.l')]),
+                      diff(out_mat[indexing,which(colnames(out_mat) == 'psec_cases.l')]))
+    cases_uvac.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'prim_cases.h')]),
+                           diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'sec_cases.h')]),
+                           diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'psec_cases.h')]),
+                           diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'prim_cases.l')]),
+                           diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'sec_cases.l')]),
+                           diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'psec_cases.l')]))
+
+    ##vaccinated, high
+    cases_vac.h <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'sec_vac.cases.h')]),
+                       diff(out_mat[indexing,which(colnames(out_mat) == 'psec_vac.cases.h')]))
+    cases_vac.h.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'sec_vac.cases.h')]),
+                            diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'psec_vac.cases.h')]))
+    ##vaccinated, low
+    cases_vac.l <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'sec_vac.cases.l')]),
+                       diff(out_mat[indexing,which(colnames(out_mat) == 'psec_vac.cases.l')]))
+    cases_vac.l.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'sec_vac.cases.l')]),
+                            diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'psec_vac.cases.l')]))
+
+    ##unvaccinaetd, high
+    cases_uvac.h <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'prim_cases.h')]),
+                        diff(out_mat[indexing,which(colnames(out_mat) == 'sec_cases.h')]),
+                        diff(out_mat[indexing,which(colnames(out_mat) == 'psec_cases.h')]))
+    cases_uvac.h.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'prim_cases.h')]),
+                             diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'sec_cases.h')]),
+                             diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'psec_cases.h')]))
+
+    ##unvaccinated, low
+    cases_uvac.l <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'prim_cases.l')]),
+                        diff(out_mat[indexing,which(colnames(out_mat) == 'sec_cases.l')]),
+                        diff(out_mat[indexing,which(colnames(out_mat) == 'psec_cases.l')]))
+    cases_uvac.l.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'prim_cases.l')]),
+                             diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'sec_cases.l')]),
+                             diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'psec_cases.l')]))
+
+
+    cases_averted <- ((cases.null - cases) / cases.null) * 100
+    cases_averted.h <- ((cases.h.null - cases.h) / cases.h.null) * 100
+    cases_averted.l <- ((cases.l.null - cases.l) / cases.l.null) * 100
+
+    cases_av_vac.h <- ((cases_vac.h.null - cases_vac.h) / cases_vac.h.null) * 100
+    cases_av_vac.l <- ((cases_vac.l.null - cases_vac.l) / cases_vac.l.null) * 100
+    cases_av_vac <- ((cases_vac.null - cases_vac) / cases_vac.null) * 100
+
+    cases_av_uvac.h <- ((cases_uvac.h.null - cases_uvac.h) / cases_uvac.h.null) * 100
+    cases_av_uvac.l <- ((cases_uvac.l.null - cases_uvac.l) / cases_uvac.l.null) * 100
+    cases_av_uvac <- ((cases_uvac.null - cases_uvac) / cases_uvac.null) * 100
+
+
+    output <- c(cases_averted.h, cases_averted, cases_averted.l,
+                cases_av_vac.h, cases_av_vac, cases_av_vac.l,
+                cases_av_uvac.h, cases_av_uvac, cases_av_uvac.l)
+    names(output) <- c('cases_averted.h', 'cases_averted', 'cases_averted.l',
+                       'cases_av_vac.h', 'cases_av_vac', 'cases_av_vac.l',
+                       'cases_av_uvac.h', 'cases_av_uvac', 'cases_av_uvac.l')
+
+    return(output)
+  }
+  #
+  output.vec.h <- list()
+  for(timepoint_year in 61:90){
+    output.vec.h[[timepoint_year - 60]] <- cases_averted.func(out.h, out_null.h, timepoint_year)
+  }
+  save(output.vec.h, file = paste('output_mod_trav_notest_', input, '.RData', sep = ''))
+
+
+  #
+}
 # 
 # 
