@@ -11,7 +11,9 @@ input = as.numeric(args[1])
 ##########################
 
 
-beta_l.vec <- 0.1857143
+# beta_l.vec <- 0.1857143
+beta_l.vec <- 0.1020408
+
 beta_l <- beta_l.vec[input]
 beta_h <- beta_l
 travel_l <- 0
