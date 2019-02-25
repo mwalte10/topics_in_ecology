@@ -10,7 +10,7 @@ input = as.numeric(args[1])
 #IF DOING VAC COVERAGE
 ##########################
 load("parms.mat.dec_16.RData")
-parse <- which(new.parms.mat[,3] == seq(0, 0.05, length.out = 20)[11])
+parse <- which(new.parms.mat[,3] == seq(0, 0.05, length.out = 20)[1])
 new.parms.mat <- new.parms.mat[parse,]
 
 beta_h <- new.parms.mat[input,1]
@@ -103,33 +103,6 @@ population_l <- sum(susceptible_total_l + infected_total_l + recovered_total_l)
 
 
 
-# parms <- list(beta_h = beta_h,
-#            beta_l = beta_l,
-#            gamma = 1/4,
-#            sigma = 1/(365 * 1.2),
-#            mu = birth,
-#            delta = death,
-#            age_window = rep(1, 80),
-#            native = native,
-#            travel = 1 - native,
-#            vac_h = vac_h,
-#            vac_l = vac_l,
-#            sens = 1,
-#            spec = 0)
-# parms_null <- list(beta_h = beta_h,
-#               beta_l = beta_l,
-#               gamma = 1/4,
-#               sigma = 1/(365 * 1.2),
-#               mu = birth,
-#               delta = death,
-#               age_window = rep(1, 80),
-#               native = native,
-#               travel = 1 - native,
-#               vac_h = 0,
-#               vac_l = 0,
-#               sens = 1,
-#               spec = 0)
-
 
 parms.h <- list(beta_h = beta_h,
               beta_l = beta_l,
@@ -162,36 +135,6 @@ parms_null.h <- list(beta_h = beta_h,
                    hopkins,
                    hopkins_inverse)
 
-# parms.i <- list(beta_h = beta_h.i,
-#                 beta_l = beta_l.i,
-#                 gamma = 1/4,
-#                 sigma = 1/(365 * 1.2),
-#                 mu = birth,
-#                 delta = death,
-#                 age_window = rep(1, 80),
-#                 native = native,
-#                 travel = 1 - native,
-#                 vac_h = vac_h,
-#                 vac_l = vac_l,
-#                 sens = 1,
-#                 spec = 0,
-#                 imperial,
-#                 imperial_inverse)
-# parms_null.i <- list(beta_h = beta_h.i,
-#                      beta_l = beta_l.i,
-#                      gamma = 1/4,
-#                      sigma = 1/(365 * 1.2),
-#                      mu = birth,
-#                      delta = death,
-#                      age_window = rep(1, 80),
-#                      native = native,
-#                      travel = 1 - native,
-#                      vac_h = 0,
-#                      vac_l = 0,
-#                      sens = 1,
-#                      spec = 0,
-#                      imperial,
-#                      imperial_inverse)
 
 years = 90
 years_vac = 60
@@ -2267,10 +2210,8 @@ out_null.h <- out_null.h[,2:ncol(out_null.h)]
     return(output)
   }
   #
-  output.vec.h <- list()
-  for(timepoint_year in 61:90){
-    output.vec.h[[timepoint_year - 60]] <- cases_averted.func(out.h, out_null.h, timepoint_year)
-  }
+  output.vec.h  <- cases_averted.func(out.h, out_null.h, 90)
+  
   save(output.vec.h, file = paste('output_timeseries.h.notest_', input, '.RData', sep = ''))
   
 
@@ -2278,6 +2219,8 @@ out_null.h <- out_null.h[,2:ncol(out_null.h)]
  }
 
 
+###ignore
+{
 ###RR calcs modified
 {# rr <- function(out_mat, out_null){
 #   
@@ -2714,4 +2657,4 @@ out_null.h <- out_null.h[,2:ncol(out_null.h)]
 
 
 
-}
+}}
