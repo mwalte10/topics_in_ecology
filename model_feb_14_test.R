@@ -9,20 +9,20 @@ input = as.numeric(args[1])
 ##########################
 #IF DOING VAC COVERAGE
 ##########################
-betas <- seq(0.05, 0.35, length.out = 20)
-beta_l <- rep(betas, 20)
+betas <- seq(0.15, 0.25, length.out = 30)
+beta_l <- rep(betas, 30)
 beta_h <- list()
-for(i in 1:20){
-  beta_h[[i]] <- rep(betas[i], 20)
+for(i in 1:30){
+  beta_h[[i]] <- rep(betas[i], 30)
 }
 beta_h <- unlist(beta_h)
-travel_h <- rep(0.0025, 400)
-travel_l <- rep(0.025, 400)
+travel_h <- rep(0.0025, 900)
+travel_l <- rep(0.025, 900)
 native_h <- 1 - travel_h
 native_l <- 1 - travel_l
 parms.mat <- cbind(beta_l, beta_h, travel_l, travel_h, native_l, native_h)
 remove <- c()
-for(i in 1:400){
+for(i in 1:900){
   remove[i] <- beta_l[i] < beta_h[i]
 }
 parms.mat <- parms.mat[-which(remove == TRUE), ]
@@ -241,7 +241,7 @@ model <- function(t, y, parms){
   R4_l.v <- y[which(names(y)== 'rl4.v')]
   
   ###Tracking infected individuals
-
+  
   
   infecteds_h.prim.c <- I1_h * inf[1]
   infecteds_h.sec.c <- cbind(I2_h, I2_h.v) * inf[2]
@@ -285,13 +285,13 @@ model <- function(t, y, parms){
   
   
   population_l <- cbind(S1_l, I1_l, R1_l,
-                 S2_l, I2_l, R2_l,
-                 S3_l, I3_l, R3_l,
-                 S4_l, I4_l, R4_l,
-                 R1_l.v,
-                 S2_l.v, I2_l.v, R2_l.v,
-                 S3_l.v, I3_l.v, R3_l.v,
-                 S4_l.v, I4_l.v, R4_l.v)
+                        S2_l, I2_l, R2_l,
+                        S3_l, I3_l, R3_l,
+                        S4_l, I4_l, R4_l,
+                        R1_l.v,
+                        S2_l.v, I2_l.v, R2_l.v,
+                        S3_l.v, I3_l.v, R3_l.v,
+                        S4_l.v, I4_l.v, R4_l.v)
   pop_l <- rowSums(population_l)
   birth_pop_l <- sum(pop_l)
   # effective_population_h <- population_h + rep(travel,22) * population_l
@@ -815,7 +815,7 @@ model <- function(t, y, parms){
     native_l * S2_l.v * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
     travel_l * S2_l.v * beta_h * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l)
   I_secondary_vac <- sum(I_secondary_vac)
-    
+  
   
   I_post_sec_tot <- 
     native_h * S3_h * 2 * 0.5 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
@@ -870,38 +870,38 @@ model <- function(t, y, parms){
     native_l * S4_l.v * beta_l * 0.5 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
     travel_l * S4_l.v * beta_h * 0.5 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) 
   I_post_sec_vac <- sum(I_post_sec_vac)
-    
-    
- 
-   I_l <-
-     native_l * S1_l * 2 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
-     travel_l * S1_l * 2 * beta_h * (native_h * (sym_inf_h)/ pop_h + travel_l * (sym_inf_l) / pop_l) +
-     native_l * S1_l * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
-     travel_l * S1_l * beta_h * (native_h * (inf_h)/ pop_h + travel_l * (inf_l) / pop_l) +
-     native_l * S2_l * beta_l * 2 * 0.75 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
-     travel_l * S2_l * beta_h * 2 *  0.75 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
-     native_l * S2_l * beta_l * 0.75 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
-     travel_l * S2_l * beta_h * 0.75 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) +
-     native_l * S2_l.v * beta_l * 2  * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
-     travel_l * S2_l.v * beta_h * 2 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
-     native_l * S2_l.v * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
-     travel_l * S2_l.v * beta_h * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) +
-     native_l * S3_l * beta_l * 2 * 0.5 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
-     travel_l * S3_l * beta_h * 2 *  0.5 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
-     native_l * S3_l * beta_l * 0.5 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
-     travel_l * S3_l * beta_h * 0.5 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) +
-     native_l * S3_l.v * beta_l * 2 * 0.75 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
-     travel_l * S3_l.v * beta_h * 2 *  0.75 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
-     native_l * S3_l.v * beta_l * 0.75 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
-     travel_l * S3_l.v * beta_h * 0.75 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) +
-     native_l * S4_l * beta_l * 2 * 0.25 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
-     travel_l * S4_l * beta_h * 2 *  0.25 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
-     native_l * S4_l * beta_l * 0.25 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
-     travel_l * S4_l * beta_h * 0.25 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) +
-     native_l * S4_l.v * beta_l * 2 * 0.5 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
-     travel_l * S4_l.v * beta_h * 2 *  0.5 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
-     native_l * S4_l.v * beta_l * 0.5 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
-     travel_l * S4_l.v * beta_h * 0.5 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) 
+  
+  
+  
+  I_l <-
+    native_l * S1_l * 2 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
+    travel_l * S1_l * 2 * beta_h * (native_h * (sym_inf_h)/ pop_h + travel_l * (sym_inf_l) / pop_l) +
+    native_l * S1_l * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
+    travel_l * S1_l * beta_h * (native_h * (inf_h)/ pop_h + travel_l * (inf_l) / pop_l) +
+    native_l * S2_l * beta_l * 2 * 0.75 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
+    travel_l * S2_l * beta_h * 2 *  0.75 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
+    native_l * S2_l * beta_l * 0.75 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
+    travel_l * S2_l * beta_h * 0.75 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) +
+    native_l * S2_l.v * beta_l * 2  * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
+    travel_l * S2_l.v * beta_h * 2 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
+    native_l * S2_l.v * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
+    travel_l * S2_l.v * beta_h * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) +
+    native_l * S3_l * beta_l * 2 * 0.5 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
+    travel_l * S3_l * beta_h * 2 *  0.5 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
+    native_l * S3_l * beta_l * 0.5 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
+    travel_l * S3_l * beta_h * 0.5 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) +
+    native_l * S3_l.v * beta_l * 2 * 0.75 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
+    travel_l * S3_l.v * beta_h * 2 *  0.75 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
+    native_l * S3_l.v * beta_l * 0.75 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
+    travel_l * S3_l.v * beta_h * 0.75 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) +
+    native_l * S4_l * beta_l * 2 * 0.25 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
+    travel_l * S4_l * beta_h * 2 *  0.25 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
+    native_l * S4_l * beta_l * 0.25 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
+    travel_l * S4_l * beta_h * 0.25 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) +
+    native_l * S4_l.v * beta_l * 2 * 0.5 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
+    travel_l * S4_l.v * beta_h * 2 *  0.5 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
+    native_l * S4_l.v * beta_l * 0.5 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
+    travel_l * S4_l.v * beta_h * 0.5 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) 
   I_l <- sum(I_l)
   
   I_l_vac <- 
@@ -918,7 +918,7 @@ model <- function(t, y, parms){
     native_l * S4_l.v * beta_l * 0.5 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
     travel_l * S4_l.v * beta_h * 0.5 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) 
   I_l_vac <- sum(I_l_vac)
-    
+  
   
   I_l_primary_tot <- 
     native_l * S1_l * 2 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
@@ -974,7 +974,7 @@ model <- function(t, y, parms){
     native_l * S4_l.v * beta_l * 0.5 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
     travel_l * S4_l.v * beta_h * 0.5 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) 
   I_l_post_sec_vac <- sum(I_l_post_sec_vac)
-    
+  
   
   primary <-
     native_h * S1_h * 2 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
@@ -987,59 +987,59 @@ model <- function(t, y, parms){
     travel_l * S1_l * beta_h * (native_h * (inf_h)/ pop_h + travel_l * (inf_l) / pop_l)
   primary <- sum(primary) * inf[1]
   primary_inf <- primary/ inf[1]
-
+  
   
   
   ##primary cases incidence
-{  primary_tot.cases <- 
-    native_h * S1_h * 2 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    travel_h * S1_h * 2 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
-    native_h * S1_h * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
-    travel_h * S1_h * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
-    native_l * S1_l * 2 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
-    travel_l * S1_l * 2 * beta_h * (native_h * (sym_inf_h)/ pop_h + travel_l * (sym_inf_l) / pop_l) +
-    native_l * S1_l * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
-    travel_l * S1_l * beta_h * (native_h * (inf_h)/ pop_h + travel_l * (inf_l) / pop_l)
-  primary_tot.cases <- sum(primary_tot.cases) * inf[1]
-  
-  primary_tot.ncases <- 
-    native_h * S1_h * 2 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    travel_h * S1_h * 2 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
-    native_h * S1_h * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
-    travel_h * S1_h * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
-    native_l * S1_l * 2 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
-    travel_l * S1_l * 2 * beta_h * (native_h * (sym_inf_h)/ pop_h + travel_l * (sym_inf_l) / pop_l) +
-    native_l * S1_l * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
-    travel_l * S1_l * beta_h * (native_h * (inf_h)/ pop_h + travel_l * (inf_l) / pop_l)
-  primary_tot.ncases <- sum(primary_tot.ncases) * ninf[1]
-  
-  primary_cases.l <-
-    native_l * S1_l * 2 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
-    native_l * S1_l * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
-    travel_l * S1_l * 2 * beta_h * (native_h * (sym_inf_h)/ pop_h + travel_l * (sym_inf_l) / pop_l) +
-    travel_l * S1_l * beta_h * (native_h * (inf_h)/ pop_h + travel_l * (inf_l) / pop_l) 
+  {  primary_tot.cases <- 
+      native_h * S1_h * 2 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      travel_h * S1_h * 2 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
+      native_h * S1_h * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
+      travel_h * S1_h * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
+      native_l * S1_l * 2 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
+      travel_l * S1_l * 2 * beta_h * (native_h * (sym_inf_h)/ pop_h + travel_l * (sym_inf_l) / pop_l) +
+      native_l * S1_l * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
+      travel_l * S1_l * beta_h * (native_h * (inf_h)/ pop_h + travel_l * (inf_l) / pop_l)
+    primary_tot.cases <- sum(primary_tot.cases) * inf[1]
+    
+    primary_tot.ncases <- 
+      native_h * S1_h * 2 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      travel_h * S1_h * 2 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
+      native_h * S1_h * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
+      travel_h * S1_h * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
+      native_l * S1_l * 2 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
+      travel_l * S1_l * 2 * beta_h * (native_h * (sym_inf_h)/ pop_h + travel_l * (sym_inf_l) / pop_l) +
+      native_l * S1_l * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
+      travel_l * S1_l * beta_h * (native_h * (inf_h)/ pop_h + travel_l * (inf_l) / pop_l)
+    primary_tot.ncases <- sum(primary_tot.ncases) * ninf[1]
+    
+    primary_cases.l <-
+      native_l * S1_l * 2 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
+      native_l * S1_l * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
+      travel_l * S1_l * 2 * beta_h * (native_h * (sym_inf_h)/ pop_h + travel_l * (sym_inf_l) / pop_l) +
+      travel_l * S1_l * beta_h * (native_h * (inf_h)/ pop_h + travel_l * (inf_l) / pop_l) 
     primary_cases.l <- sum(primary_cases.l) * inf[1]
-  
-  primary_ncases.l <- 
-    travel_l * S1_l * 2 * beta_h * (native_h * (sym_inf_h)/ pop_h + travel_l * (sym_inf_l) / pop_l) +
-    travel_l * S1_l * beta_h * (native_h * (inf_h)/ pop_h + travel_l * (inf_l) / pop_l)
-    native_l * S1_l * 2 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
-    native_l * S1_l * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) 
-  primary_ncases.l <- sum(primary_ncases.l) * ninf[1]
-  
-  primary_cases.h <- 
-    native_h * S1_h * 2 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    native_h * S1_h * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
-    travel_h * S1_h * 2 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
-    travel_h * S1_h * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) 
-  primary_cases.h <- sum(primary_cases.h) * inf[1]
-  
-  primary_ncases.h <- 
-    travel_h * S1_h * 2 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
-    travel_h * S1_h * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
-    native_h * S1_h * 2 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    native_h * S1_h * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) 
-  primary_ncases.h <- sum(primary_ncases.h) * ninf[1]}
+    
+    primary_ncases.l <- 
+      travel_l * S1_l * 2 * beta_h * (native_h * (sym_inf_h)/ pop_h + travel_l * (sym_inf_l) / pop_l) +
+      travel_l * S1_l * beta_h * (native_h * (inf_h)/ pop_h + travel_l * (inf_l) / pop_l) +
+      native_l * S1_l * 2 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
+      native_l * S1_l * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) 
+    primary_ncases.l <- sum(primary_ncases.l) * ninf[1]
+    
+    primary_cases.h <- 
+      native_h * S1_h * 2 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      native_h * S1_h * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
+      travel_h * S1_h * 2 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
+      travel_h * S1_h * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) 
+    primary_cases.h <- sum(primary_cases.h) * inf[1]
+    
+    primary_ncases.h <- 
+      travel_h * S1_h * 2 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
+      travel_h * S1_h * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
+      native_h * S1_h * 2 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      native_h * S1_h * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) 
+    primary_ncases.h <- sum(primary_ncases.h) * ninf[1]}
   
   
   secondary <-
@@ -1064,106 +1064,106 @@ model <- function(t, y, parms){
   
   
   #vaccinated case incidence
-{  secondary_vac_tot.cases <- 
-    native_h * S2_h.v * 2 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    travel_h * S2_h.v * 2 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
-    native_h * S2_h.v * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
-    travel_h * S2_h.v * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
-    native_l * S2_l.v * beta_l * 2  * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
-    travel_l * S2_l.v * beta_h * 2 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    native_l * S2_l.v * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
-    travel_l * S2_l.v * beta_h * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) 
-  secondary_vac_tot.cases <- sum(secondary_vac_tot.cases) * inf[2]
-  
-  secondary_vac_tot.ncases <- 
-    native_h * S2_h.v * 2 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    travel_h * S2_h.v * 2 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
-    native_h * S2_h.v * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
-    travel_h * S2_h.v * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
-    native_l * S2_l.v * beta_l * 2  * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
-    travel_l * S2_l.v * beta_h * 2 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    native_l * S2_l.v * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
-    travel_l * S2_l.v * beta_h * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l)  
-  secondary_vac_tot.ncases <- sum(secondary_vac_tot.ncases) * ninf[2]
-  
-  secondary_vac_cases.l <- 
-    native_l * S2_l.v * beta_l * 2  * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
-    travel_l * S2_l.v * beta_h * 2 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    native_l * S2_l.v * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
-    travel_l * S2_l.v * beta_h * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l)  
-  secondary_vac_cases.l <- sum(secondary_vac_cases.l) * inf[2]
-  
-  secondary_vac_ncases.l <- 
-    native_l * S2_l.v * beta_l * 2  * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
-    travel_l * S2_l.v * beta_h * 2 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    native_l * S2_l.v * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
-    travel_l * S2_l.v * beta_h * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l)  
-  secondary_vac_ncases.l <- sum(secondary_vac_ncases.l) * ninf[2]
-  
-  secondary_vac_cases.h <- 
-    native_h * S2_h.v * 2 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    travel_h * S2_h.v * 2 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
-    native_h * S2_h.v * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
-    travel_h * S2_h.v * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h)
-  secondary_vac_cases.h <- sum(secondary_vac_cases.h) * inf[2]
-  
-  secondary_vac_ncases.h <- 
-    native_h * S2_h.v * 2 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    travel_h * S2_h.v * 2 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
-    native_h * S2_h.v * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
-    travel_h * S2_h.v * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h)
-  secondary_vac_ncases.h <- sum(secondary_vac_ncases.h) * ninf[2]}
+  {  secondary_vac_tot.cases <- 
+      native_h * S2_h.v * 2 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      travel_h * S2_h.v * 2 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
+      native_h * S2_h.v * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
+      travel_h * S2_h.v * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
+      native_l * S2_l.v * beta_l * 2  * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
+      travel_l * S2_l.v * beta_h * 2 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      native_l * S2_l.v * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
+      travel_l * S2_l.v * beta_h * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) 
+    secondary_vac_tot.cases <- sum(secondary_vac_tot.cases) * inf[2]
+    
+    secondary_vac_tot.ncases <- 
+      native_h * S2_h.v * 2 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      travel_h * S2_h.v * 2 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
+      native_h * S2_h.v * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
+      travel_h * S2_h.v * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
+      native_l * S2_l.v * beta_l * 2  * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
+      travel_l * S2_l.v * beta_h * 2 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      native_l * S2_l.v * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
+      travel_l * S2_l.v * beta_h * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l)  
+    secondary_vac_tot.ncases <- sum(secondary_vac_tot.ncases) * ninf[2]
+    
+    secondary_vac_cases.l <- 
+      native_l * S2_l.v * beta_l * 2  * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
+      travel_l * S2_l.v * beta_h * 2 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      native_l * S2_l.v * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
+      travel_l * S2_l.v * beta_h * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l)  
+    secondary_vac_cases.l <- sum(secondary_vac_cases.l) * inf[2]
+    
+    secondary_vac_ncases.l <- 
+      native_l * S2_l.v * beta_l * 2  * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
+      travel_l * S2_l.v * beta_h * 2 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      native_l * S2_l.v * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
+      travel_l * S2_l.v * beta_h * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l)  
+    secondary_vac_ncases.l <- sum(secondary_vac_ncases.l) * ninf[2]
+    
+    secondary_vac_cases.h <- 
+      native_h * S2_h.v * 2 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      travel_h * S2_h.v * 2 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
+      native_h * S2_h.v * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
+      travel_h * S2_h.v * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h)
+    secondary_vac_cases.h <- sum(secondary_vac_cases.h) * inf[2]
+    
+    secondary_vac_ncases.h <- 
+      native_h * S2_h.v * 2 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      travel_h * S2_h.v * 2 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
+      native_h * S2_h.v * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
+      travel_h * S2_h.v * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h)
+    secondary_vac_ncases.h <- sum(secondary_vac_ncases.h) * ninf[2]}
   
   #nonvaccinated case incidence
-{  secondary_tot.cases <-
-    native_h * S2_h * 2 * 0.75 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    travel_h * S2_h * 2 * 0.75 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
-    native_h * S2_h * 0.75 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
-    travel_h * S2_h * 0.75 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
-    native_l * S2_l * beta_l * 2 * 0.75 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
-    travel_l * S2_l * beta_h * 2 *  0.75 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    native_l * S2_l * beta_l * 0.75 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
-    travel_l * S2_l * beta_h * 0.75 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l)
-  secondary_tot.cases <- sum(secondary_tot.cases) * inf[2]
-  
-  secondary_tot.ncases <-
-    native_h * S2_h * 2 * 0.75 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    travel_h * S2_h * 2 * 0.75 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
-    native_h * S2_h * 0.75 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
-    travel_h * S2_h * 0.75 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
-    native_l * S2_l * beta_l * 2 * 0.75 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
-    travel_l * S2_l * beta_h * 2 *  0.75 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    native_l * S2_l * beta_l * 0.75 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
-    travel_l * S2_l * beta_h * 0.75 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) 
-  secondary_tot.ncases <- sum(secondary_tot.ncases) * ninf[2]
-  
-  secondary_cases.l <-
-    travel_l * S2_l * beta_h * 2 *  0.75 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    travel_l * S2_l * beta_h * 0.75 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l)
-    native_l * S2_l * beta_l * 2 * 0.75 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
-    native_l * S2_l * beta_l * 0.75 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) 
-  secondary_cases.l <- sum(secondary_cases.l) * inf[2]
-  
-  secondary_ncases.l <-
-    travel_l * S2_l * beta_h * 2 *  0.75 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    travel_l * S2_l * beta_h * 0.75 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l)
-    native_l * S2_l * beta_l * 2 * 0.75 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
-    native_l * S2_l * beta_l * 0.75 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) 
-  secondary_ncases.l <- sum(secondary_ncases.l) * ninf[2]
-  
-  secondary_cases.h <-
-    native_h * S2_h * 2 * 0.75 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    native_h * S2_h * 0.75 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
-    travel_h * S2_h * 2 * 0.75 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
-    travel_h * S2_h * 0.75 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) 
-  secondary_cases.h <- sum(secondary_cases.h) * inf[2]
-  
-  secondary_ncases.h <-
-    native_h * S2_h * 2 * 0.75 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    native_h * S2_h * 0.75 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
-    travel_h * S2_h * 2 * 0.75 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
-    travel_h * S2_h * 0.75 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) 
-  secondary_ncases.h <- sum(secondary_ncases.h) * ninf[2]}
+  {  secondary_tot.cases <-
+      native_h * S2_h * 2 * 0.75 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      travel_h * S2_h * 2 * 0.75 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
+      native_h * S2_h * 0.75 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
+      travel_h * S2_h * 0.75 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
+      native_l * S2_l * beta_l * 2 * 0.75 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
+      travel_l * S2_l * beta_h * 2 *  0.75 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      native_l * S2_l * beta_l * 0.75 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
+      travel_l * S2_l * beta_h * 0.75 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l)
+    secondary_tot.cases <- sum(secondary_tot.cases) * inf[2]
+    
+    secondary_tot.ncases <-
+      native_h * S2_h * 2 * 0.75 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      travel_h * S2_h * 2 * 0.75 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
+      native_h * S2_h * 0.75 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
+      travel_h * S2_h * 0.75 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
+      native_l * S2_l * beta_l * 2 * 0.75 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
+      travel_l * S2_l * beta_h * 2 *  0.75 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      native_l * S2_l * beta_l * 0.75 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
+      travel_l * S2_l * beta_h * 0.75 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) 
+    secondary_tot.ncases <- sum(secondary_tot.ncases) * ninf[2]
+    
+    secondary_cases.l <-
+      travel_l * S2_l * beta_h * 2 *  0.75 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      travel_l * S2_l * beta_h * 0.75 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) +
+      native_l * S2_l * beta_l * 2 * 0.75 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
+      native_l * S2_l * beta_l * 0.75 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) 
+    secondary_cases.l <- sum(secondary_cases.l) * inf[2]
+    
+    secondary_ncases.l <-
+      travel_l * S2_l * beta_h * 2 *  0.75 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      travel_l * S2_l * beta_h * 0.75 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) +
+      native_l * S2_l * beta_l * 2 * 0.75 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
+      native_l * S2_l * beta_l * 0.75 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) 
+    secondary_ncases.l <- sum(secondary_ncases.l) * ninf[2]
+    
+    secondary_cases.h <-
+      native_h * S2_h * 2 * 0.75 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      native_h * S2_h * 0.75 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
+      travel_h * S2_h * 2 * 0.75 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
+      travel_h * S2_h * 0.75 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) 
+    secondary_cases.h <- sum(secondary_cases.h) * inf[2]
+    
+    secondary_ncases.h <-
+      native_h * S2_h * 2 * 0.75 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      native_h * S2_h * 0.75 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
+      travel_h * S2_h * 2 * 0.75 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
+      travel_h * S2_h * 0.75 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) 
+    secondary_ncases.h <- sum(secondary_ncases.h) * ninf[2]}
   
   
   tertiary <-
@@ -1188,354 +1188,354 @@ model <- function(t, y, parms){
   
   
   ##post sec vaccinated case incidence
- { postsec_vac_tot.cases <- 
-     native_h * S3_h * 2 * 0.5 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
-     travel_h * S3_h * 2 * 0.5 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
-     native_h * S3_h * 0.5 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
-     travel_h * S3_h * 0.5 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
-     native_h * S3_h.v * 2 * 0.75 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
-     travel_h * S3_h.v * 2 * 0.75 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
-     native_h * S3_h.v * 0.75 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
-     travel_h * S3_h.v * 0.75 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
-     native_h * S4_h * 2 * 0.25 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
-     travel_h * S4_h * 2 * 0.25 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
-     native_h * S4_h * 0.25 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
-     travel_h * S4_h * 0.25 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
-     native_h * S4_h.v * 2 * 0.5 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
-     travel_h * S4_h.v * 2 * 0.5 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
-     native_h * S4_h.v * 0.5 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
-     travel_h * S4_h.v * 0.5 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
-     native_l * S3_l * beta_l * 2 * 0.5 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
-     travel_l * S3_l * beta_h * 2 *  0.5 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
-     native_l * S3_l * beta_l * 0.5 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
-     travel_l * S3_l * beta_h * 0.5 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) +
-     native_l * S3_l.v * beta_l * 2 * 0.75 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
-     travel_l * S3_l.v * beta_h * 2 *  0.75 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
-     native_l * S3_l.v * beta_l * 0.75 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
-     travel_l * S3_l.v * beta_h * 0.75 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) +
-     native_l * S4_l * beta_l * 2 * 0.25 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
-     travel_l * S4_l * beta_h * 2 *  0.25 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
-     native_l * S4_l * beta_l * 0.25 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
-     travel_l * S4_l * beta_h * 0.25 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) +
-     native_l * S4_l.v * beta_l * 2 * 0.5 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
-     travel_l * S4_l.v * beta_h * 2 *  0.5 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
-     native_l * S4_l.v * beta_l * 0.5 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
-     travel_l * S4_l.v * beta_h * 0.5 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) 
-  postsec_vac_tot.cases <- sum(postsec_vac_tot.cases) * inf[3]
-  
-  postsec_vac_tot.ncases <- 
-    native_h * S3_h.v * 2 * 0.75 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    travel_h * S3_h.v * 2 * 0.75 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
-    native_h * S3_h.v * 0.75 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
-    travel_h * S3_h.v * 0.75 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
-    native_h * S4_h.v * 2 * 0.5 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    travel_h * S4_h.v * 2 * 0.5 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
-    native_h * S4_h.v * 0.5 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
-    travel_h * S4_h.v * 0.5 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
-    native_l * S3_l.v * beta_l * 2 * 0.75 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
-    travel_l * S3_l.v * beta_h * 2 *  0.75 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    native_l * S3_l.v * beta_l * 0.75 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
-    travel_l * S3_l.v * beta_h * 0.75 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) +
-    native_l * S4_l.v * beta_l * 2 * 0.5 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
-    travel_l * S4_l.v * beta_h * 2 *  0.5 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    native_l * S4_l.v * beta_l * 0.5 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
-    travel_l * S4_l.v * beta_h * 0.5 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) 
-  postsec_vac_tot.ncases <- sum(postsec_vac_tot.ncases) * ninf[3]
-  
-  postsec_vac_cases.l <- 
-    travel_l * S3_l.v * beta_h * 2 *  0.75 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    travel_l * S3_l.v * beta_h * 0.75 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) +
-    travel_l * S4_l.v * beta_h * 2 *  0.5 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    travel_l * S4_l.v * beta_h * 0.5 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) +
-    native_l * S3_l.v * beta_l * 2 * 0.75 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
-    native_l * S3_l.v * beta_l * 0.75 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
-    native_l * S4_l.v * beta_l * 2 * 0.5 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
-    native_l * S4_l.v * beta_l * 0.5 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h)
-  postsec_vac_cases.l <- sum(postsec_vac_cases.l) * inf[3]
-  
-  postsec_vac_ncases.l <- 
-    travel_l * S3_l.v * beta_h * 2 *  0.75 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    travel_l * S3_l.v * beta_h * 0.75 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) +
-    travel_l * S4_l.v * beta_h * 2 *  0.5 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    travel_l * S4_l.v * beta_h * 0.5 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) +
-    native_l * S3_l.v * beta_l * 2 * 0.75 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
-    native_l * S3_l.v * beta_l * 0.75 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
-    native_l * S4_l.v * beta_l * 2 * 0.5 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
-    native_l * S4_l.v * beta_l * 0.5 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) 
-  postsec_vac_ncases.l <- sum(postsec_vac_ncases.l) * ninf[3]
-  
-  postsec_vac_cases.h <- 
-    native_h * S3_h.v * 2 * 0.75 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    native_h * S3_h.v * 0.75 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
-    native_h * S4_h.v * 2 * 0.5 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    native_h * S4_h.v * 0.5 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
-    travel_h * S3_h.v * 2 * 0.75 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
-    travel_h * S3_h.v * 0.75 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
-    travel_h * S4_h.v * 2 * 0.5 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
-    travel_h * S4_h.v * 0.5 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) 
-  postsec_vac_cases.h <- sum(postsec_vac_cases.h) * inf[3]
-  
-  postsec_vac_ncases.h <- 
-    native_h * S3_h.v * 2 * 0.75 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    native_h * S3_h.v * 0.75 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
-    native_h * S4_h.v * 2 * 0.5 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    native_h * S4_h.v * 0.5 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
-    travel_h * S3_h.v * 2 * 0.75 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
-    travel_h * S3_h.v * 0.75 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
-    travel_h * S4_h.v * 2 * 0.5 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
-    travel_h * S4_h.v * 0.5 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) 
-  postsec_vac_ncases.h <- sum(postsec_vac_ncases.h) * ninf[3]}
+  { postsec_vac_tot.cases <- 
+      native_h * S3_h * 2 * 0.5 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      travel_h * S3_h * 2 * 0.5 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
+      native_h * S3_h * 0.5 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
+      travel_h * S3_h * 0.5 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
+      native_h * S3_h.v * 2 * 0.75 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      travel_h * S3_h.v * 2 * 0.75 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
+      native_h * S3_h.v * 0.75 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
+      travel_h * S3_h.v * 0.75 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
+      native_h * S4_h * 2 * 0.25 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      travel_h * S4_h * 2 * 0.25 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
+      native_h * S4_h * 0.25 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
+      travel_h * S4_h * 0.25 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
+      native_h * S4_h.v * 2 * 0.5 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      travel_h * S4_h.v * 2 * 0.5 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
+      native_h * S4_h.v * 0.5 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
+      travel_h * S4_h.v * 0.5 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
+      native_l * S3_l * beta_l * 2 * 0.5 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
+      travel_l * S3_l * beta_h * 2 *  0.5 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      native_l * S3_l * beta_l * 0.5 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
+      travel_l * S3_l * beta_h * 0.5 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) +
+      native_l * S3_l.v * beta_l * 2 * 0.75 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
+      travel_l * S3_l.v * beta_h * 2 *  0.75 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      native_l * S3_l.v * beta_l * 0.75 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
+      travel_l * S3_l.v * beta_h * 0.75 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) +
+      native_l * S4_l * beta_l * 2 * 0.25 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
+      travel_l * S4_l * beta_h * 2 *  0.25 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      native_l * S4_l * beta_l * 0.25 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
+      travel_l * S4_l * beta_h * 0.25 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) +
+      native_l * S4_l.v * beta_l * 2 * 0.5 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
+      travel_l * S4_l.v * beta_h * 2 *  0.5 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      native_l * S4_l.v * beta_l * 0.5 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
+      travel_l * S4_l.v * beta_h * 0.5 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) 
+    postsec_vac_tot.cases <- sum(postsec_vac_tot.cases) * inf[3]
+    
+    postsec_vac_tot.ncases <- 
+      native_h * S3_h.v * 2 * 0.75 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      travel_h * S3_h.v * 2 * 0.75 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
+      native_h * S3_h.v * 0.75 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
+      travel_h * S3_h.v * 0.75 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
+      native_h * S4_h.v * 2 * 0.5 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      travel_h * S4_h.v * 2 * 0.5 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
+      native_h * S4_h.v * 0.5 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
+      travel_h * S4_h.v * 0.5 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
+      native_l * S3_l.v * beta_l * 2 * 0.75 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
+      travel_l * S3_l.v * beta_h * 2 *  0.75 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      native_l * S3_l.v * beta_l * 0.75 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
+      travel_l * S3_l.v * beta_h * 0.75 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) +
+      native_l * S4_l.v * beta_l * 2 * 0.5 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
+      travel_l * S4_l.v * beta_h * 2 *  0.5 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      native_l * S4_l.v * beta_l * 0.5 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
+      travel_l * S4_l.v * beta_h * 0.5 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) 
+    postsec_vac_tot.ncases <- sum(postsec_vac_tot.ncases) * ninf[3]
+    
+    postsec_vac_cases.l <- 
+      travel_l * S3_l.v * beta_h * 2 *  0.75 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      travel_l * S3_l.v * beta_h * 0.75 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) +
+      travel_l * S4_l.v * beta_h * 2 *  0.5 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      travel_l * S4_l.v * beta_h * 0.5 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) +
+      native_l * S3_l.v * beta_l * 2 * 0.75 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
+      native_l * S3_l.v * beta_l * 0.75 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
+      native_l * S4_l.v * beta_l * 2 * 0.5 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
+      native_l * S4_l.v * beta_l * 0.5 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h)
+    postsec_vac_cases.l <- sum(postsec_vac_cases.l) * inf[3]
+    
+    postsec_vac_ncases.l <- 
+      travel_l * S3_l.v * beta_h * 2 *  0.75 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      travel_l * S3_l.v * beta_h * 0.75 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) +
+      travel_l * S4_l.v * beta_h * 2 *  0.5 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      travel_l * S4_l.v * beta_h * 0.5 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) +
+      native_l * S3_l.v * beta_l * 2 * 0.75 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
+      native_l * S3_l.v * beta_l * 0.75 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
+      native_l * S4_l.v * beta_l * 2 * 0.5 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
+      native_l * S4_l.v * beta_l * 0.5 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) 
+    postsec_vac_ncases.l <- sum(postsec_vac_ncases.l) * ninf[3]
+    
+    postsec_vac_cases.h <- 
+      native_h * S3_h.v * 2 * 0.75 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      native_h * S3_h.v * 0.75 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
+      native_h * S4_h.v * 2 * 0.5 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      native_h * S4_h.v * 0.5 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
+      travel_h * S3_h.v * 2 * 0.75 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
+      travel_h * S3_h.v * 0.75 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
+      travel_h * S4_h.v * 2 * 0.5 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
+      travel_h * S4_h.v * 0.5 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) 
+    postsec_vac_cases.h <- sum(postsec_vac_cases.h) * inf[3]
+    
+    postsec_vac_ncases.h <- 
+      native_h * S3_h.v * 2 * 0.75 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      native_h * S3_h.v * 0.75 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
+      native_h * S4_h.v * 2 * 0.5 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      native_h * S4_h.v * 0.5 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
+      travel_h * S3_h.v * 2 * 0.75 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
+      travel_h * S3_h.v * 0.75 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
+      travel_h * S4_h.v * 2 * 0.5 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
+      travel_h * S4_h.v * 0.5 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) 
+    postsec_vac_ncases.h <- sum(postsec_vac_ncases.h) * ninf[3]}
   
   ##post sec nonvaccinated case incidence
-{  postsec_tot_cases <- 
-    native_h * S3_h * 2 * 0.5 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    travel_h * S3_h * 2 * 0.5 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
-    native_h * S3_h * 0.5 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
-    travel_h * S3_h * 0.5 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
-    native_h * S4_h * 2 * 0.25 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    travel_h * S4_h * 2 * 0.25 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
-    native_h * S4_h * 0.25 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
-    travel_h * S4_h * 0.25 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
-    native_l * S3_l * beta_l * 2 * 0.5 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
-    travel_l * S3_l * beta_h * 2 *  0.5 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    native_l * S3_l * beta_l * 0.5 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
-    travel_l * S3_l * beta_h * 0.5 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) +
-    native_l * S4_l * beta_l * 2 * 0.25 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
-    travel_l * S4_l * beta_h * 2 *  0.25 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    native_l * S4_l * beta_l * 0.25 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
-    travel_l * S4_l * beta_h * 0.25 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) 
-  postsec_tot_cases <- sum(postsec_tot_cases) * inf[3]
-  
-  postsec_tot_ncases <- 
-    native_h * S3_h * 2 * 0.5 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    travel_h * S3_h * 2 * 0.5 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
-    native_h * S3_h * 0.5 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
-    travel_h * S3_h * 0.5 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
-    native_h * S4_h * 2 * 0.25 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    travel_h * S4_h * 2 * 0.25 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
-    native_h * S4_h * 0.25 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
-    travel_h * S4_h * 0.25 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
-    native_l * S3_l * beta_l * 2 * 0.5 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
-    travel_l * S3_l * beta_h * 2 *  0.5 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    native_l * S3_l * beta_l * 0.5 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
-    travel_l * S3_l * beta_h * 0.5 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) +
-    native_l * S4_l * beta_l * 2 * 0.25 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
-    travel_l * S4_l * beta_h * 2 *  0.25 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    native_l * S4_l * beta_l * 0.25 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
-    travel_l * S4_l * beta_h * 0.25 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) 
-  postsec_tot_ncases <- sum(postsec_tot_ncases) * ninf[3]
-  
-  postsec_cases.l <- 
-    travel_l * S3_l * beta_h * 2 *  0.5 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    travel_l * S3_l * beta_h * 0.5 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) +
-    travel_l * S4_l * beta_h * 2 *  0.25 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    travel_l * S4_l * beta_h * 0.25 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) +
-    native_l * S3_l * beta_l * 2 * 0.5 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
-    native_l * S3_l * beta_l * 0.5 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
-    native_l * S4_l * beta_l * 2 * 0.25 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
-    native_l * S4_l * beta_l * 0.25 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) 
-  postsec_cases.l <- sum(postsec_cases.l) * inf[3]
-  
-  postsec_ncases.l <- 
-    travel_l * S3_l * beta_h * 2 *  0.5 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    travel_l * S3_l * beta_h * 0.5 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) +
-    travel_l * S4_l * beta_h * 2 *  0.25 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    travel_l * S4_l * beta_h * 0.25 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) +
-    native_l * S3_l * beta_l * 2 * 0.5 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
-    native_l * S3_l * beta_l * 0.5 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
-    native_l * S4_l * beta_l * 2 * 0.25 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
-    native_l * S4_l * beta_l * 0.25 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) 
-  postsec_ncases.l <- sum(postsec_ncases.l) * ninf[3]
-  
-  postsec_cases.h <- 
-    native_h * S3_h * 2 * 0.5 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    native_h * S3_h * 0.5 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
-    native_h * S4_h * 2 * 0.25 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    native_h * S4_h * 0.25 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
-    travel_h * S3_h * 2 * 0.5 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
-    travel_h * S3_h * 0.5 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
-    travel_h * S4_h * 2 * 0.25 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
-    travel_h * S4_h * 0.25 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) 
-  postsec_cases.h <- sum(postsec_cases.h) * inf[3]
-  
-  postsec_ncases.h <- 
-    native_h * S3_h * 2 * 0.5 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    native_h * S3_h * 0.5 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
-    native_h * S4_h * 2 * 0.25 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    native_h * S4_h * 0.25 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
-    travel_h * S3_h * 2 * 0.5 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
-    travel_h * S3_h * 0.5 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
-    travel_h * S4_h * 2 * 0.25 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
-    travel_h * S4_h * 0.25 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) 
-  postsec_ncases.h <- sum(postsec_ncases.h) * ninf[3]
-  
-}
-{  
-  quaternary <-
-    native_h * S4_h * 2 * 0.25 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    travel_h * S4_h * 2 * 0.25 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
-    native_h * S4_h * 0.25 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
-    travel_h * S4_h * 0.25 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
-    native_h * S4_h.v * 2 * 0.5 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    travel_h * S4_h.v * 2 * 0.5 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
-    native_h * S4_h.v * 0.5 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
-    travel_h * S4_h.v * 0.5 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
-    native_l * S4_l * beta_l * 2 * 0.25 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
-    travel_l * S4_l * beta_h * 2 *  0.25 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    native_l * S4_l * beta_l * 0.25 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
-    travel_l * S4_l * beta_h * 0.25 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) +
-    native_l * S4_l.v * beta_l * 2 * 0.5 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
-    travel_l * S4_l.v * beta_h * 2 *  0.5 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    native_l * S4_l.v * beta_l * 0.5 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
-    travel_l * S4_l.v * beta_h * 0.5 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) 
-  quaternary <- sum(quaternary) * inf[3]
-  
-  cases <- primary + secondary + tertiary + quaternary
-  post_sec <- tertiary + quaternary
-  post_sec_inf <- post_sec / inf[3]
-  
-  primary.h <- 
-    travel_h * S1_h * 2 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
-    travel_h * S1_h * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
-    native_h * S1_h * 2 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    native_h * S1_h * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) 
-  primary.h <- sum(primary.h) * inf[1]
-  
-  secondary.h <- 
-    native_h * S2_h * 2 * 0.75 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    native_h * S2_h * 0.75 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
-    native_h * S2_h.v * 2 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    native_h * S2_h.v * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
-    travel_h * S2_h * 2 * 0.75 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
-    travel_h * S2_h * 0.75 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
-    travel_h * S2_h.v * 2 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
-    travel_h * S2_h.v * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) 
-   
-  secondary.h <- sum(secondary.h) * inf[2]
-  
-  post_sec.h <- 
-    native_h * S3_h.v * 2 * 0.75 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    native_h * S3_h.v * 0.75 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
-    native_h * S4_h.v * 2 * 0.5 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    native_h * S4_h.v * 0.5 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
-    native_h * S3_h * 2 * 0.5 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    native_h * S3_h * 0.5 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
-    native_h * S4_h * 2 * 0.25 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    native_h * S4_h * 0.25 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
-    travel_h * S3_h * 2 * 0.5 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
-    travel_h * S3_h * 0.5 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
-    travel_h * S3_h.v * 2 * 0.75 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
-    travel_h * S3_h.v * 0.75 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
-    travel_h * S4_h * 2 * 0.25 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
+  {  postsec_tot_cases <- 
+      native_h * S3_h * 2 * 0.5 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      travel_h * S3_h * 2 * 0.5 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
+      native_h * S3_h * 0.5 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
+      travel_h * S3_h * 0.5 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
+      native_h * S4_h * 2 * 0.25 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      travel_h * S4_h * 2 * 0.25 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
+      native_h * S4_h * 0.25 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
+      travel_h * S4_h * 0.25 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
+      native_l * S3_l * beta_l * 2 * 0.5 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
+      travel_l * S3_l * beta_h * 2 *  0.5 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      native_l * S3_l * beta_l * 0.5 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
+      travel_l * S3_l * beta_h * 0.5 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) +
+      native_l * S4_l * beta_l * 2 * 0.25 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
+      travel_l * S4_l * beta_h * 2 *  0.25 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      native_l * S4_l * beta_l * 0.25 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
+      travel_l * S4_l * beta_h * 0.25 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) 
+    postsec_tot_cases <- sum(postsec_tot_cases) * inf[3]
+    
+    postsec_tot_ncases <- 
+      native_h * S3_h * 2 * 0.5 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      travel_h * S3_h * 2 * 0.5 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
+      native_h * S3_h * 0.5 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
+      travel_h * S3_h * 0.5 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
+      native_h * S4_h * 2 * 0.25 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      travel_h * S4_h * 2 * 0.25 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
+      native_h * S4_h * 0.25 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
+      travel_h * S4_h * 0.25 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
+      native_l * S3_l * beta_l * 2 * 0.5 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
+      travel_l * S3_l * beta_h * 2 *  0.5 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      native_l * S3_l * beta_l * 0.5 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
+      travel_l * S3_l * beta_h * 0.5 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) +
+      native_l * S4_l * beta_l * 2 * 0.25 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
+      travel_l * S4_l * beta_h * 2 *  0.25 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      native_l * S4_l * beta_l * 0.25 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
+      travel_l * S4_l * beta_h * 0.25 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) 
+    postsec_tot_ncases <- sum(postsec_tot_ncases) * ninf[3]
+    
+    postsec_cases.l <- 
+      travel_l * S3_l * beta_h * 2 *  0.5 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      travel_l * S3_l * beta_h * 0.5 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) +
+      travel_l * S4_l * beta_h * 2 *  0.25 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      travel_l * S4_l * beta_h * 0.25 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) +
+      native_l * S3_l * beta_l * 2 * 0.5 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
+      native_l * S3_l * beta_l * 0.5 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
+      native_l * S4_l * beta_l * 2 * 0.25 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
+      native_l * S4_l * beta_l * 0.25 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) 
+    postsec_cases.l <- sum(postsec_cases.l) * inf[3]
+    
+    postsec_ncases.l <- 
+      travel_l * S3_l * beta_h * 2 *  0.5 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      travel_l * S3_l * beta_h * 0.5 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) +
+      travel_l * S4_l * beta_h * 2 *  0.25 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      travel_l * S4_l * beta_h * 0.25 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) +
+      native_l * S3_l * beta_l * 2 * 0.5 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
+      native_l * S3_l * beta_l * 0.5 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
+      native_l * S4_l * beta_l * 2 * 0.25 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
+      native_l * S4_l * beta_l * 0.25 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) 
+    postsec_ncases.l <- sum(postsec_ncases.l) * ninf[3]
+    
+    postsec_cases.h <- 
+      native_h * S3_h * 2 * 0.5 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      native_h * S3_h * 0.5 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
+      native_h * S4_h * 2 * 0.25 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      native_h * S4_h * 0.25 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
+      travel_h * S3_h * 2 * 0.5 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
+      travel_h * S3_h * 0.5 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
+      travel_h * S4_h * 2 * 0.25 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
+      travel_h * S4_h * 0.25 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) 
+    postsec_cases.h <- sum(postsec_cases.h) * inf[3]
+    
+    postsec_ncases.h <- 
+      native_h * S3_h * 2 * 0.5 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      native_h * S3_h * 0.5 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
+      native_h * S4_h * 2 * 0.25 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      native_h * S4_h * 0.25 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
+      travel_h * S3_h * 2 * 0.5 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
+      travel_h * S3_h * 0.5 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
+      travel_h * S4_h * 2 * 0.25 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
+      travel_h * S4_h * 0.25 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) 
+    postsec_ncases.h <- sum(postsec_ncases.h) * ninf[3]
+    
+  }
+  {  
+    quaternary <-
+      native_h * S4_h * 2 * 0.25 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      travel_h * S4_h * 2 * 0.25 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
+      native_h * S4_h * 0.25 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
+      travel_h * S4_h * 0.25 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
+      native_h * S4_h.v * 2 * 0.5 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      travel_h * S4_h.v * 2 * 0.5 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
+      native_h * S4_h.v * 0.5 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
+      travel_h * S4_h.v * 0.5 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
+      native_l * S4_l * beta_l * 2 * 0.25 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
+      travel_l * S4_l * beta_h * 2 *  0.25 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      native_l * S4_l * beta_l * 0.25 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
+      travel_l * S4_l * beta_h * 0.25 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) +
+      native_l * S4_l.v * beta_l * 2 * 0.5 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
+      travel_l * S4_l.v * beta_h * 2 *  0.5 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      native_l * S4_l.v * beta_l * 0.5 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
+      travel_l * S4_l.v * beta_h * 0.5 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) 
+    quaternary <- sum(quaternary) * inf[3]
+    
+    cases <- primary + secondary + tertiary + quaternary
+    post_sec <- tertiary + quaternary
+    post_sec_inf <- post_sec / inf[3]
+    
+    primary.h <- 
+      travel_h * S1_h * 2 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
+      travel_h * S1_h * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
+      native_h * S1_h * 2 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      native_h * S1_h * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) 
+    primary.h <- sum(primary.h) * inf[1]
+    
+    secondary.h <- 
+      native_h * S2_h * 2 * 0.75 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      native_h * S2_h * 0.75 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
+      native_h * S2_h.v * 2 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      native_h * S2_h.v * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
+      travel_h * S2_h * 2 * 0.75 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
+      travel_h * S2_h * 0.75 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
+      travel_h * S2_h.v * 2 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
+      travel_h * S2_h.v * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) 
+    
+    secondary.h <- sum(secondary.h) * inf[2]
+    
+    post_sec.h <- 
+      native_h * S3_h.v * 2 * 0.75 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      native_h * S3_h.v * 0.75 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
+      native_h * S4_h.v * 2 * 0.5 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      native_h * S4_h.v * 0.5 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
+      native_h * S3_h * 2 * 0.5 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      native_h * S3_h * 0.5 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
+      native_h * S4_h * 2 * 0.25 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      native_h * S4_h * 0.25 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
+      travel_h * S3_h * 2 * 0.5 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
+      travel_h * S3_h * 0.5 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
+      travel_h * S3_h.v * 2 * 0.75 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
+      travel_h * S3_h.v * 0.75 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
+      travel_h * S4_h * 2 * 0.25 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
       travel_h * S4_h * 0.25 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
       travel_h * S4_h.v * 2 * 0.5 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
       travel_h * S4_h.v * 0.5 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) 
-  
-  post_sec.h <- sum(post_sec.h) * inf[3]
-  
-  cases.h <- primary.h + secondary.h + post_sec.h
-
-  primary.l <-
-    travel_l * S1_l * beta_h * (native_h * (inf_h)/ pop_h + travel_l * (inf_l) / pop_l) +
-    travel_l * S1_l * 2 * beta_h * (native_h * (sym_inf_h)/ pop_h + travel_l * (sym_inf_l) / pop_l) +
-    native_l * S1_l * 2 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +    
-    native_l * S1_l * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) 
-  primary.l <- sum(primary.l) * inf[1]
-  primary.l.inf <- primary.l / inf[1]
-  
-  secondary.l <-
-    travel_l * S2_l * beta_h * 2 *  0.75 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    travel_l * S2_l * beta_h * 0.75 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) +
-    travel_l * S2_l.v * beta_h * 2 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    travel_l * S2_l.v * beta_h * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) +
-    native_l * S2_l * beta_l * 2 * 0.75 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
-    native_l * S2_l * beta_l * 0.75 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
-    native_l * S2_l.v * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
-    native_l * S2_l.v * beta_l * 2  * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) 
-  secondary.l <- sum(secondary.l) * inf[2]
-  secondary.l.inf <- secondary.l / inf[2]
-  
-  tertiary.l <-
-    travel_l * S3_l * beta_h * 2 *  0.5 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    travel_l * S3_l * beta_h * 0.5 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) +
-    travel_l * S3_l.v * beta_h * 2 *  0.75 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    travel_l * S3_l.v * beta_h * 0.75 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) +
-    native_l * S3_l * beta_l * 2 * 0.5 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
-    native_l * S3_l * beta_l * 0.5 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
-    native_l * S3_l.v * beta_l * 2 * 0.75 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
-    native_l * S3_l.v * beta_l * 0.75 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) 
-  tertiary.l <- sum(tertiary.l) * inf[3]
-  
-  quaternary.l <-
-    travel_l * S4_l * beta_h * 2 *  0.25 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    travel_l * S4_l * beta_h * 0.25 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) + 
-    travel_l * S4_l.v * beta_h * 2 *  0.5 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
-    travel_l * S4_l.v * beta_h * 0.5 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) + 
-    native_l * S4_l * beta_l * 2 * 0.25 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
-    native_l * S4_l * beta_l * 0.25 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
-    native_l * S4_l.v * beta_l * 2 * 0.5 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
-    native_l * S4_l.v * beta_l * 0.5 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) 
-  quaternary.l <- sum(quaternary.l) * inf[3]
-  
-  cases.l <- primary.l + secondary.l  + tertiary.l + quaternary.l
-  post_sec.l <- tertiary.l + quaternary.l
-  post_sec.l.inf <- post_sec.l / inf[3]
-  }
-
     
+    post_sec.h <- sum(post_sec.h) * inf[3]
+    
+    cases.h <- primary.h + secondary.h + post_sec.h
+    
+    primary.l <-
+      travel_l * S1_l * beta_h * (native_h * (inf_h)/ pop_h + travel_l * (inf_l) / pop_l) +
+      travel_l * S1_l * 2 * beta_h * (native_h * (sym_inf_h)/ pop_h + travel_l * (sym_inf_l) / pop_l) +
+      native_l * S1_l * 2 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +    
+      native_l * S1_l * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) 
+    primary.l <- sum(primary.l) * inf[1]
+    primary.l.inf <- primary.l / inf[1]
+    
+    secondary.l <-
+      travel_l * S2_l * beta_h * 2 *  0.75 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      travel_l * S2_l * beta_h * 0.75 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) +
+      travel_l * S2_l.v * beta_h * 2 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      travel_l * S2_l.v * beta_h * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) +
+      native_l * S2_l * beta_l * 2 * 0.75 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
+      native_l * S2_l * beta_l * 0.75 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
+      native_l * S2_l.v * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
+      native_l * S2_l.v * beta_l * 2  * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) 
+    secondary.l <- sum(secondary.l) * inf[2]
+    secondary.l.inf <- secondary.l / inf[2]
+    
+    tertiary.l <-
+      travel_l * S3_l * beta_h * 2 *  0.5 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      travel_l * S3_l * beta_h * 0.5 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) +
+      travel_l * S3_l.v * beta_h * 2 *  0.75 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      travel_l * S3_l.v * beta_h * 0.75 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) +
+      native_l * S3_l * beta_l * 2 * 0.5 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
+      native_l * S3_l * beta_l * 0.5 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
+      native_l * S3_l.v * beta_l * 2 * 0.75 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
+      native_l * S3_l.v * beta_l * 0.75 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) 
+    tertiary.l <- sum(tertiary.l) * inf[3]
+    
+    quaternary.l <-
+      travel_l * S4_l * beta_h * 2 *  0.25 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      travel_l * S4_l * beta_h * 0.25 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) + 
+      travel_l * S4_l.v * beta_h * 2 *  0.5 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
+      travel_l * S4_l.v * beta_h * 0.5 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) + 
+      native_l * S4_l * beta_l * 2 * 0.25 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
+      native_l * S4_l * beta_l * 0.25 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
+      native_l * S4_l.v * beta_l * 2 * 0.5 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
+      native_l * S4_l.v * beta_l * 0.5 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) 
+    quaternary.l <- sum(quaternary.l) * inf[3]
+    
+    cases.l <- primary.l + secondary.l  + tertiary.l + quaternary.l
+    post_sec.l <- tertiary.l + quaternary.l
+    post_sec.l.inf <- post_sec.l / inf[3]
+  }
+  
+  
   
   list(c(
-         dS1_h, dI1_h, dR1_h,
-         dS2_h, dI2_h, dR2_h,
-         dS3_h, dI3_h, dR3_h,
-         dS4_h, dI4_h, dR4_h,
-         dR1_h.v,
-         dS2_h.v, dI2_h.v, dR2_h.v,
-         dS3_h.v, dI3_h.v, dR3_h.v,
-         dS4_h.v, dI4_h.v, dR4_h.v,
-         
-         dS1_l, dI1_l, dR1_l,
-         dS2_l, dI2_l, dR2_l,
-         dS3_l, dI3_l, dR3_l,
-         dS4_l, dI4_l, dR4_l,
-         dR1_l.v,
-         dS2_l.v, dI2_l.v, dR2_l.v,
-         dS3_l.v, dI3_l.v, dR3_l.v,
-         dS4_l.v, dI4_l.v, dR4_l.v,
-
-         I_secondary_vac, I_post_sec_vac,
-         I_l_sec_vac, I_l_post_sec_vac,
-         
-         primary_tot.cases, primary_tot.ncases, 
-         primary_cases.l, primary_ncases.l,
-         primary_cases.h, primary_ncases.h,
-         
-         secondary_vac_tot.cases, secondary_vac_tot.ncases,
-         secondary_vac_cases.l, secondary_vac_ncases.l,
-         secondary_vac_cases.h, secondary_vac_ncases.h,
-         secondary_tot.cases, secondary_tot.ncases,
-         secondary_cases.l, secondary_ncases.l,
-         secondary_cases.h, secondary_ncases.h,
-         
-         postsec_vac_tot.cases, postsec_vac_tot.ncases,
-         postsec_vac_cases.l, postsec_vac_ncases.l,
-         postsec_vac_cases.h, postsec_vac_ncases.h,
-         postsec_tot_cases, postsec_tot_ncases,
-         postsec_cases.l, postsec_ncases.l,
-         postsec_cases.h, postsec_ncases.h,
-         
-         cases.h,
-         
-         I_total, I_l, cases, cases.l,
-         I_primary_tot, I_secondary_tot, I_post_sec_tot,
-         I_l_primary_tot, I_l_sec_tot, I_l_post_sec_tot,
-         primary, secondary, post_sec,
-         primary.l, secondary.l, post_sec.l, 
-         primary_inf, secondary_inf, post_sec_inf, 
-         primary.l.inf, secondary.l.inf, post_sec.l.inf,
-         I_h
-         ))
-
+    dS1_h, dI1_h, dR1_h,
+    dS2_h, dI2_h, dR2_h,
+    dS3_h, dI3_h, dR3_h,
+    dS4_h, dI4_h, dR4_h,
+    dR1_h.v,
+    dS2_h.v, dI2_h.v, dR2_h.v,
+    dS3_h.v, dI3_h.v, dR3_h.v,
+    dS4_h.v, dI4_h.v, dR4_h.v,
+    
+    dS1_l, dI1_l, dR1_l,
+    dS2_l, dI2_l, dR2_l,
+    dS3_l, dI3_l, dR3_l,
+    dS4_l, dI4_l, dR4_l,
+    dR1_l.v,
+    dS2_l.v, dI2_l.v, dR2_l.v,
+    dS3_l.v, dI3_l.v, dR3_l.v,
+    dS4_l.v, dI4_l.v, dR4_l.v,
+    
+    I_secondary_vac, I_post_sec_vac,
+    I_l_sec_vac, I_l_post_sec_vac,
+    
+    primary_tot.cases, primary_tot.ncases, 
+    primary_cases.l, primary_ncases.l,
+    primary_cases.h, primary_ncases.h,
+    
+    secondary_vac_tot.cases, secondary_vac_tot.ncases,
+    secondary_vac_cases.l, secondary_vac_ncases.l,
+    secondary_vac_cases.h, secondary_vac_ncases.h,
+    secondary_tot.cases, secondary_tot.ncases,
+    secondary_cases.l, secondary_ncases.l,
+    secondary_cases.h, secondary_ncases.h,
+    
+    postsec_vac_tot.cases, postsec_vac_tot.ncases,
+    postsec_vac_cases.l, postsec_vac_ncases.l,
+    postsec_vac_cases.h, postsec_vac_ncases.h,
+    postsec_tot_cases, postsec_tot_ncases,
+    postsec_cases.l, postsec_ncases.l,
+    postsec_cases.h, postsec_ncases.h,
+    
+    cases.h,
+    
+    I_total, I_l, cases, cases.l,
+    I_primary_tot, I_secondary_tot, I_post_sec_tot,
+    I_l_primary_tot, I_l_sec_tot, I_l_post_sec_tot,
+    primary, secondary, post_sec,
+    primary.l, secondary.l, post_sec.l, 
+    primary_inf, secondary_inf, post_sec_inf, 
+    primary.l.inf, secondary.l.inf, post_sec.l.inf,
+    I_h
+  ))
+  
   
 }
 
@@ -1607,7 +1607,6 @@ years = 60
 years_vac = 60
 out.h <- ode(times = times, y = y_init, func = model, parms = parms.h)
 out_null.h <- ode(times = times, y = y_init, func = model, parms = parms_null.h)
-
 
 ##incidence calcs 
 
