@@ -28,16 +28,16 @@ input = as.numeric(args[1])
 # parms.mat <- parms.mat[-which(remove == TRUE), ]
 load('parms.mat.feb_14.RData')
 
-beta_l <- parms.mat[input,1]
-beta_h <- parms.mat[input,2]
-travel_l <- parms.mat[input,3]
-travel_h <- parms.mat[input,4]
+beta_l <- new.parms.mat[input,1]
+beta_h <- new.parms.mat[input,2]
+travel_l <- new.parms.mat[input,3]
+travel_h <- new.parms.mat[input,4]
 native_l <- 1 - travel_l
 native_h <- 1 - native_l
 
 
-vac_h <- parms.mat[input,5]
-vac_l <- parms.mat[input,6]
+vac_h <- new.parms.mat[input,5]
+vac_l <- new.parms.mat[input,6]
 
 
 load('pop_1950.RData')
