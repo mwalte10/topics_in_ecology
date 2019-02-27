@@ -159,7 +159,7 @@ parms_null.h <- list(beta_h = beta_h,
                      hopkins_inverse)
 
 
-years = 60
+years = 90
 years_vac = 60
 times <- seq(from = 0, to = 365 * years, by = .1)
 times <- times[1:(length(times) - 1)]
@@ -1604,7 +1604,7 @@ names(y_init) <- c(rep('sh1', 80), rep('ih1', 80), rep('rh1', 80),
                    'prim_inf', 'sec_inf', 'psec_inf',
                    'prim.l.inf', 'sec.l.inf', 'psec.l.inf',
                    'ih')
-years = 60
+years = 90
 years_vac = 60
 out.h <- ode(times = times, y = y_init, func = model, parms = parms.h)
 out_null.h <- ode(times = times, y = y_init, func = model, parms = parms_null.h)
