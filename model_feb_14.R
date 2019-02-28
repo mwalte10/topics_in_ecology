@@ -26,18 +26,20 @@ input = as.numeric(args[1])
 #   remove[i] <- beta_l[i] < beta_h[i]
 # }
 # parms.mat <- parms.mat[-which(remove == TRUE), ]
-load('parms.mat.feb_14.RData')
+#load('parms.mat.feb_14.RData')
+vac_h.vec <- seq(0, 1, length.out = 20)
+vac_l.vec <- rev(vac_h.vec)
 
-beta_l <- new.parms.mat[input,1]
-beta_h <- new.parms.mat[input,2]
-travel_l <- new.parms.mat[input,3]
-travel_h <- new.parms.mat[input,4]
+beta_l <- 0.1387755 
+beta_h <- 0.2612245 
+travel_l <- 0.025 
+travel_h <- 0.0025 
 native_l <- 1 - travel_l
 native_h <- 1 - native_l
 
 
-vac_h <- new.parms.mat[input,5]
-vac_l <- new.parms.mat[input,6]
+vac_h <- vac_h.vec[input]
+vac_l <- vac_l.vec[input]
 
 
 load('pop_1950.RData')
