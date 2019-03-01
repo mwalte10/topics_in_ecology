@@ -8,20 +8,31 @@ input = as.numeric(args[1])
 ##########################
 #IF DOING VAC COVERAGE
 ##########################
-vac_h.vec <- seq(0, 1, length.out = 20)
-vac_l.vec <- rev(vac_h.vec)
+# vac_h.vec <- seq(0, 1, length.out = 20)
+# vac_l.vec <- rev(vac_h.vec)
+# 
+# beta_l <- 0.1387755 
+# beta_h <- 0.2612245 
+# travel_l <- 0.025 
+# travel_h <- 0.0025 
+# native_l <- 1 - travel_l
+# native_h <- 1 - native_l
+# 
+# 
+# vac_h <- vac_h.vec[input]
+# vac_l <- vac_l.vec[input]
 
-beta_l <- 0.1387755 
-beta_h <- 0.2612245 
-travel_l <- 0.025 
-travel_h <- 0.0025 
+beta_vec <- rep(0.5, 3)
+beta_l <- beta_vec[input]
+beta_h <- 0.5
+travel_l <- 0.025
+travel_h <- 0.0025
 native_l <- 1 - travel_l
 native_h <- 1 - native_l
 
 
-vac_h <- vac_h.vec[input]
-vac_l <- vac_l.vec[input]
-
+vac_h <- 0.5
+vac_l <- 0.5
 
 load('pop_1950.RData')
 load('birth_1950.RData')
@@ -142,7 +153,7 @@ parms_null.h <- list(beta_h = beta_h,
                      hopkins_inverse)
 
 
-years = 60
+years = 90
 years_vac = 60
 times <- seq(from = 0, to = 365 * years, by = .1)
 times <- times[1:(length(times) - 1)]
@@ -1587,7 +1598,7 @@ names(y_init) <- c(rep('sh1', 80), rep('ih1', 80), rep('rh1', 80),
                    'prim_inf', 'sec_inf', 'psec_inf',
                    'prim.l.inf', 'sec.l.inf', 'psec.l.inf',
                    'ih')
-years = 60
+years = 90
 years_vac = 60
 out.h <- ode(times = times, y = y_init, func = model, parms = parms.h)
 out_null.h <- ode(times = times, y = y_init, func = model, parms = parms_null.h)
@@ -1724,7 +1735,7 @@ cases_averted.func <- function(out_mat, out_mat_null, timepoint_year){
   return(output)
 }
 #
-output.vec.h  <- cases_averted.func(out.h, out_null.h, 90)
+output.vec.h  <- cases_averted.func(out.h, out_null.h, years)
 
 save(output.vec.h, file = paste('output_alttrav_', input, '.RData', sep = ''))
 
