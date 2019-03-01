@@ -119,8 +119,8 @@ parms.h <- list(beta_h = beta_h,
                 travel_l = travel_l,
                 vac_h = vac_h,
                 vac_l = vac_l,
-                sens = 0.85,
-                spec = 0.95,
+                sens = 1,
+                spec = 0,
                 hopkins,
                 hopkins_inverse)
 parms_null.h <- list(beta_h = beta_h,
@@ -136,8 +136,8 @@ parms_null.h <- list(beta_h = beta_h,
                      travel_l = travel_l,
                      vac_h = 0,
                      vac_l = 0,
-                     sens = 0.85,
-                     spec = 0.95,
+                     sens = 1,
+                     spec = 0,
                      hopkins,
                      hopkins_inverse)
 
@@ -1726,9 +1726,5 @@ cases_averted.func <- function(out_mat, out_mat_null, timepoint_year){
 #
 output.vec.h  <- cases_averted.func(out.h, out_null.h, 90)
 
-save(output.vec.h, file = paste('output_alttrav_', input, '.RData', sep = ''))
+save(output.vec.h, file = paste('output_alttrav_notest_', input, '.RData', sep = ''))
 
-test <-  sum(diff(out_mat[indexing,which(colnames(out_mat) == 'prim_cases.l')]),
-             diff(out_mat[indexing,which(colnames(out_mat) == 'sec_cases.l')]),
-             diff(out_mat[indexing,which(colnames(out_mat) == 'psec_cases.l')]))
-save(test, file = paste('test_', input, '.RData', sep = ''))
