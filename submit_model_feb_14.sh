@@ -1,7 +1,7 @@
 #!/bin/csh
 
 #$ -N feb_14_
-#$ -t 1
+#$ -t 1-465
 
 module load bio/R/3.4.0
 
