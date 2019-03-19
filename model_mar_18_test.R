@@ -2273,7 +2273,7 @@ FOI_l <- sum(out.h[indexing,which(colnames(out.h) == 'FOI_l')]) / (3650 * (years
 FOI_h.novac <- sum(out_null.h[indexing,which(colnames(out_null.h) == 'FOI_h')]) / (3650 * (years - years_vac))
 FOI_l.novac <- sum(out_null.h[indexing,which(colnames(out_null.h) == 'FOI_l')]) / (3650 * (years - years_vac))
 FOI_output <- c(FOI_h, FOI_l, FOI_h.novac, FOI_l.novac)
-save(FOI_output, file = paste('FOI_output_', i, '.RData'))
+save(FOI_output, file = paste('FOI_output_', input, '.RData'))
 
 
 
