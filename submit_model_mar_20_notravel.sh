@@ -1,6 +1,6 @@
 #!/bin/csh
 
-#$ -N mar_20_notravel_
+#$ -N mar_20_notrav_
 #$ -t 1-20
 
 module load bio/R/3.4.0
