@@ -10,7 +10,7 @@ input = as.numeric(args[1])
 #IF DOING VAC COVERAGE
 ##########################
 load("parms.mat.dec_16.RData")
-parse <- which(new.parms.mat[,3] == seq(0, 0.05, length.out = 20)[1])
+parse <- which(new.parms.mat[,3] == seq(0, 0.05, length.out = 20)[11])
 new.parms.mat <- new.parms.mat[parse,]
 
 beta_h <- new.parms.mat[input,1]
@@ -1984,100 +1984,85 @@ model <- function(t, y, parms){
          travel * 2 * beta_h * (native * (sym_inf_h)/ pop_h + travel * (sym_inf_l) / pop_l) +
          native * beta_l * (native * (inf_l) / pop_l + travel * (inf_h) / pop_h) +
          travel * beta_h * (native * (inf_h)/ pop_h + travel * (inf_l) / pop_l))
-  # 
-  # FOI_h <-
-  #   sum(2 * beta_h * (native * (sym_inf_h) / pop_h + travel * (sym_inf_l) / pop_l) +
-  #         2 * beta_l * (native * (sym_inf_l) / pop_l + travel * (sym_inf_h) / pop_h) +
-  #         beta_h * (native * (inf_h) / pop_h + travel * (inf_l) / pop_l) +
-  #         beta_l * (native * (inf_l) / pop_l + travel * (inf_h) / pop_h))
-  # 
-  # FOI_l <-
-  #   sum(2 * beta_l * (native * (sym_inf_l) / pop_l + travel * (sym_inf_h) / pop_h) +
-  #         2 * beta_h * (native * (sym_inf_h)/ pop_h + travel * (sym_inf_l) / pop_l) +
-  #         beta_l * (native * (inf_l) / pop_l + travel * (inf_h) / pop_h) +
-  #         beta_h * (native * (inf_h)/ pop_h + travel * (inf_l) / pop_l))
-  # 
-  zero_h <- S1_h * vac_h * (1 - spec)
-  one_h <- sum((R1_h * vac_h * sens) + (S2_h * vac_h * sens))
-  two_h <- sum((R2_h * vac_h * sens) + (S3_h * vac_h * sens))
-  three_h <- sum((R3_h * vac_h * sens) + (S4_h * vac_h * sens))
 
-
-  zero_l <- S1_l * vac_l * (1 - spec)
-  one_l <- sum((R1_l * vac_l * sens) + (S2_l * vac_l * sens))
-  two_l <- sum((R2_l * vac_l * sens) + (S3_l * vac_l * sens))
-  three_l <- sum((R3_l * vac_l * sens) + (S4_l * vac_l * sens))
-  
-
-  tot_h <- sum(zero_h + one_h + two_h + three_h)
-  prop_h <- c(zero_h / tot_h, one_h / tot_h, two_h / tot_h, three_h / tot_h)
-  
-  tot_l <- sum(zero_l + one_l + two_l + three_l)
-  prop_l <- c(zero_l / tot_l, one_l / tot_l, two_l / tot_l, three_l / tot_l)
+  zero_h <- sum(S1_h * vac_h * (1 - spec))
+  one_h <- sum(sum((R1_h * vac_h * sens) + (S2_h * vac_h * sens)))
+  two_h <- sum(sum((R2_h * vac_h * sens) + (S3_h * vac_h * sens)))
+  three_h <- sum(sum((R3_h * vac_h * sens) + (S4_h * vac_h * sens)))
   
   
-    
+  zero_l <- sum(S1_l * vac_l * (1 - spec))
+  one_l <- sum(sum((R1_l * vac_l * sens) + (S2_l * vac_l * sens)))
+  two_l <- sum(sum((R2_l * vac_l * sens) + (S3_l * vac_l * sens)))
+  three_l <- sum(sum((R3_l * vac_l * sens) + (S4_l * vac_l * sens)))
+  
+  
+  prop_h <- c(zero_h, one_h, two_h, three_h)
+  #prop_h <- c(zero_h / tot_h, one_h / tot_h, two_h / tot_h, three_h / tot_h)
+  
+  prop_l <- c(zero_l , one_l , two_l , three_l)
+  #prop_l <- c(zero_l / tot_l, one_l / tot_l, two_l / tot_l, three_l / tot_l)
+  
+  
+  
   
   list(c(
-         dS1_h, dI1_h, dR1_h,
-         dS2_h, dI2_h, dR2_h,
-         dS3_h, dI3_h, dR3_h,
-         dS4_h, dI4_h, dR4_h,
-         dR1_h.v,
-         dS2_h.v, dI2_h.v, dR2_h.v,
-         dS3_h.v, dI3_h.v, dR3_h.v,
-         dS4_h.v, dI4_h.v, dR4_h.v,
-         
-         dS1_l, dI1_l, dR1_l,
-         dS2_l, dI2_l, dR2_l,
-         dS3_l, dI3_l, dR3_l,
-         dS4_l, dI4_l, dR4_l,
-         dR1_l.v,
-         dS2_l.v, dI2_l.v, dR2_l.v,
-         dS3_l.v, dI3_l.v, dR3_l.v,
-         dS4_l.v, dI4_l.v, dR4_l.v,
-
-         I_secondary_vac, I_post_sec_vac,
-         I_l_sec_vac, I_l_post_sec_vac,
-         
-         primary_tot.cases, primary_tot.ncases, 
-         primary_cases.l, primary_ncases.l,
-         primary_cases.h, primary_ncases.h,
-         
-         secondary_vac_tot.cases, secondary_vac_tot.ncases,
-         secondary_vac_cases.l, secondary_vac_ncases.l,
-         secondary_vac_cases.h, secondary_vac_ncases.h,
-         secondary_tot.cases, secondary_tot.ncases,
-         secondary_cases.l, secondary_ncases.l,
-         secondary_cases.h, secondary_ncases.h,
-         
-         postsec_vac_tot.cases, postsec_vac_tot.ncases,
-         postsec_vac_cases.l, postsec_vac_ncases.l,
-         postsec_vac_cases.h, postsec_vac_ncases.h,
-         postsec_tot_cases, postsec_tot_ncases,
-         postsec_cases.l, postsec_ncases.l,
-         postsec_cases.h, postsec_ncases.h,
-         
-         cases.h,
-         
-         I_total, I_l, cases, cases.l,
-         I_primary_tot, I_secondary_tot, I_post_sec_tot,
-         I_l_primary_tot, I_l_sec_tot, I_l_post_sec_tot,
-         primary, secondary, post_sec,
-         primary.l, secondary.l, post_sec.l, 
-         primary_inf, secondary_inf, post_sec_inf, 
-         primary.l.inf, secondary.l.inf, post_sec.l.inf,
-         I_h,
-         s, h, s.h, h.h, s.l, h.l,
-         s.v, h.v, s.h.v, h.h.v, s.l.v, h.l.v,
-         s.nv, h.nv, s.h.nv, h.h.nv, s.l.nv, h.l.nv,
-         FOI_h.travel, FOI_l.travel
-         # prop_h, prop_l
-         # FOI_h, FOI_l,
-         # zero_h, one_h, two_h, three_h,
-         # zero_l, one_l, two_l, three_l
-         ))
-
+    dS1_h, dI1_h, dR1_h,
+    dS2_h, dI2_h, dR2_h,
+    dS3_h, dI3_h, dR3_h,
+    dS4_h, dI4_h, dR4_h,
+    dR1_h.v,
+    dS2_h.v, dI2_h.v, dR2_h.v,
+    dS3_h.v, dI3_h.v, dR3_h.v,
+    dS4_h.v, dI4_h.v, dR4_h.v,
+    
+    dS1_l, dI1_l, dR1_l,
+    dS2_l, dI2_l, dR2_l,
+    dS3_l, dI3_l, dR3_l,
+    dS4_l, dI4_l, dR4_l,
+    dR1_l.v,
+    dS2_l.v, dI2_l.v, dR2_l.v,
+    dS3_l.v, dI3_l.v, dR3_l.v,
+    dS4_l.v, dI4_l.v, dR4_l.v,
+    
+    I_secondary_vac, I_post_sec_vac,
+    I_l_sec_vac, I_l_post_sec_vac,
+    
+    primary_tot.cases, primary_tot.ncases, 
+    primary_cases.l, primary_ncases.l,
+    primary_cases.h, primary_ncases.h,
+    
+    secondary_vac_tot.cases, secondary_vac_tot.ncases,
+    secondary_vac_cases.l, secondary_vac_ncases.l,
+    secondary_vac_cases.h, secondary_vac_ncases.h,
+    secondary_tot.cases, secondary_tot.ncases,
+    secondary_cases.l, secondary_ncases.l,
+    secondary_cases.h, secondary_ncases.h,
+    
+    postsec_vac_tot.cases, postsec_vac_tot.ncases,
+    postsec_vac_cases.l, postsec_vac_ncases.l,
+    postsec_vac_cases.h, postsec_vac_ncases.h,
+    postsec_tot_cases, postsec_tot_ncases,
+    postsec_cases.l, postsec_ncases.l,
+    postsec_cases.h, postsec_ncases.h,
+    
+    cases.h,
+    
+    I_total, I_l, cases, cases.l,
+    I_primary_tot, I_secondary_tot, I_post_sec_tot,
+    I_l_primary_tot, I_l_sec_tot, I_l_post_sec_tot,
+    primary, secondary, post_sec,
+    primary.l, secondary.l, post_sec.l, 
+    primary_inf, secondary_inf, post_sec_inf, 
+    primary.l.inf, secondary.l.inf, post_sec.l.inf,
+    I_h,
+    FOI_h.travel, FOI_l.travel,
+    prop_h, prop_l
+    # FOI_h, FOI_l,
+    # zero_h, one_h, two_h, three_h,
+    # zero_l, one_l, two_l, three_l
+  ))
+  
   
 }
 
@@ -2098,8 +2083,8 @@ y_init <- c(susceptible_h(1), infected_h(1), recovered_h(1),
             rep(0, 80), rep(0, 80), rep(0, 80), rep(0, 80), rep(0, 80),
             0,
             rep(0, 30),
-            rep(0,27),
-            rep(0, 20))
+            rep(0,29),
+            rep(0,8))
 names(y_init) <- c(rep('sh1', 80), rep('ih1', 80), rep('rh1', 80),
                    rep('sh2', 80), rep('ih2', 80), rep('rh2', 80),
                    rep('sh3', 80), rep('ih3', 80), rep('rh3', 80),
@@ -2146,14 +2131,12 @@ names(y_init) <- c(rep('sh1', 80), rep('ih1', 80), rep('rh1', 80),
                    'prim_inf', 'sec_inf', 'psec_inf',
                    'prim.l.inf', 'sec.l.inf', 'psec.l.inf',
                    'ih',
-                   's', 'h', 's.h', 'h.h', 's.l', 'h.l',
-                   's.v', 'h.v', 's.h.v', 'h.h.v', 's.l.v', 'h.l.v',
-                   's.nv', 'h.nv', 's.h.nv', 'h.h.nv', 's.l.nv', 'h.l.nv',
-                   'FOI_h.travel', 'FOI_l.travel'
+                   'FOI_h.travel', 'FOI_l.travel',
                    # , 'FOI_h', 'FOI_l',
                    # 'zero_h', 'one_h', 'two_h', 'three_h',
                    # 'zero_l', 'one_l', 'two_l', 'three_l'
-                   )
+                   rep('prop_h',4), rep('prop_l', 4)
+)
 years = 90
 years_vac = 60
 out.h <- ode(times = times, y = y_init, func = model, parms = parms.h)
@@ -2164,6 +2147,35 @@ out_null.h <- ode(times = times, y = y_init, func = model, parms = parms_null.h)
 
 out.h <- out.h[,2:ncol(out.h)]
 out_null.h <- out_null.h[,2:ncol(out_null.h)]
+
+###Coverage calcs
+vac_h <- sum(sum(out.h[nrow(out.h),which(colnames(out.h) == 'rh1.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'sh2.v')]) +
+  sum(out.h[nrow(out.h),which(colnames(out.h) == 'ih2.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'rh2.v')]) + 
+  sum(out.h[nrow(out.h),which(colnames(out.h) == 'sh3.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'ih3.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'rh3.v')]) + 
+  sum(out.h[nrow(out.h),which(colnames(out.h) == 'sh4.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'ih4.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'rh4.v')]))
+pop_h <- sum(out.h[nrow(out.h),((which(colnames(out.h) == 'sh1')[1]):(which(colnames(out.h) == 'rh4'))[length(which(colnames(out.h) == 'rh4'))])])
+
+vac_l <- sum(sum(out.h[nrow(out.h),which(colnames(out.h) == 'rl1.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'sl2.v')]) +
+               sum(out.h[nrow(out.h),which(colnames(out.h) == 'il2.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'rl2.v')]) + 
+               sum(out.h[nrow(out.h),which(colnames(out.h) == 'sl3.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'il3.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'rl3.v')]) + 
+               sum(out.h[nrow(out.h),which(colnames(out.h) == 'sl4.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'il4.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'rl4.v')]))
+pop_l <- sum(out.h[nrow(out.h),((which(colnames(out.h) == 'sl1')[1]):(which(colnames(out.h) == 'rl4'))[length(which(colnames(out.h) == 'rl4'))])])
+coverage_h <- vac_h / pop_h
+coverage_l <- vac_l / pop_l
+coverage_pop <- (vac_h + vac_l) / (pop_h + pop_l)
+coverage <- c(coverage_h, coverage_l, coverage_pop)
+save(coverage, file = paste('coverage_', input, '.RData', sep = ''))
+
+###prop_calcs
+prop.h <- list()
+prop.l <- list()
+for(i in (years_vac * 3650):(years * 3650)){
+  prop.h[[i]] <- out.h[i,which(colnames(out.h) == 'prop_h')] / sum(out.h[i,which(colnames(out.h) == 'prop_h')])
+  prop.l[[i]] <- out.h[i,which(colnames(out.h) == 'prop_l')] / sum(out.h[i,which(colnames(out.h) == 'prop_l')] )
+}
+save(prop.h, file = paste('prop.h_', input, '.RData', sep = ''))
+save(prop.l, file = paste('prop.l_', input, '.RData', sep = ''))
+
 
 ####Cases averted calcs
 {
@@ -2308,45 +2320,139 @@ out_null.h <- out_null.h[,2:ncol(out_null.h)]
 
 ####FOI 
 
-
-FOI_h.travel <- c()
-FOI_l.travel <- c()
-for(i in 1:((years * 3650))){
-  indexing <- c(1:(i))
-  FOI_h.travel[i] <- sum(diff(out.h[indexing,which(colnames(out.h) == 'FOI_h.travel')]) / (length(indexing)))
-  FOI_l.travel[i] <- sum(diff(out.h[indexing,which(colnames(out.h) == 'FOI_l.travel')]) / (length(indexing)))
+{
+# FOI_h.travel <- c()
+# FOI_l.travel <- c()
+# for(i in 1:((years * 3650))){
+#   indexing <- c(1:(i))
+#   FOI_h.travel[i] <- sum(diff(out.h[indexing,which(colnames(out.h) == 'FOI_h.travel')]) / (length(indexing)))
+#   FOI_l.travel[i] <- sum(diff(out.h[indexing,which(colnames(out.h) == 'FOI_l.travel')]) / (length(indexing)))
+# }
+# 
+# 
+# FOI_output <- list(FOI_h.travel, FOI_l.travel)
+# save(FOI_output, file = paste('FOI_output_', input, '.RData', sep = ''))
 }
 
-# FOI_h.travel <- sum(diff(out.h[indexing,which(colnames(out.h) == 'FOI_h.travel')]) / (length(indexing)))
-# FOI_l.travel <- sum(diff(out.h[indexing,which(colnames(out.h) == 'FOI_l.travel')]) / (length(indexing)))
-
-FOI_output <- list(FOI_h.travel, FOI_l.travel)
-save(FOI_output, file = paste('FOI_output_', input, '.RData', sep = ''))
-
-######appropriate vaccinations
-# length <- indexing 
 # 
-# prop_h <- list()
-# prop_l <- list()
-# for(indexing in 1:length(length)){
-#   zero_h <- out.h[indexing,which(colnames(out.h) == 'zero_h')]
-#   one_h <- out.h[indexing,which(colnames(out.h) == 'one_h')]
-#   two_h <- out.h[indexing,which(colnames(out.h) == 'two_h')]
-#   three_h <- out.h[indexing,which(colnames(out.h) == 'three_h')]
-#   tot_h <- sum(zero_h + one_h + two_h + three_h)
-#   prop_h[[i]] <- c(zero_h / tot_h, one_h / tot_h, two_h / tot_h, three_h / tot_h)
+# cases_averted.func <- function(out_mat, out_mat_null, timepoint_year){
+#   indexing <- c((3650 * years_vac + 1):(timepoint_year * 3650))
 #   
-#   zero_l <- out.h[indexing,which(colnames(out.h) == 'zero_l')]
-#   one_l <- out.h[indexing,which(colnames(out.h) == 'one_l')]
-#   two_l <- out.h[indexing,which(colnames(out.h) == 'two_l')]
-#   three_l <- out.h[indexing,which(colnames(out.h) == 'three_l')]
-#   tot_l <- sum(zero_l + one_l + two_l + three_l)
-#   prop_l[[i]] <- c(zero_l / tot_l, one_l / tot_l, two_l / tot_l, three_l / tot_l)
+#   vac_h <- sum(sum(out_mat[(timepoint_year * 3650),which(colnames(out_mat) == 'rh1.v')]) + sum(out_mat[(timepoint_year * 3650),which(colnames(out_mat) == 'sh2.v')]) +
+#                  sum(out_mat[(timepoint_year * 3650),which(colnames(out_mat) == 'ih2.v')]) + sum(out_mat[(timepoint_year * 3650),which(colnames(out_mat) == 'rh2.v')]) + 
+#                  sum(out_mat[(timepoint_year * 3650),which(colnames(out_mat) == 'sh3.v')]) + sum(out_mat[(timepoint_year * 3650),which(colnames(out_mat) == 'ih3.v')]) + sum(out_mat[(timepoint_year * 3650),which(colnames(out_mat) == 'rh3.v')]) + 
+#                  sum(out_mat[(timepoint_year * 3650),which(colnames(out_mat) == 'sh4.v')]) + sum(out_mat[(timepoint_year * 3650),which(colnames(out_mat) == 'ih4.v')]) + sum(out_mat[(timepoint_year * 3650),which(colnames(out_mat) == 'rh4.v')]))
+#   pop_h <- sum(out_mat_null[(timepoint_year * 3650),((which(colnames(out_mat_null) == 'sh1')[1]):(which(colnames(out_mat_null) == 'rh4'))[length(which(colnames(out_mat_null) == 'rh4'))])])
 #   
+#   vac_l <- sum(sum(out_mat[(timepoint_year * 3650),which(colnames(out_mat) == 'rl1.v')]) + sum(out_mat[(timepoint_year * 3650),which(colnames(out_mat) == 'sl2.v')]) +
+#                  sum(out_mat[(timepoint_year * 3650),which(colnames(out_mat) == 'il2.v')]) + sum(out_mat[(timepoint_year * 3650),which(colnames(out_mat) == 'rl2.v')]) + 
+#                  sum(out_mat[(timepoint_year * 3650),which(colnames(out_mat) == 'sl3.v')]) + sum(out_mat[(timepoint_year * 3650),which(colnames(out_mat) == 'il3.v')]) + sum(out_mat[(timepoint_year * 3650),which(colnames(out_mat) == 'rl3.v')]) + 
+#                  sum(out_mat[(timepoint_year * 3650),which(colnames(out_mat) == 'sl4.v')]) + sum(out_mat[(timepoint_year * 3650),which(colnames(out_mat) == 'il4.v')]) + sum(out_mat[(timepoint_year * 3650),which(colnames(out_mat) == 'rl4.v')]))
+#   pop_l <- sum(out_mat_null[(timepoint_year * 3650),((which(colnames(out_mat_null) == 'sl1')[1]):(which(colnames(out_mat_null) == 'rl4'))[length(which(colnames(out_mat_null) == 'rl4'))])])
+#   coverage_h <- vac_h / pop_h
+#   coverage_l <- vac_l / pop_l
+#   coverage_pop <- (vac_h + vac_l) / (pop_h + pop_l)
+#   
+#   prop_h <- out_mat[(timepoint_year * 3650),which(colnames(out_mat) == 'prop_h')] / sum(out_mat[(timepoint_year * 3650),which(colnames(out_mat) == 'prop_h')] )
+#   prop_l <- out_mat[(timepoint_year * 3650),which(colnames(out_mat) == 'prop_l')] / sum(out_mat[(timepoint_year * 3650),which(colnames(out_mat) == 'prop_l')])
+#   
+#   cases_plac_v.h <- coverage_h * prop_h * c(0.53, 1, 0.115, 0.115)
+#   cases_plac_v.h <- sum(cases_plac_v.h)
+#   cases_plac_v.l <- coverage_l * prop_l * c(0.53, 1, 0.115, 0.115)
+#   cases_plac_v.l <- sum(cases_plac_v.l)
+#   cases_plac_v.pop <- cases_plac_v.h + cases_plac_v.l
+#   
+#   
+#   cases <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'cases')]))
+#   cases.l <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'cases.l')]))
+#   cases.h <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'cases.h')]))
+#   cases.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'cases')]))
+#   cases.l.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'cases.l')]))
+#   cases.h.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'cases.h')]))
+#   
+#   cases_plac.h <- cases.h.null + cases_plac_v.h
+#   cases_plac.l <- cases.l.null + cases_plac_v.l
+#   cases_plac.pop <- cases.null + cases_plac_v.pop
+#   
+#   ##vaccinated, whole pop
+#   cases_vac<- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'sec_vac.cases.h')]),
+#                   diff(out_mat[indexing,which(colnames(out_mat) == 'psec_vac.cases.h')]),
+#                   diff(out_mat[indexing,which(colnames(out_mat) == 'sec_vac.cases.l')]),
+#                   diff(out_mat[indexing,which(colnames(out_mat) == 'psec_vac.cases.l')]))
+#   cases_vac.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'sec_vac.cases.h')]),
+#                         diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'psec_vac.cases.h')]),
+#                         diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'sec_vac.cases.l')]),
+#                         diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'psec_vac.cases.l')]))
+#   
+#   ##unvaccinated, whole pop
+#   cases_uvac <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'prim_cases.h')]),
+#                     diff(out_mat[indexing,which(colnames(out_mat) == 'sec_cases.h')]),
+#                     diff(out_mat[indexing,which(colnames(out_mat) == 'psec_cases.h')]),
+#                     diff(out_mat[indexing,which(colnames(out_mat) == 'prim_cases.l')]),
+#                     diff(out_mat[indexing,which(colnames(out_mat) == 'sec_cases.l')]),
+#                     diff(out_mat[indexing,which(colnames(out_mat) == 'psec_cases.l')]))
+#   cases_uvac.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'prim_cases.h')]),
+#                          diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'sec_cases.h')]),
+#                          diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'psec_cases.h')]),
+#                          diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'prim_cases.l')]),
+#                          diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'sec_cases.l')]),
+#                          diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'psec_cases.l')]))
+#   
+#   ##vaccinated, high
+#   cases_vac.h <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'sec_vac.cases.h')]),
+#                      diff(out_mat[indexing,which(colnames(out_mat) == 'psec_vac.cases.h')]))
+#   cases_vac.h.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'sec_vac.cases.h')]),
+#                           diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'psec_vac.cases.h')]))
+#   ##vaccinated, low
+#   cases_vac.l <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'sec_vac.cases.l')]),
+#                      diff(out_mat[indexing,which(colnames(out_mat) == 'psec_vac.cases.l')]))
+#   cases_vac.l.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'sec_vac.cases.l')]),
+#                           diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'psec_vac.cases.l')]))
+#   
+#   ##unvaccinaetd, high
+#   cases_uvac.h <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'prim_cases.h')]),
+#                       diff(out_mat[indexing,which(colnames(out_mat) == 'sec_cases.h')]),
+#                       diff(out_mat[indexing,which(colnames(out_mat) == 'psec_cases.h')]))
+#   cases_uvac.h.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'prim_cases.h')]),
+#                            diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'sec_cases.h')]),
+#                            diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'psec_cases.h')]))
+#   
+#   ##unvaccinated, low
+#   cases_uvac.l <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'prim_cases.l')]),
+#                       diff(out_mat[indexing,which(colnames(out_mat) == 'sec_cases.l')]),
+#                       diff(out_mat[indexing,which(colnames(out_mat) == 'psec_cases.l')]))
+#   cases_uvac.l.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'prim_cases.l')]),
+#                            diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'sec_cases.l')]),
+#                            diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'psec_cases.l')]))
+#   
+#   
+#   cases_averted <- ((cases.null - cases) / cases.null) * 100
+#   cases_averted.h <- ((cases.h.null - cases.h) / cases.h.null) * 100
+#   cases_averted.l <- ((cases.l.null - cases.l) / cases.l.null) * 100
+#   
+#   
+#   cases_av_vac.h <- ((cases_plac.h - cases_vac.h) / cases_plac.h ) * 100
+#   cases_av_vac.l <- ((cases_plac.l - cases_vac.l) / cases_plac.l) * 100
+#   cases_av_vac <- ((cases_plac.pop - cases_vac) / cases_plac.pop) * 100
+#   
+#   cases_av_uvac.h <- ((cases_uvac.h.null - cases_uvac.h) / cases_uvac.h.null) * 100
+#   cases_av_uvac.l <- ((cases_uvac.l.null - cases_uvac.l) / cases_uvac.l.null) * 100
+#   cases_av_uvac <- ((cases_uvac.null - cases_uvac) / cases_uvac.null) * 100
+#   
+#   
+#   output <- c(cases_averted.h, cases_averted, cases_averted.l,
+#               cases_av_vac.h, cases_av_vac, cases_av_vac.l,
+#               cases_av_uvac.h, cases_av_uvac, cases_av_uvac.l)
+#   names(output) <- c('cases_averted.h', 'cases_averted', 'cases_averted.l',
+#                      'cases_av_vac.h', 'cases_av_vac', 'cases_av_vac.l',
+#                      'cases_av_uvac.h', 'cases_av_uvac', 'cases_av_uvac.l')
+#   
+#   return(output)
 # }
-
-
-
+# 
+# output.vec.h  <- cases_averted.func(out.h, out_null.h, years)
+# 
+# save(output.vec.h, file = paste('output_alttrav_', input, '.RData', sep = ''))
 
 
 
