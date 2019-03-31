@@ -2148,29 +2148,29 @@ out.h <- out.h[,2:ncol(out.h)]
 out_null.h <- out_null.h[,2:ncol(out_null.h)]
 
 ###Coverage calcs
-vac_h <- sum(sum(out.h[nrow(out.h),which(colnames(out.h) == 'rh1.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'sh2.v')]) +
-               sum(out.h[nrow(out.h),which(colnames(out.h) == 'ih2.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'rh2.v')]) + 
-               sum(out.h[nrow(out.h),which(colnames(out.h) == 'sh3.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'ih3.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'rh3.v')]) + 
-               sum(out.h[nrow(out.h),which(colnames(out.h) == 'sh4.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'ih4.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'rh4.v')]))
-pop_h <- sum(out.h[nrow(out.h),((which(colnames(out.h) == 'sh1')[1]):(which(colnames(out.h) == 'rh4'))[length(which(colnames(out.h) == 'rh4'))])])
-
-vac_l <- sum(sum(out.h[nrow(out.h),which(colnames(out.h) == 'rl1.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'sl2.v')]) +
-               sum(out.h[nrow(out.h),which(colnames(out.h) == 'il2.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'rl2.v')]) + 
-               sum(out.h[nrow(out.h),which(colnames(out.h) == 'sl3.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'il3.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'rl3.v')]) + 
-               sum(out.h[nrow(out.h),which(colnames(out.h) == 'sl4.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'il4.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'rl4.v')]))
-pop_l <- sum(out.h[nrow(out.h),((which(colnames(out.h) == 'sl1')[1]):(which(colnames(out.h) == 'rl4'))[length(which(colnames(out.h) == 'rl4'))])])
-coverage_h <- vac_h / pop_h
-coverage_l <- vac_l / pop_l
-coverage_pop <- (vac_h + vac_l) / (pop_h + pop_l)
-coverage <- c(coverage_h, coverage_l, coverage_pop)
-save(coverage, file = paste('coverage_', input, '.RData', sep = ''))
+# vac_h <- sum(sum(out.h[nrow(out.h),which(colnames(out.h) == 'rh1.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'sh2.v')]) +
+#                sum(out.h[nrow(out.h),which(colnames(out.h) == 'ih2.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'rh2.v')]) + 
+#                sum(out.h[nrow(out.h),which(colnames(out.h) == 'sh3.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'ih3.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'rh3.v')]) + 
+#                sum(out.h[nrow(out.h),which(colnames(out.h) == 'sh4.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'ih4.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'rh4.v')]))
+# pop_h <- sum(out.h[nrow(out.h),((which(colnames(out.h) == 'sh1')[1]):(which(colnames(out.h) == 'rh4'))[length(which(colnames(out.h) == 'rh4'))])])
+# 
+# vac_l <- sum(sum(out.h[nrow(out.h),which(colnames(out.h) == 'rl1.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'sl2.v')]) +
+#                sum(out.h[nrow(out.h),which(colnames(out.h) == 'il2.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'rl2.v')]) + 
+#                sum(out.h[nrow(out.h),which(colnames(out.h) == 'sl3.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'il3.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'rl3.v')]) + 
+#                sum(out.h[nrow(out.h),which(colnames(out.h) == 'sl4.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'il4.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'rl4.v')]))
+# pop_l <- sum(out.h[nrow(out.h),((which(colnames(out.h) == 'sl1')[1]):(which(colnames(out.h) == 'rl4'))[length(which(colnames(out.h) == 'rl4'))])])
+# coverage_h <- vac_h / pop_h
+# coverage_l <- vac_l / pop_l
+# coverage_pop <- (vac_h + vac_l) / (pop_h + pop_l)
+# coverage <- c(coverage_h, coverage_l, coverage_pop)
+# save(coverage, file = paste('coverage_', input, '.RData', sep = ''))
 
 ###prop_calcs
 prop.h <- list()
 prop.l <- list()
 for(i in (years_vac * 3650):(years * 3650)){
-  prop.h[[i]] <- out.h[i,which(colnames(out.h) == 'prop_h')] / sum(out.h[i,which(colnames(out.h) == 'prop_h')])
-  prop.l[[i]] <- out.h[i,which(colnames(out.h) == 'prop_l')] / sum(out.h[i,which(colnames(out.h) == 'prop_l')] )
+  prop.h[[i - years_vac * 3650 + 1]] <- out.h[i,which(colnames(out.h) == 'prop_h')] / sum(out.h[i,which(colnames(out.h) == 'prop_h')])
+  prop.l[[i - years_vac * 3650 + 1]] <- out.h[i,which(colnames(out.h) == 'prop_l')] / sum(out.h[i,which(colnames(out.h) == 'prop_l')] )
 }
 save(prop.h, file = paste('prop.h_', input, '.RData', sep = ''))
 save(prop.l, file = paste('prop.l_', input, '.RData', sep = ''))
