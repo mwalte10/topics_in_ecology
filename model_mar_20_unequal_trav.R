@@ -10,6 +10,8 @@ input = as.numeric(args[1])
 ##########################
 vac_h.vec <- seq(0, 1, length.out = 20)
 vac_l.vec <- rev(vac_h.vec)
+input.vec <- c(1, 6, 8)
+input <- input.vec[input]
 
 beta_l <- 0.2500000
 beta_h <- 0.1489796
