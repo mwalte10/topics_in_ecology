@@ -12,7 +12,7 @@ input = as.numeric(args[1])
 
 beta_l.vec <- seq(0, 1, length.out = 20)
 beta_l <- beta_l.vec[input]
-beta_h <- 0
+beta_h <- beta_l
 travel_l <- 0
 travel_h <- 0
 native_l <- 1 - travel_l
