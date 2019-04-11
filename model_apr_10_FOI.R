@@ -1795,7 +1795,7 @@ average_age <- sum(people) / length(people)
 FOI_age.l <- 1 /average_age
 
 FOI_age <- c(FOI_age.h, FOI_age.l)
-save(paste('FOI_age_', input, '.RData', sep =''))  
+save(FOI_age, file = paste('FOI_age_', input, '.RData', sep =''))  
 # FOI_h <- sum(diff(out.h[indexing,which(colnames(out.h) == 'FOI_h')]) / (3650 * (years - years_vac)))
 # FOI_l <- sum(diff(out.h[indexing,which(colnames(out.h) == 'FOI_l')]) / (3650 * (years - years_vac)))
 # FOI_h.novac <- sum(diff(out_null.h[indexing,which(colnames(out_null.h) == 'FOI_h')]) / (3650 * (years - years_vac)))
