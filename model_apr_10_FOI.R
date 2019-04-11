@@ -168,7 +168,7 @@ parms_null.h <- list(beta_h = beta_h,
                      hopkins_inverse)
 
 
-years = 90
+years = 60
 years_vac = 60
 times <- seq(from = 0, to = 365 * years, by = .1)
 times <- times[1:(length(times) - 1)]
@@ -1497,13 +1497,14 @@ model <- function(t, y, parms){
     sum(native_h * S1_h * 2 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
           travel_h * S1_h * 2 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
           native_h * S1_h * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
-          travel_h * S1_h * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h))
+          travel_h * S1_h * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h)) / sum(S1_h)
+
   
   FOI_l.travel <-
     sum(native_l * S1_l * 2 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
           travel_l * S1_l * 2 * beta_h * (native_h * (sym_inf_h)/ pop_h + travel_l * (sym_inf_l) / pop_l) +
           native_l * S1_l * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
-          travel_l * S1_l * beta_h * (native_h * (inf_h)/ pop_h + travel_l * (inf_l) / pop_l))
+          travel_l * S1_l * beta_h * (native_h * (inf_h)/ pop_h + travel_l * (inf_l) / pop_l)) / sum(S1_l)
   
   
   
@@ -1628,7 +1629,7 @@ names(y_init) <- c(rep('sh1', 80), rep('ih1', 80), rep('rh1', 80),
                    'prim.l.inf', 'sec.l.inf', 'psec.l.inf',
                    'ih',
                    'FOI_h.travel', 'FOI_l.travel')
-years = 90
+years = 60
 years_vac = 60
 #out.h <- ode(times = times, y = y_init, func = model, parms = parms.h)
 out_null.h <- ode(times = times, y = y_init, func = model, parms = parms_null.h)
@@ -1773,7 +1774,28 @@ out_null.h <- out_null.h[,2:ncol(out_null.h)]
 ####FOI
 
 
-indexing <- c((0):(years * 3650))
+indexing <- c((1):(years * 3650))
+
+people <- list()
+number <- out_null.h[(years * 3650),which(colnames(out_null.h) == 'ih1')]
+for(i in 1:length(number)){
+  people[[i]] <- rep((i-1), number[i])
+}
+people <- unlist(people)
+average_age <- sum(people) / length(people)
+FOI_age.h <- 1 /average_age
+
+people <- list()
+number <- out_null.h[(years * 3650),which(colnames(out_null.h) == 'il1')]
+for(i in 1:length(number)){
+  people[[i]] <- rep((i-1), number[i])
+}
+people <- unlist(people)
+average_age <- sum(people) / length(people)
+FOI_age.l <- 1 /average_age
+
+FOI_age <- c(FOI_age.h, FOI_age.l)
+save(paste('FOI_age_', input, '.RData', sep =''))  
 # FOI_h <- sum(diff(out.h[indexing,which(colnames(out.h) == 'FOI_h')]) / (3650 * (years - years_vac)))
 # FOI_l <- sum(diff(out.h[indexing,which(colnames(out.h) == 'FOI_l')]) / (3650 * (years - years_vac)))
 # FOI_h.novac <- sum(diff(out_null.h[indexing,which(colnames(out_null.h) == 'FOI_h')]) / (3650 * (years - years_vac)))
