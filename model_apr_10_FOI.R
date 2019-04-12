@@ -1843,7 +1843,13 @@ out_null.h <- out_null.h[,2:ncol(out_null.h)]
 indexing <- c((1):(years * 3650))
 
 people <- list()
-number <- out_null.h[(years * 3650),which(colnames(out_null.h) == 'ih1')]
+number <- c(out_null.h[(years * 3650),which(colnames(out_null.h) == 'ih1')],
+            out_null.h[(years * 3650),which(colnames(out_null.h) == 'ih2')],
+            out_null.h[(years * 3650),which(colnames(out_null.h) == 'ih3')],
+            out_null.h[(years * 3650),which(colnames(out_null.h) == 'ih4')],
+            out_null.h[(years * 3650),which(colnames(out_null.h) == 'ih2.v')],
+            out_null.h[(years * 3650),which(colnames(out_null.h) == 'ih3.v')],
+            out_null.h[(years * 3650),which(colnames(out_null.h) == 'ih4.v')])
 for(i in 1:length(number)){
   people[[i]] <- rep((i-1), number[i])
 }
@@ -1852,7 +1858,13 @@ average_age <- sum(people) / length(people)
 FOI_age.h <- 1 /average_age
 
 people <- list()
-number <- out_null.h[(years * 3650),which(colnames(out_null.h) == 'il1')]
+number <- c(out_null.h[(years * 3650),which(colnames(out_null.h) == 'il1')],
+            out_null.h[(years * 3650),which(colnames(out_null.h) == 'il2')],
+            out_null.h[(years * 3650),which(colnames(out_null.h) == 'il3')],
+            out_null.h[(years * 3650),which(colnames(out_null.h) == 'il4')],
+            out_null.h[(years * 3650),which(colnames(out_null.h) == 'il2.v')],
+            out_null.h[(years * 3650),which(colnames(out_null.h) == 'il3.v')],
+            out_null.h[(years * 3650),which(colnames(out_null.h) == 'il4.v')])
 for(i in 1:length(number)){
   people[[i]] <- rep((i-1), number[i])
 }
