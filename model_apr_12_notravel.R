@@ -14,7 +14,10 @@ new.parms.mat <- new.parms.mat[parse,]
 
 beta_h <- new.parms.mat[input,1]
 beta_l <- new.parms.mat[input,2]
-native <- 1 - new.parms.mat[input,3]
+native_h <- 1 - new.parms.mat[input,3]
+native_l <- native_h
+travel_h <- new.parms.mat[input,3]
+travel_l <- travel_h
 vac_h <- new.parms.mat[input,4]
 vac_l <- new.parms.mat[input,5]
 
@@ -414,7 +417,6 @@ model <- function(t, y, parms){
     c(1/365 / head(age_window, -1) * head(I2_l, -1), 0) -
     I2_l * gamma -
     I2_l * delta
-
   dI2_l.v <-
     native_l * S2_l.v * beta_l * 2  * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
     travel_l * S2_l.v * beta_h * 2 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
@@ -505,9 +507,6 @@ model <- function(t, y, parms){
     c(1/365 / head(age_window, -1) * head(I3_h, -1), 0) -
     I3_h * gamma -
     I3_h * delta
-
-  
-  
   dI3_h.v <-
     native_h * S3_h.v * 2 * 0.75 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
     travel_h * S3_h.v * 2 * 0.75 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
@@ -606,7 +605,7 @@ model <- function(t, y, parms){
     native_l * S4_l.v * beta_l * 0.5 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) -
     travel_l * S4_l.v * beta_h * 0.5 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) -
     S4_l.v * delta 
-    
+  
   dI4_h <- 
     native_h * S4_h * 2 * 0.25 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
     travel_h * S4_h * 2 * 0.25 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
@@ -1465,6 +1464,7 @@ model <- function(t, y, parms){
     post_sec.l <- tertiary.l + quaternary.l
     post_sec.l.inf <- post_sec.l / inf[3]
   }
+  
   
   
   # FOI_h.travel <-
