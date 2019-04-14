@@ -1812,38 +1812,38 @@ out_null.h <- out_null.h[,2:ncol(out_null.h)]
 
 indexing <- c((1):(years * 3650))
 
-# people <- list()
-# number <- out_null.h[(years * 3650),which(colnames(out_null.h) == 'ih1')] + 
-#             out_null.h[(years * 3650),which(colnames(out_null.h) == 'ih2')] +
-#             out_null.h[(years * 3650),which(colnames(out_null.h) == 'ih3')] +
-#             out_null.h[(years * 3650),which(colnames(out_null.h) == 'ih4')] +
-#             out_null.h[(years * 3650),which(colnames(out_null.h) == 'ih2.v')] +
-#             out_null.h[(years * 3650),which(colnames(out_null.h) == 'ih3.v')] +
-#             out_null.h[(years * 3650),which(colnames(out_null.h) == 'ih4.v')]
-# for(i in 1:length(number)){
-#   people[[i]] <- rep((i-1), number[i])
-# }
-# people <- unlist(people)
-# average_age <- sum(people) / length(people)
-# FOI_age.h <- 1 /average_age
-# 
-# people <- list()
-# number <- out_null.h[(years * 3650),which(colnames(out_null.h) == 'il1')] + 
-#             out_null.h[(years * 3650),which(colnames(out_null.h) == 'il2')] +
-#             out_null.h[(years * 3650),which(colnames(out_null.h) == 'il3')]+ 
-#             out_null.h[(years * 3650),which(colnames(out_null.h) == 'il4')] +
-#             out_null.h[(years * 3650),which(colnames(out_null.h) == 'il2.v')] +
-#             out_null.h[(years * 3650),which(colnames(out_null.h) == 'il3.v')]+
-#             out_null.h[(years * 3650),which(colnames(out_null.h) == 'il4.v')] 
-# for(i in 1:length(number)){
-#   people[[i]] <- rep((i-1), ceiling(number[i]))
-# }
-# people <- unlist(people)
-# average_age <- sum(people) / length(people)
-# FOI_age.l <- 1 /average_age
-# 
-# FOI_age <- c(FOI_age.h, FOI_age.l)
-# save(FOI_age, file = paste('FOI_age_', input, '.RData', sep =''))  
+people <- list()
+number <- out_null.h[(years * 3650),which(colnames(out_null.h) == 'ih1')] +
+            out_null.h[(years * 3650),which(colnames(out_null.h) == 'ih2')] +
+            out_null.h[(years * 3650),which(colnames(out_null.h) == 'ih3')] +
+            out_null.h[(years * 3650),which(colnames(out_null.h) == 'ih4')] +
+            out_null.h[(years * 3650),which(colnames(out_null.h) == 'ih2.v')] +
+            out_null.h[(years * 3650),which(colnames(out_null.h) == 'ih3.v')] +
+            out_null.h[(years * 3650),which(colnames(out_null.h) == 'ih4.v')]
+for(i in 1:length(number)){
+  people[[i]] <- rep((i-1), number[i])
+}
+people <- unlist(people)
+average_age <- sum(people) / length(people)
+FOI_age.h <- 1 /average_age
+
+people <- list()
+number <- out_null.h[(years * 3650),which(colnames(out_null.h) == 'il1')] +
+            out_null.h[(years * 3650),which(colnames(out_null.h) == 'il2')] +
+            out_null.h[(years * 3650),which(colnames(out_null.h) == 'il3')]+
+            out_null.h[(years * 3650),which(colnames(out_null.h) == 'il4')] +
+            out_null.h[(years * 3650),which(colnames(out_null.h) == 'il2.v')] +
+            out_null.h[(years * 3650),which(colnames(out_null.h) == 'il3.v')]+
+            out_null.h[(years * 3650),which(colnames(out_null.h) == 'il4.v')]
+for(i in 1:length(number)){
+  people[[i]] <- rep((i-1), ceiling(number[i]))
+}
+people <- unlist(people)
+average_age <- sum(people) / length(people)
+FOI_age.l <- 1 /average_age
+
+FOI_age <- c(FOI_age.h, FOI_age.l)
+save(FOI_age, file = paste('FOI_age_', input, '.RData', sep =''))
 # FOI_h <- sum(diff(out.h[indexing,which(colnames(out.h) == 'FOI_h')]) / (3650 * (years - years_vac)))
 # FOI_l <- sum(diff(out.h[indexing,which(colnames(out.h) == 'FOI_l')]) / (3650 * (years - years_vac)))
 # FOI_h.novac <- sum(diff(out_null.h[indexing,which(colnames(out_null.h) == 'FOI_h')]) / (3650 * (years - years_vac)))
@@ -1851,10 +1851,10 @@ indexing <- c((1):(years * 3650))
 
 #FOI_h.travel <- sum(diff(out.h[indexing,which(colnames(out.h) == 'FOI_h.travel')]) / (3650 * (years)))
 #FOI_l.travel <- sum(diff(out.h[indexing,which(colnames(out.h) == 'FOI_l.travel')]) / (3650 * (years )))
-FOI_h.novac.travel <- sum(diff(out_null.h[indexing,which(colnames(out_null.h) == 'FOI_h.travel')]) / ((years)))
-FOI_l.novac.travel <- sum(diff(out_null.h[indexing,which(colnames(out_null.h) == 'FOI_l.travel')]) / ((years)))
-
-FOI_output <- c(FOI_h.novac.travel, FOI_l.novac.travel)
-save(FOI_output, file = paste('FOI_output_', input, '.RData', sep = ''))
+# FOI_h.novac.travel <- sum(diff(out_null.h[indexing,which(colnames(out_null.h) == 'FOI_h.travel')]) / ((years)))
+# FOI_l.novac.travel <- sum(diff(out_null.h[indexing,which(colnames(out_null.h) == 'FOI_l.travel')]) / ((years)))
+# 
+# FOI_output <- c(FOI_h.novac.travel, FOI_l.novac.travel)
+# save(FOI_output, file = paste('FOI_output_', input, '.RData', sep = ''))
 
 
