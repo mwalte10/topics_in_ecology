@@ -2166,14 +2166,14 @@ out_null.h <- out_null.h[,2:ncol(out_null.h)]
 # save(coverage, file = paste('coverage_', input, '.RData', sep = ''))
 
 ###prop_calcs
-prop.h <- list()
-prop.l <- list()
-for(i in (years_vac * 3650):(years * 3650)){
-  prop.h[[i - years_vac * 3650 + 1]] <- out.h[i,which(colnames(out.h) == 'prop_h')] / sum(out.h[i,which(colnames(out.h) == 'prop_h')])
-  prop.l[[i - years_vac * 3650 + 1]] <- out.h[i,which(colnames(out.h) == 'prop_l')] / sum(out.h[i,which(colnames(out.h) == 'prop_l')] )
-}
-save(prop.h, file = paste('prop.h_', input, '.RData', sep = ''))
-save(prop.l, file = paste('prop.l_', input, '.RData', sep = ''))
+# prop.h <- list()
+# prop.l <- list()
+# for(i in (years_vac * 3650):(years * 3650)){
+#   prop.h[[i - years_vac * 3650 + 1]] <- out.h[i,which(colnames(out.h) == 'prop_h')] / sum(out.h[i,which(colnames(out.h) == 'prop_h')])
+#   prop.l[[i - years_vac * 3650 + 1]] <- out.h[i,which(colnames(out.h) == 'prop_l')] / sum(out.h[i,which(colnames(out.h) == 'prop_l')] )
+# }
+# save(prop.h, file = paste('prop.h_', input, '.RData', sep = ''))
+# save(prop.l, file = paste('prop.l_', input, '.RData', sep = ''))
 
 ####Cases averted calcs
 {
@@ -2356,6 +2356,18 @@ save(prop.l, file = paste('prop.l_', input, '.RData', sep = ''))
 # 
 # 
 
+
+FOI_h.travel <- c()
+FOI_l.travel <- c()
+for(i in 1:((years * 3650))){
+  indexing <- c(1:(i))
+  FOI_h.travel[i] <- sum(diff(out.h[indexing,which(colnames(out.h) == 'FOI_h.travel')]) / (length(indexing)))
+  FOI_l.travel[i] <- sum(diff(out.h[indexing,which(colnames(out.h) == 'FOI_l.travel')]) / (length(indexing)))
+}
+
+
+FOI_output <- list(FOI_h.travel, FOI_l.travel)
+save(FOI_output, file = paste('FOI_output_', input, '.RData', sep = ''))
 
 
 
