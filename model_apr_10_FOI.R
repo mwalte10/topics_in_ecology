@@ -1497,30 +1497,21 @@ model <- function(t, y, parms){
   }
   
   
-  # FOI_h.travel <-
-  #   sum(native_h * S1_h * 2 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
-  #         travel_h * S1_h * 2 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
-  #         native_h * S1_h * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
-  #         travel_h * S1_h * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h)) / sum(S1_h)
-  # 
-  # 
-  # FOI_l.travel <-
-  #   sum(native_l * S1_l * 2 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
-  #         travel_l * S1_l * 2 * beta_h * (native_h * (sym_inf_h)/ pop_h + travel_l * (sym_inf_l) / pop_l) +
-  #         native_l * S1_l * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
-  #         travel_l * S1_l * beta_h * (native_h * (inf_h)/ pop_h + travel_l * (inf_l) / pop_l)) / sum(S1_l)
-  
   FOI_h.travel <-
-    sum(native * 2 * beta_h * (native * (sym_inf_h) / pop_h + travel * (sym_inf_l) / pop_l) +
-          travel * 2 * beta_l * (native * (sym_inf_l) / pop_l + travel * (sym_inf_h) / pop_h) +
-          native * beta_h * (native * (inf_h) / pop_h + travel * (inf_l) / pop_l) +
-          travel * beta_l * (native * (inf_l) / pop_l + travel * (inf_h) / pop_h))
-  
+    sum(native_h * 2 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
+          travel_h *  2 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
+          native_h * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
+          travel_h * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h))
+
+
   FOI_l.travel <-
-    sum(native * 2 * beta_l * (native * (sym_inf_l) / pop_l + travel * (sym_inf_h) / pop_h) +
-          travel * 2 * beta_h * (native * (sym_inf_h)/ pop_h + travel * (sym_inf_l) / pop_l) +
-          native * beta_l * (native * (inf_l) / pop_l + travel * (inf_h) / pop_h) +
-          travel * beta_h * (native * (inf_h)/ pop_h + travel * (inf_l) / pop_l))
+    sum(native_l * 2 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
+          travel_l * 2 * beta_h * (native_h * (sym_inf_h)/ pop_h + travel_l * (sym_inf_l) / pop_l) +
+          native_l * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
+          travel_l * beta_h * (native_h * (inf_h)/ pop_h + travel_l * (inf_l) / pop_l))
+  
+
+  
   
   list(c(
     dS1_h, dI1_h, dR1_h,
