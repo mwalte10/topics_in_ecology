@@ -1511,68 +1511,16 @@ model <- function(t, y, parms){
   #         travel_l * S1_l * beta_h * (native_h * (inf_h)/ pop_h + travel_l * (inf_l) / pop_l)) / sum(S1_l)
   
   FOI_h.travel <-
-    sum(native_h * S1_h * 2 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
-          travel_h * S1_h * 2 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
-          native_h * S1_h * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
-          travel_h * S1_h * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) + 
-          native_h * S2_h * 2 * 0.75 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
-          travel_h * S2_h * 2 * 0.75 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
-          native_h * S2_h * 0.75 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
-          travel_h * S2_h * 0.75 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) + native_h * S2_h.v * 2 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
-          travel_h * S2_h.v * 2 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
-          native_h * S2_h.v * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
-          travel_h * S2_h.v * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h)+
-          native_h * S3_h * 2 * 0.5 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
-          travel_h * S3_h * 2 * 0.5 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
-          native_h * S3_h * 0.5 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
-          travel_h * S3_h * 0.5 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
-          native_h * S3_h.v * 2 * 0.75 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
-          travel_h * S3_h.v * 2 * 0.75 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
-          native_h * S3_h.v * 0.75 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
-          travel_h * S3_h.v * 0.75 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
-          native_h * S4_h * 2 * 0.25 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
-          travel_h * S4_h * 2 * 0.25 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
-          native_h * S4_h * 0.25 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
-          travel_h * S4_h * 0.25 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
-          native_h * S4_h.v * 2 * 0.5 * beta_h * (native_h * (sym_inf_h) / pop_h + travel_l * (sym_inf_l) / pop_l) +
-          travel_h * S4_h.v * 2 * 0.5 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
-          native_h * S4_h.v * 0.5 * beta_h * (native_h * (inf_h) / pop_h + travel_l * (inf_l) / pop_l) +
-          travel_h * S4_h.v * 0.5 * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) ) / sum(S1_h + S2_h.v + S2_h + S3_h.v + S3_h + S4_h.v + S4_h)
-  
-
-  
+    sum(native * 2 * beta_h * (native * (sym_inf_h) / pop_h + travel * (sym_inf_l) / pop_l) +
+          travel * 2 * beta_l * (native * (sym_inf_l) / pop_l + travel * (sym_inf_h) / pop_h) +
+          native * beta_h * (native * (inf_h) / pop_h + travel * (inf_l) / pop_l) +
+          travel * beta_l * (native * (inf_l) / pop_l + travel * (inf_h) / pop_h))
   
   FOI_l.travel <-
-    sum(native_l * S1_l * 2 * beta_l * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h) / pop_h) +
-          travel_l * S1_l * 2 * beta_h * (native_h * (sym_inf_h)/ pop_h + travel_l * (sym_inf_l) / pop_l) +
-          native_l * S1_l * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h) / pop_h) +
-          travel_l * S1_l * beta_h * (native_h * (inf_h)/ pop_h + travel_l * (inf_l) / pop_l) +
-          native_l * S2_l * beta_l * 2 * 0.75 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
-          travel_l * S2_l * beta_h * 2 *  0.75 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
-          native_l * S2_l * beta_l * 0.75 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
-          travel_l * S2_l * beta_h * 0.75 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) +
-          native_l * S2_l.v * beta_l * 2  * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
-          travel_l * S2_l.v * beta_h * 2 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
-          native_l * S2_l.v * beta_l * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
-          travel_l * S2_l.v * beta_h * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) + 
-          native_l * S3_l * beta_l * 2 * 0.5 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
-          travel_l * S3_l * beta_h * 2 *  0.5 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
-          native_l * S3_l * beta_l * 0.5 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
-          travel_l * S3_l * beta_h * 0.5 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) +
-          native_l * S3_l.v * beta_l * 2 * 0.75 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
-          travel_l * S3_l.v * beta_h * 2 *  0.75 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
-          native_l * S3_l.v * beta_l * 0.75 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
-          travel_l * S3_l.v * beta_h * 0.75 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) +
-          native_l * S4_l * beta_l * 2 * 0.25 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
-          travel_l * S4_l * beta_h * 2 *  0.25 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
-          native_l * S4_l * beta_l * 0.25 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
-          travel_l * S4_l * beta_h * 0.25 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) +
-          native_l * S4_l.v * beta_l * 2 * 0.5 * (native_l * (sym_inf_l) / pop_l + travel_h * (sym_inf_h)  / pop_h) +
-          travel_l * S4_l.v * beta_h * 2 *  0.5 * (native_h * (sym_inf_h)  / pop_h + travel_l * (sym_inf_l) / pop_l) +
-          native_l * S4_l.v * beta_l * 0.5 * (native_l * (inf_l) / pop_l + travel_h * (inf_h)  / pop_h) +
-          travel_l * S4_l.v * beta_h * 0.5 * (native_h * (inf_h)  / pop_h + travel_l * (inf_l) / pop_l) ) / sum(S1_l + S2_l.v + S2_l + S3_l.v + S3_l + S4_l.v + S4_l)
-  
-  
+    sum(native * 2 * beta_l * (native * (sym_inf_l) / pop_l + travel * (sym_inf_h) / pop_h) +
+          travel * 2 * beta_h * (native * (sym_inf_h)/ pop_h + travel * (sym_inf_l) / pop_l) +
+          native * beta_l * (native * (inf_l) / pop_l + travel * (inf_h) / pop_h) +
+          travel * beta_h * (native * (inf_h)/ pop_h + travel * (inf_l) / pop_l))
   
   list(c(
     dS1_h, dI1_h, dR1_h,
@@ -1841,39 +1789,39 @@ out_null.h <- out_null.h[,2:ncol(out_null.h)]
 
 
 indexing <- c((1):(years * 3650))
-
-people <- list()
-number <- out_null.h[(years * 3650),which(colnames(out_null.h) == 'ih1')] + 
-            out_null.h[(years * 3650),which(colnames(out_null.h) == 'ih2')] +
-            out_null.h[(years * 3650),which(colnames(out_null.h) == 'ih3')] +
-            out_null.h[(years * 3650),which(colnames(out_null.h) == 'ih4')] +
-            out_null.h[(years * 3650),which(colnames(out_null.h) == 'ih2.v')] +
-            out_null.h[(years * 3650),which(colnames(out_null.h) == 'ih3.v')] +
-            out_null.h[(years * 3650),which(colnames(out_null.h) == 'ih4.v')]
-for(i in 1:length(number)){
-  people[[i]] <- rep((i-1), number[i])
-}
-people <- unlist(people)
-average_age <- sum(people) / length(people)
-FOI_age.h <- 1 /average_age
-
-people <- list()
-number <- out_null.h[(years * 3650),which(colnames(out_null.h) == 'il1')] + 
-            out_null.h[(years * 3650),which(colnames(out_null.h) == 'il2')] +
-            out_null.h[(years * 3650),which(colnames(out_null.h) == 'il3')]+ 
-            out_null.h[(years * 3650),which(colnames(out_null.h) == 'il4')] +
-            out_null.h[(years * 3650),which(colnames(out_null.h) == 'il2.v')] +
-            out_null.h[(years * 3650),which(colnames(out_null.h) == 'il3.v')]+
-            out_null.h[(years * 3650),which(colnames(out_null.h) == 'il4.v')] 
-for(i in 1:length(number)){
-  people[[i]] <- rep((i-1), ceiling(number[i]))
-}
-people <- unlist(people)
-average_age <- sum(people) / length(people)
-FOI_age.l <- 1 /average_age
-
-FOI_age <- c(FOI_age.h, FOI_age.l)
-save(FOI_age, file = paste('FOI_age_', input, '.RData', sep =''))  
+# 
+# people <- list()
+# number <- out_null.h[(years * 3650),which(colnames(out_null.h) == 'ih1')] + 
+#             out_null.h[(years * 3650),which(colnames(out_null.h) == 'ih2')] +
+#             out_null.h[(years * 3650),which(colnames(out_null.h) == 'ih3')] +
+#             out_null.h[(years * 3650),which(colnames(out_null.h) == 'ih4')] +
+#             out_null.h[(years * 3650),which(colnames(out_null.h) == 'ih2.v')] +
+#             out_null.h[(years * 3650),which(colnames(out_null.h) == 'ih3.v')] +
+#             out_null.h[(years * 3650),which(colnames(out_null.h) == 'ih4.v')]
+# for(i in 1:length(number)){
+#   people[[i]] <- rep((i-1), number[i])
+# }
+# people <- unlist(people)
+# average_age <- sum(people) / length(people)
+# FOI_age.h <- 1 /average_age
+# 
+# people <- list()
+# number <- out_null.h[(years * 3650),which(colnames(out_null.h) == 'il1')] + 
+#             out_null.h[(years * 3650),which(colnames(out_null.h) == 'il2')] +
+#             out_null.h[(years * 3650),which(colnames(out_null.h) == 'il3')]+ 
+#             out_null.h[(years * 3650),which(colnames(out_null.h) == 'il4')] +
+#             out_null.h[(years * 3650),which(colnames(out_null.h) == 'il2.v')] +
+#             out_null.h[(years * 3650),which(colnames(out_null.h) == 'il3.v')]+
+#             out_null.h[(years * 3650),which(colnames(out_null.h) == 'il4.v')] 
+# for(i in 1:length(number)){
+#   people[[i]] <- rep((i-1), ceiling(number[i]))
+# }
+# people <- unlist(people)
+# average_age <- sum(people) / length(people)
+# FOI_age.l <- 1 /average_age
+# 
+# FOI_age <- c(FOI_age.h, FOI_age.l)
+# save(FOI_age, file = paste('FOI_age_', input, '.RData', sep =''))  
 # FOI_h <- sum(diff(out.h[indexing,which(colnames(out.h) == 'FOI_h')]) / (3650 * (years - years_vac)))
 # FOI_l <- sum(diff(out.h[indexing,which(colnames(out.h) == 'FOI_l')]) / (3650 * (years - years_vac)))
 # FOI_h.novac <- sum(diff(out_null.h[indexing,which(colnames(out_null.h) == 'FOI_h')]) / (3650 * (years - years_vac)))
