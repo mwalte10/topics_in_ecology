@@ -1684,11 +1684,12 @@ out.h <- ode(times = times, y = y_init, func = model, parms = parms.h)
 end <- Sys.time()
 time <- begin - end
 
+save(time, file = paste('time_', input, '.RData', sep = ''))
 
 ##incidence calcs 
 
-out.h <- out.h[,2:ncol(out.h)]
-out_null.h <- out_null.h[,2:ncol(out_null.h)]
+# out.h <- out.h[,2:ncol(out.h)]
+# out_null.h <- out_null.h[,2:ncol(out_null.h)]
 
 
 
@@ -1824,7 +1825,7 @@ out_null.h <- out_null.h[,2:ncol(out_null.h)]
 ####FOI
 
 
-indexing <- c((1):(years * 3650))
+# indexing <- c((1):(years * 3650))
 
 # people <- list()
 # number <- out_null.h[(years * 3650),which(colnames(out_null.h) == 'ih1')] +
