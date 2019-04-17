@@ -144,7 +144,7 @@ parms_null.h <- list(beta_h = beta_h,
 
 years = 60
 years_vac = 60
-times <- seq(from = 0, to = 365 * years, by = 1)
+times <- seq(from = 0, to = 365 * years, by = 5)
 times <- times[1:(length(times) - 1)]
 
 ############################
