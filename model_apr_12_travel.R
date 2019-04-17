@@ -142,9 +142,9 @@ parms_null.h <- list(beta_h = beta_h,
                      hopkins_inverse)
 
 
-years = 60
+years = 90
 years_vac = 60
-times <- seq(from = 0, to = 365 * years, by = 5)
+times <- seq(from = 0, to = 365 * years, by = 0.1)
 times <- times[1:(length(times) - 1)]
 
 ############################
@@ -1676,7 +1676,7 @@ names(y_init) <- c(rep('sh1', 80), rep('ih1', 80), rep('rh1', 80),
                    'prim.l.inf', 'sec.l.inf', 'psec.l.inf',
                    'ih',
                    'FOI_h.travel', 'FOI_l.travel')
-years = 60
+years = 90
 years_vac = 60
 begin <- Sys.time()
 out.h <- ode(times = times, y = y_init, func = model, parms = parms.h)
@@ -1684,7 +1684,7 @@ out.h <- ode(times = times, y = y_init, func = model, parms = parms.h)
 end <- Sys.time()
 time <- begin - end
 
-save(time, file = paste('time_', input, '.RData', sep = ''))
+#save(time, file = paste('time_', input, '.RData', sep = ''))
 
 ##incidence calcs 
 
@@ -1864,14 +1864,15 @@ save(time, file = paste('time_', input, '.RData', sep = ''))
 # FOI_h.novac <- sum(diff(out_null.h[indexing,which(colnames(out_null.h) == 'FOI_h')]) / (3650 * (years - years_vac)))
 # FOI_l.novac <- sum(diff(out_null.h[indexing,which(colnames(out_null.h) == 'FOI_l')]) / (3650 * (years - years_vac)))
 
-# FOI_h.travel <- sum(diff(out.h[indexing,which(colnames(out.h) == 'FOI_h.travel')]) / ((years)))
-# FOI_l.travel <- sum(diff(out.h[indexing,which(colnames(out.h) == 'FOI_l.travel')]) / ((years)))
-# # FOI_h.travel.new <- sum(diff(out.h[indexing,which(colnames(out.h) == 'FOI_h.travel.new')]) / ((years)))
-# # FOI_l.travel.new <- sum(diff(out.h[indexing,which(colnames(out.h) == 'FOI_l.travel.new')]) / ((years)))
-# # FOI_h.novac..travel <- sum(diff(out_null.h[indexing,which(colnames(out_null.h) == 'FOI_h.travel')]) / ((years)))
-# # FOI_l.novac.travel <- sum(diff(out_null.h[indexing,which(colnames(out_null.h) == 'FOI_l.travel')]) / ((years)))
-# 
-# FOI_output <- c(FOI_h.travel, FOI_l.travel)
-# save(FOI_output, file = paste('FOI_output_', input, '.RData', sep = ''))
+indexing <- c((3650 * years_vac + 1):(years * 3650))
+
+FOI_h.travel <- sum(diff(out.h[indexing,which(colnames(out.h) == 'FOI_h.travel')]) / (3650 * (years - years_vac)))
+FOI_l.travel <- sum(diff(out.h[indexing,which(colnames(out.h) == 'FOI_l.travel')]) / (3650 * (years - years_vac)))
+FOI_h.novac.travel <- sum(diff(out_null.h[indexing,which(colnames(out_null.h) == 'FOI_h.travel')]) / (3650 * (years - years_vac)))
+FOI_l.novac.travel <- sum(diff(out_null.h[indexing,which(colnames(out_null.h) == 'FOI_l.travel')]) / (3650 * (years - years_vac)))
+
+FOI_output <- c(FOI_h.travel, FOI_l.travel, FOI_h.novac.travel, FOI_l.novac.travel)
+save(FOI_output, file = paste('FOI_output_', input, '.RData', sep = ''))
+
 
 
