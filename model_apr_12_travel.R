@@ -1680,7 +1680,7 @@ years = 90
 years_vac = 60
 begin <- Sys.time()
 out.h <- ode(times = times, y = y_init, func = model, parms = parms.h)
-#out_null.h <- ode(times = times, y = y_init, func = model, parms = parms_null.h)
+out_null.h <- ode(times = times, y = y_init, func = model, parms = parms_null.h)
 end <- Sys.time()
 time <- begin - end
 
