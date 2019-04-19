@@ -29,7 +29,7 @@ input = as.numeric(args[1])
 
 
 
-beta_h.vec <- seq(0, 1, length.out = 20)
+beta_h.vec <- seq(0.15, 0.35, length.out = 20)
 beta_h <- beta_h.vec[input]
 beta_l <- beta_h
 native <- 1 
