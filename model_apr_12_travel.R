@@ -10,6 +10,8 @@ input = as.numeric(args[1])
 ##########################
 load("parms.mat.dec_16.RData")
 
+input.vec <- c(13,18,19)
+input <- input.vec[input]
 parse <- which(new.parms.mat[,3] == seq(0, 0.05, length.out = 20)[11])
 new.parms.mat <- new.parms.mat[parse,]
 
