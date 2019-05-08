@@ -1864,7 +1864,7 @@ FOI_l.novac <- sum(out_null.h[indexing,which(colnames(out_null.h) == 'FOI_l')]) 
 
 FOI_output <- c(FOI_h, FOI_l, FOI_h.novac, FOI_l.novac)
 names(FOI_output) <- c('low_trans', 'high_trans', 'low_trans_novac', 'high_trans_novac')
-save(FOI_output, file = paste('FOI_ouptut_new_', index, '.RData', sep = ''))
+save(FOI_output, file = paste('FOI_ouptut_new_', input, '.RData', sep = ''))
 
 
 
