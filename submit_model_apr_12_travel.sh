@@ -1,7 +1,7 @@
 #!/bin/csh
 
 #$ -N apr_12_
-#$ -t 1-3
+#$ -t 1-200
 
 module load bio/R/3.4.0
 
