@@ -2034,6 +2034,7 @@ model <- function(t, y, parms){
   
   FOI_h <- I_h / sum(S1_h + S2_h + S3_h + S4_h + S2_h.v + S3_h.v + S4_h.v)
   FOI_l <- I_l / sum(S1_l + S2_l + S3_l + S4_l + S2_l.v + S3_l.v + S4_l.v)
+  FOI <- (I_l + I_h )/ sum(S1_l + S2_l + S3_l + S4_l + S2_l.v + S3_l.v + S4_l.v + S1_h + S2_h + S3_h + S4_h + S2_h.v + S3_h.v + S4_h.v)
   
   
   list(c(
@@ -2089,7 +2090,7 @@ model <- function(t, y, parms){
     s, h, s.h, h.h, s.l, h.l,
     s.v, h.v, s.h.v, h.h.v, s.l.v, h.l.v,
     s.nv, h.nv, s.h.nv, h.h.nv, s.l.nv, h.l.nv,
-    FOI_h.travel, FOI_l.travel, FOI_h, FOI_l
+    FOI_h.travel, FOI_l.travel, FOI_h, FOI_l, FOI
     # prop_h, prop_l
     # FOI_h, FOI_l,
     # zero_h, one_h, two_h, three_h,
@@ -2117,7 +2118,7 @@ y_init <- c(susceptible_h(1), infected_h(1), recovered_h(1),
             0,
             rep(0, 30),
             rep(0,27),
-            rep(0, 22))
+            rep(0, 23))
 names(y_init) <- c(rep('sh1', 80), rep('ih1', 80), rep('rh1', 80),
                    rep('sh2', 80), rep('ih2', 80), rep('rh2', 80),
                    rep('sh3', 80), rep('ih3', 80), rep('rh3', 80),
@@ -2366,9 +2367,12 @@ save(sp9.vec, file = paste('sp9_', input, '.RData', sep = ''))
 indexing <- c((3650 * years_vac + 1):(years * 3650))
 FOI_h <- sum(out.h[indexing,which(colnames(out.h) == 'FOI_h')]) / length(indexing)
 FOI_l <- sum(out.h[indexing,which(colnames(out.h) == 'FOI_l')])  / length(indexing)
+FOI <- sum(out.h[indexing,which(colnames(out.h) == 'FOI')])  / length(indexing)
+
 FOI_h.novac <- sum(out_null.h[indexing,which(colnames(out_null.h) == 'FOI_h')]) / length(indexing)
 FOI_l.novac <- sum(out_null.h[indexing,which(colnames(out_null.h) == 'FOI_l')]) / length(indexing)
+FOI.novac <- sum(out_null.h[indexing,which(colnames(out_null.h) == 'FOI')]) / length(indexing)
 
-FOI_output <- c(FOI_h, FOI_l, FOI_h.novac, FOI_l.novac)
-names(FOI_output) <- c('low_trans', 'high_trans', 'low_trans_novac', 'high_trans_novac')
+FOI_output <- c(FOI_h, FOI_l, FOI, FOI_h.novac, FOI_l.novac, FOI.novac)
+names(FOI_output) <- c('low_trans', 'high_trans', 'tot', 'low_trans_novac', 'high_trans_novac', 'tot.novac')
 save(FOI_output, file = paste('FOI_ouptut_new_', input, '.RData', sep = ''))
