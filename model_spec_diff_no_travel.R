@@ -1753,22 +1753,22 @@ time <- begin - end
 # 
 # 
   
-#   ###Coverage calcs
-#   vac_h <- sum(sum(out.h[nrow(out.h),which(colnames(out.h) == 'rh1.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'sh2.v')]) +
-#                  sum(out.h[nrow(out.h),which(colnames(out.h) == 'ih2.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'rh2.v')]) +
-#                  sum(out.h[nrow(out.h),which(colnames(out.h) == 'sh3.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'ih3.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'rh3.v')]) +
-#                  sum(out.h[nrow(out.h),which(colnames(out.h) == 'sh4.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'ih4.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'rh4.v')]))
-#   pop_h <- sum(out.h[nrow(out.h),((which(colnames(out.h) == 'sh1')[1]):(which(colnames(out.h) == 'rh4'))[length(which(colnames(out.h) == 'rh4'))])])
-# 
-#   vac_l <- sum(sum(out.h[nrow(out.h),which(colnames(out.h) == 'rl1.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'sl2.v')]) +
-#                  sum(out.h[nrow(out.h),which(colnames(out.h) == 'il2.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'rl2.v')]) +
-#                  sum(out.h[nrow(out.h),which(colnames(out.h) == 'sl3.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'il3.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'rl3.v')]) +
-#                  sum(out.h[nrow(out.h),which(colnames(out.h) == 'sl4.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'il4.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'rl4.v')]))
-#   pop_l <- sum(out.h[nrow(out.h),((which(colnames(out.h) == 'sl1')[1]):(which(colnames(out.h) == 'rl4'))[length(which(colnames(out.h) == 'rl4'))])])
-#   coverage_h <- vac_h / pop_h
-#   coverage_l <- vac_l / pop_l
-#   coverage_pop <- (vac_h + vac_l) / (pop_h + pop_l)
-#   coverage <- c(coverage_h, coverage_l, coverage_pop)
+  ###Coverage calcs
+  vac_h <- sum(sum(out.h[nrow(out.h),which(colnames(out.h) == 'rh1.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'sh2.v')]) +
+                 sum(out.h[nrow(out.h),which(colnames(out.h) == 'ih2.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'rh2.v')]) +
+                 sum(out.h[nrow(out.h),which(colnames(out.h) == 'sh3.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'ih3.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'rh3.v')]) +
+                 sum(out.h[nrow(out.h),which(colnames(out.h) == 'sh4.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'ih4.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'rh4.v')]))
+  pop_h <- sum(out.h[nrow(out.h),((which(colnames(out.h) == 'sh1')[1]):(which(colnames(out.h) == 'rh4'))[length(which(colnames(out.h) == 'rh4'))])])
+
+  vac_l <- sum(sum(out.h[nrow(out.h),which(colnames(out.h) == 'rl1.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'sl2.v')]) +
+                 sum(out.h[nrow(out.h),which(colnames(out.h) == 'il2.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'rl2.v')]) +
+                 sum(out.h[nrow(out.h),which(colnames(out.h) == 'sl3.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'il3.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'rl3.v')]) +
+                 sum(out.h[nrow(out.h),which(colnames(out.h) == 'sl4.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'il4.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'rl4.v')]))
+  pop_l <- sum(out.h[nrow(out.h),((which(colnames(out.h) == 'sl1')[1]):(which(colnames(out.h) == 'rl4'))[length(which(colnames(out.h) == 'rl4'))])])
+  coverage_h <- vac_h / pop_h
+  coverage_l <- vac_l / pop_l
+  coverage_pop <- (vac_h + vac_l) / (pop_h + pop_l)
+  coverage <- c(coverage_h, coverage_l, coverage_pop)
 # 
 # cases_averted.func <- function(out_mat, out_mat_null, timepoint_year){
 #   indexing <- c((3650 * years_vac + 1):(timepoint_year * 3650 ))
