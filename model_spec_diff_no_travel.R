@@ -27,6 +27,9 @@ spec <- unlist(spec)
 new.table <- do.call('rbind', new.table)
 new.parms.mat <- cbind(new.table, spec)
 
+input.vec <- c(9, 10, 18, 19,23, 24, 25, 52, 75, 94)
+input <- input.vec[input]
+
 
 beta_h <- new.parms.mat[input,1]
 beta_l <- new.parms.mat[input,2]
