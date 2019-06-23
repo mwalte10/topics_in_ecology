@@ -19,8 +19,10 @@ native_h <- 1 - new.parms.mat[input,3]
 native_l <- native_h
 travel_h <- new.parms.mat[input,3]
 travel_l <- travel_h
-vac_h <- new.parms.mat[input,4]
-vac_l <- new.parms.mat[input,5]
+# vac_h <- new.parms.mat[input,4]
+# vac_l <- new.parms.mat[input,5]
+vac_h <- 0
+vac_l <- 0
 
 
 load('pop_1950.RData')
@@ -1865,21 +1867,20 @@ time <- begin - end
 
 indexing <- c((3650 * years_vac + 1):(years * 3650))
 
-#FOI_h.travel <- sum(diff(out.h[indexing,which(colnames(out.h) == 'FOI_h.travel')]) / (3650 * (years - years_vac)))
-#FOI_l.travel <- sum(diff(out.h[indexing,which(colnames(out.h) == 'FOI_l.travel')]) / (3650 * (years - years_vac)))
-#FOI_h.novac.travel <- sum(diff(out_null.h[indexing,which(colnames(out_null.h) == 'FOI_h.travel')]) / (3650 * (years - years_vac)))
-#FOI_l.novac.travel <- sum(diff(out_null.h[indexing,which(colnames(out_null.h) == 'FOI_l.travel')]) / (3650 * (years - years_vac)))
+FOI_h.travel <- sum(diff(out.h[indexing,which(colnames(out.h) == 'FOI_h.travel')]) / (3650 * (years - years_vac)))
+FOI_l.travel <- sum(diff(out.h[indexing,which(colnames(out.h) == 'FOI_l.travel')]) / (3650 * (years - years_vac)))
+FOI_h.novac.travel <- sum(diff(out_null.h[indexing,which(colnames(out_null.h) == 'FOI_h.travel')]) / (3650 * (years - years_vac)))
+FOI_l.novac.travel <- sum(diff(out_null.h[indexing,which(colnames(out_null.h) == 'FOI_l.travel')]) / (3650 * (years - years_vac)))
 
-#FOI_output <- c(FOI_h.travel, FOI_l.travel, FOI_h.novac.travel, FOI_l.novac.travel)
-#save(FOI_output, file = paste('FOI_output_', input, '.RData', sep = ''))
+FOI_output <- c(FOI_h.travel, FOI_l.travel, FOI_h.novac.travel, FOI_l.novac.travel)
+save(FOI_output, file = paste('FOI_output_', input, '.RData', sep = ''))
 
 
-
-FOI_h.travel <- diff(out.h[indexing,which(colnames(out.h) == 'FOI_h.travel')])
-FOI_l.travel <- diff(out.h[indexing,which(colnames(out.h) == 'FOI_l.travel')])
-FOI_h.novac.travel <- diff(out_null.h[indexing,which(colnames(out_null.h) == 'FOI_h.travel')])
-FOI_l.novac.travel <- diff(out_null.h[indexing,which(colnames(out_null.h) == 'FOI_l.travel')])
-
-FOI_output <- list(FOI_h.travel, FOI_l.travel, FOI_h.novac.travel, FOI_l.novac.travel)
-save(FOI_output, file = paste('FOI_output_list_', input, '.RData', sep = ''))
+# FOI_h.travel <- diff(out.h[indexing,which(colnames(out.h) == 'FOI_h.travel')])
+# FOI_l.travel <- diff(out.h[indexing,which(colnames(out.h) == 'FOI_l.travel')])
+# FOI_h.novac.travel <- diff(out_null.h[indexing,which(colnames(out_null.h) == 'FOI_h.travel')])
+# FOI_l.novac.travel <- diff(out_null.h[indexing,which(colnames(out_null.h) == 'FOI_l.travel')])
+# 
+# FOI_output <- list(FOI_h.travel, FOI_l.travel, FOI_h.novac.travel, FOI_l.novac.travel)
+# save(FOI_output, file = paste('FOI_output_list_', input, '.RData', sep = ''))
 
