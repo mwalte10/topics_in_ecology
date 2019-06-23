@@ -18,10 +18,10 @@ FOI_list.l <- list()
   z <- c()
   for(i in 1:length(FOI_output[[1]])){
     index <- c(1:i)
-    w <- sum(diffinv(FOI_output[[1]][index])) / length(index)
-    x <- sum(diffinv(FOI_output[[2]][index])) / length(index)
-    y <- sum(diffinv(FOI_output[[3]][index])) / length(index)
-    z <- sum(diffinv(FOI_output[[4]][index])) / length(index)
+    w[j] <- sum(diffinv(FOI_output[[1]][index])) / length(index)
+    x[j] <- sum(diffinv(FOI_output[[2]][index])) / length(index)
+    y[j] <- sum(diffinv(FOI_output[[3]][index])) / length(index)
+    z[j] <- sum(diffinv(FOI_output[[4]][index])) / length(index)
   }
   FOI_list.h.vac <- w
   FOI_list.l.vac <- x
