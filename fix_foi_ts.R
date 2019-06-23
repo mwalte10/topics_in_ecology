@@ -30,7 +30,7 @@ FOI_list.l <- list()
 
 
 
-save(FOI_list.h.vac, file = 'FOI_list.h.vac.RData')
-save(FOI_list.l.vac, file = 'FOI_list.l.vac.RData')
-save(FOI_list.h, file = 'FOI_list.h.RData')
-save(FOI_list.l, file = 'FOI_list.l.RData')
+save(FOI_list.h.vac, file = paste('FOI_list.h.vac_', input, '.RData', sep = ''))
+save(FOI_list.l.vac, file = paste('FOI_list.l.vac_', input, '.RData', sep = ''))
+save(FOI_list.h, file = paste('FOI_list.h_', input, '.RData', sep = ''))
+save(FOI_list.l, file = paste('FOI_list.l_', input, '.RData', sep = ''))
