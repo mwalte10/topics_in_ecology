@@ -10,7 +10,7 @@ input = as.numeric(args[1])
 #IF DOING VAC COVERAGE
 ##########################
 
-load('validation_parms.test_imperial.RData')
+load('/afs/crc.nd.edu/user/m/mwalte10/topics_in_ecology/validation_parms.test_imperial.RData')
 
 beta_h <- validation_parms.test[input]
 beta_l <- beta_h
