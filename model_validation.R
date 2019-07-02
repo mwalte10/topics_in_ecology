@@ -9,15 +9,15 @@ input = as.numeric(args[1])
 #IF DOING VAC COVERAGE
 ##########################
 
-validation_parms.test <- c(0.1751208, 0.1819593, 0.1939589, 0.2175517, 0.2876784)
+validation_parms.test <- c(0.1660247, 0.1717892, 0.1826108 , 0.2045885, 0.2716160)
 beta_h <- validation_parms.test[input]
 beta_l <- beta_h
 native_h <- 1
 native_l <- 1
 travel_h <- 0
 travel_l <- 0
-vac_h <- 0
-vac_l <- 0
+vac_h <- 0.8
+vac_l <- 0.8
 
 load('pop_1950.RData')
 load('birth_1950.RData')
@@ -118,8 +118,8 @@ parms.h <- list(beta_h = beta_h,
                 travel_l = travel_l,
                 vac_h = vac_h,
                 vac_l = vac_l,
-                sens = 0.85,
-                spec = 0.95,
+                sens = 1,
+                spec = 0,
                 hopkins,
                 hopkins_inverse)
 parms_null.h <- list(beta_h = beta_h,
@@ -135,8 +135,8 @@ parms_null.h <- list(beta_h = beta_h,
                      travel_l = travel_l,
                      vac_h = 0,
                      vac_l = 0,
-                     sens = 0.85,
-                     spec = 0.95,
+                     sens = 1,
+                     spec = 0,
                      hopkins,
                      hopkins_inverse)
 
