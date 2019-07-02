@@ -8,8 +8,8 @@ input = as.numeric(args[1])
 ##########################
 #IF DOING VAC COVERAGE
 ##########################
-load('/afs/crc.nd.edu/user/m/mwalte10/topics_in_ecology/validation_parms.test_imperial.RData')
 
+validation_parms.test <- c(0.1751208, 0.1819593, 0.1939589, 0.2175517, 0.2876784)
 beta_h <- validation_parms.test[input]
 beta_l <- beta_h
 native_h <- 1
