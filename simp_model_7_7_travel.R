@@ -114,8 +114,8 @@ parms_null.h <- list(beta_h = beta_h,
 
 
 
-years = 60
-years_vac = 30
+years = 90
+years_vac = 60
 times <- seq(from = 0, to = 365 * years, by = 0.1)
 times <- times[1:(length(times) - 1)]
 
@@ -896,11 +896,11 @@ names(y_init) <- c(rep('sh1', 80), rep('ih1', 80), rep('rh1', 80),
 #run intervention model
 out.h <- ode(times = times, y = y_init, func = model, parms = parms.h)
 #run null model 
-# out_null.h <- ode(times = times, y = y_init, func = model, parms = parms_null.h)
+ out_null.h <- ode(times = times, y = y_init, func = model, parms = parms_null.h)
 
 ###remove the time column
 out.h <- out.h[,2:ncol(out.h)]
-# out_null.h <- out_null.h[,2:ncol(out_null.h)]
+out_null.h <- out_null.h[,2:ncol(out_null.h)]
 
 
 
