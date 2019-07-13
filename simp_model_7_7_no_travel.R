@@ -965,7 +965,8 @@ out.h <- out.h[,2:ncol(out.h)]
   
   ####time series coverage
   {
-    index <- seq((years_vac * 3650), (years* 3650))
+    timepoint_year <- years
+    index <- c((3650 * years_vac + 1):(timepoint_year * 3650 ))
     vac_h.1 <- rowSums(out.h[index,which(colnames(out.h) == 'rh1.v')])
     vac_h.2 <- c(rowSums(out.h[index,which(colnames(out.h) == 'sh2.v')]) +
                      rowSums(out.h[index,which(colnames(out.h) == 'ih2.v')]) + rowSums(out.h[index,which(colnames(out.h) == 'rh2.v')]))
@@ -990,6 +991,7 @@ out.h <- out.h[,2:ncol(out.h)]
       coverage_h.cum.list[[i]] <- coverage_h.cum[index]
     }
     
+    index <- c((3650 * years_vac + 1):(timepoint_year * 3650 ))
     
     vac_l.1 <- rowSums(out.h[index,which(colnames(out.h) == 'rl1.v')])
     vac_l.2 <- c(rowSums(out.h[index,which(colnames(out.h) == 'sl2.v')]) +
@@ -1006,7 +1008,7 @@ out.h <- out.h[,2:ncol(out.h)]
                    rowSums(out.h[index,which(colnames(out.h) == 'sl3.v')]) + rowSums(out.h[index,which(colnames(out.h) == 'il3.v')]) + rowSums(out.h[index,which(colnames(out.h) == 'rl3.v')]) +
                    rowSums(out.h[index,which(colnames(out.h) == 'sl4.v')]) + rowSums(out.h[index,which(colnames(out.h) == 'il4.v')]) + rowSums(out.h[index,which(colnames(out.h) == 'rl4.v')]))
     
-    # coverage_h <- c(vac_h.1 / pop_h.1, vac_h.2 / pop_h.2, vac_h.3 / pop_h.3)
+    # coverage_l <- list(vac_l.1 / pop_l.1, vac_l.2 / pop_l.2, vac_l.3 / pop_l.3)
     coverage_l.cum <- c(vac_l.1 + vac_l.2 + vac_l.3) / c(pop_l.1 + pop_l.2 + pop_l.3)
     coverage_l.cum.list <- list()
     for(i in 1:(years - years_vac)){
