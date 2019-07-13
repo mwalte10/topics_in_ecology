@@ -932,6 +932,7 @@ out_null.h <- out_null.h[,2:ncol(out_null.h)]
                    sum(out.h[nrow(out.h),which(colnames(out.h) == 'sh4.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'ih4.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'rh4.v')]))
   
   coverage_h <- c(vac_h.1 / pop_h.1, vac_h.2 / pop_h.2, vac_h.3 / pop_h.3)
+  coverage_h.cum <- sum(vac_h.1 + vac_h.2 + vac_h.3) / sum(pop_h.1 + pop_h.2 + pop_h.3)
   
   
   vac_l.1 <- sum(out.h[nrow(out.h),which(colnames(out.h) == 'rl1.v')])
@@ -947,11 +948,14 @@ out_null.h <- out_null.h[,2:ncol(out_null.h)]
   pop_l.3 <- sum(out.h[nrow(out.h),((which(colnames(out.h) == 'sl3')[1]):(which(colnames(out.h) == 'rl4'))[length(which(colnames(out.h) == 'rl4'))])] + vac_l.3)
   
   coverage_l <- c(vac_l.1 / pop_l.1, vac_l.2 / pop_l.2, vac_l.3 / pop_l.3)
+  coverage_l.cum <- sum(vac_l.1 + vac_l.2 + vac_l.3) / sum(pop_l.1 + pop_l.2 + pop_l.3)
+  
   
   coverage <- c(((vac_h.1 + vac_l.1) / (pop_h.1 + pop_l.1)),
                 ((vac_h.2 + vac_l.2) / (pop_h.2 + pop_l.2)),
                 ((vac_h.3 + vac_l.3) / (pop_h.3 + pop_l.3)))
-  coverage_list <- list(coverage_h, coverage_l, coverage)
+  coverage.cum <- sum(vac_l.1 + vac_l.2 + vac_l.3 + vac_h.1 + vac_h.2 + vac_h.3) / sum(pop_l.1 + pop_l.2 + pop_l.3 + pop_h.1 + pop_h.2 + pop_h.3)
+  coverage_list <- list(coverage_h.cum, coverage_l.cum, coverage.cum)
   save(coverage_list, file = paste('coverage_', input, '.RData', sep = ''))
   
   }
