@@ -1066,12 +1066,12 @@ out.h <- out.h[,2:ncol(out.h)]
     names(coverage) <- c('h', 'l', 'pop')
     save(coverage, file = paste('new.cov_', input, '.RData', sep = ''))
  
-   # cases.output.vec.h  <- cases_averted.func(out_mat = out.h, out_mat_null = out_null.h, timepoint_year = years, cases = 1)
+    cases.output.vec.h  <- cases_averted.func(out_mat = out.h, out_mat_null = out_null.h, timepoint_year = years, cases = 1)
   # infections.output.vec.h  <- cases_averted.func(out_mat = out.h, out_mat_null = out_null.h, timepoint_year = years, cases = 0)
   
   
   
-  # save(cases.output.vec.h, file = paste('cases_averted_', input, '.RData', sep = ''))
+   save(cases.output.vec.h, file = paste('cases_averted_', input, '.RData', sep = ''))
   # save(infections.output.vec.h, file = paste('infections_averted_', input, '.RData', sep = ''))
   
 }
