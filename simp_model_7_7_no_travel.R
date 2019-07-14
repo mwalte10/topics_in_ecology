@@ -1042,7 +1042,7 @@ out.h <- out.h[,2:ncol(out.h)]
 }
 
 last_row <- out.h[nrow(out.h),]
-save(last_row, file = paste('last_row_', i, '.RData', sep =''))
+save(last_row, file = paste('last_row_', input, '.RData', sep =''))
 
 ######check seroprevalence levels
 
