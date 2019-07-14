@@ -967,40 +967,40 @@ out_null.h <- out_null.h[,2:ncol(out_null.h)]
   {
     timepoint_year <- years
     index <- c((3650 * years_vac + 1):(timepoint_year * 3650 ))
-    vac_h.1 <- rowSums(out.h[index,which(colnames(out.h) == 'rh1.v')[10:39]])
-    vac_h.2 <- c(rowSums(out.h[index,which(colnames(out.h) == 'sh2.v')[10:39]]) +
-                     rowSums(out.h[index,which(colnames(out.h) == 'ih2.v')[10:39]]) + rowSums(out.h[index,which(colnames(out.h) == 'rh2.v')[10:39]]))
-    vac_h.3 <- c(rowSums(out.h[index,which(colnames(out.h) == 'sh3.v')[10:39]]) + rowSums(out.h[index,which(colnames(out.h) == 'ih3.v')[10:39]]) + rowSums(out.h[index,which(colnames(out.h) == 'rh3.v')[10:39]]) +
-                   rowSums(out.h[index,which(colnames(out.h) == 'sh4.v')[10:39]]) + rowSums(out.h[index,which(colnames(out.h) == 'ih4.v')[10:39]]) + rowSums(out.h[index,which(colnames(out.h) == 'rh4.v')[10:39]]))
+    vac_h.1 <- rowSums(out.h[index,which(colnames(out.h) == 'rh1.v')[9:38]])
+    vac_h.2 <- c(rowSums(out.h[index,which(colnames(out.h) == 'sh2.v')[9:38]]) +
+                     rowSums(out.h[index,which(colnames(out.h) == 'ih2.v')[9:38]]) + rowSums(out.h[index,which(colnames(out.h) == 'rh2.v')[9:38]]))
+    vac_h.3 <- c(rowSums(out.h[index,which(colnames(out.h) == 'sh3.v')[9:38]]) + rowSums(out.h[index,which(colnames(out.h) == 'ih3.v')[9:38]]) + rowSums(out.h[index,which(colnames(out.h) == 'rh3.v')[9:38]]) +
+                   rowSums(out.h[index,which(colnames(out.h) == 'sh4.v')[9:38]]) + rowSums(out.h[index,which(colnames(out.h) == 'ih4.v')[9:38]]) + rowSums(out.h[index,which(colnames(out.h) == 'rh4.v')[9:38]]))
 
-    pop_h.1 <- c(rowSums(out.h[index,which(colnames(out.h) == 'sh1')[10:39]]) + 
-                   rowSums(out.h[index,which(colnames(out.h) == 'ih1')[10:39]]) +
-                   rowSums(out.h[index,which(colnames(out.h) == 'rh1')[10:39]]) +
-                   rowSums(out.h[index,which(colnames(out.h) == 'rh1')[10:39]]))
+    pop_h.1 <- c(rowSums(out.h[index,which(colnames(out.h) == 'sh1')[9:38]]) + 
+                   rowSums(out.h[index,which(colnames(out.h) == 'ih1')[9:38]]) +
+                   rowSums(out.h[index,which(colnames(out.h) == 'rh1')[9:38]]) +
+                   rowSums(out.h[index,which(colnames(out.h) == 'rh1')[9:38]]))
                    
 
-    pop_h.2 <- c(  rowSums(out.h[index,which(colnames(out.h) == 'sh2')[10:39]]) + 
-                     rowSums(out.h[index,which(colnames(out.h) == 'ih2')[10:39]]) +
-                     rowSums(out.h[index,which(colnames(out.h) == 'rh2')[10:39]]) +
-                     rowSums(out.h[index,which(colnames(out.h) == 'sh2.v')[10:39]]) + 
-                     rowSums(out.h[index,which(colnames(out.h) == 'ih2.v')[10:39]]) +
-                     rowSums(out.h[index,which(colnames(out.h) == 'rh2.v')[10:39]])
+    pop_h.2 <- c(  rowSums(out.h[index,which(colnames(out.h) == 'sh2')[9:38]]) + 
+                     rowSums(out.h[index,which(colnames(out.h) == 'ih2')[9:38]]) +
+                     rowSums(out.h[index,which(colnames(out.h) == 'rh2')[9:38]]) +
+                     rowSums(out.h[index,which(colnames(out.h) == 'sh2.v')[9:38]]) + 
+                     rowSums(out.h[index,which(colnames(out.h) == 'ih2.v')[9:38]]) +
+                     rowSums(out.h[index,which(colnames(out.h) == 'rh2.v')[9:38]])
                  )
-    pop_h.3 <- c( rowSums(out.h[index,which(colnames(out.h) == 'sh3')[10:39]]) + 
-                    rowSums(out.h[index,which(colnames(out.h) == 'ih3')[10:39]]) +
-                    rowSums(out.h[index,which(colnames(out.h) == 'rh3')[10:39]]) +
-                    rowSums(out.h[index,which(colnames(out.h) == 'sh4')[10:39]]) + 
-                    rowSums(out.h[index,which(colnames(out.h) == 'ih4')[10:39]]) +
-                    rowSums(out.h[index,which(colnames(out.h) == 'rh4')[10:39]]) + 
-                    rowSums(out.h[index,which(colnames(out.h) == 'sh3.v')[10:39]]) + 
-                    rowSums(out.h[index,which(colnames(out.h) == 'ih3.v')[10:39]]) +
-                    rowSums(out.h[index,which(colnames(out.h) == 'rh3.v')[10:39]]) +
-                    rowSums(out.h[index,which(colnames(out.h) == 'sh4.v')[10:39]]) + 
-                    rowSums(out.h[index,which(colnames(out.h) == 'ih4.v')[10:39]]) +
-                    rowSums(out.h[index,which(colnames(out.h) == 'rh4.v')[10:39]])
+    pop_h.3 <- c( rowSums(out.h[index,which(colnames(out.h) == 'sh3')[9:38]]) + 
+                    rowSums(out.h[index,which(colnames(out.h) == 'ih3')[9:38]]) +
+                    rowSums(out.h[index,which(colnames(out.h) == 'rh3')[9:38]]) +
+                    rowSums(out.h[index,which(colnames(out.h) == 'sh4')[9:38]]) + 
+                    rowSums(out.h[index,which(colnames(out.h) == 'ih4')[9:38]]) +
+                    rowSums(out.h[index,which(colnames(out.h) == 'rh4')[9:38]]) + 
+                    rowSums(out.h[index,which(colnames(out.h) == 'sh3.v')[9:38]]) + 
+                    rowSums(out.h[index,which(colnames(out.h) == 'ih3.v')[9:38]]) +
+                    rowSums(out.h[index,which(colnames(out.h) == 'rh3.v')[9:38]]) +
+                    rowSums(out.h[index,which(colnames(out.h) == 'sh4.v')[9:38]]) + 
+                    rowSums(out.h[index,which(colnames(out.h) == 'ih4.v')[9:38]]) +
+                    rowSums(out.h[index,which(colnames(out.h) == 'rh4.v')[9:38]])
                  )
 
-    # coverage_h <- c(vac_h.1 / pop_h.1, vac_h.2 / pop_h.2, vac_h.3 / pop_h.3)
+    coverage_h <- c((vac_h.1 / pop_h.1)[length(vac_h.1 / pop_h.1)], (vac_h.2 / pop_h.2)[length(vac_h.2 / pop_h.2)], (vac_h.3 / pop_h.3)[length((vac_h.3 / pop_h.3))])
     coverage_h.cum <- c(vac_h.1 + vac_h.2 + vac_h.3) / c(pop_h.1 + pop_h.2 + pop_h.3)
     coverage_h.cum.list <- list()
     for(i in 1:(years - years_vac)){
@@ -1011,41 +1011,41 @@ out_null.h <- out_null.h[,2:ncol(out_null.h)]
 
     index <- c((3650 * years_vac + 1):(timepoint_year * 3650 ))
 
-    vac_l.1 <- rowSums(out.h[index,which(colnames(out.h) == 'rl1.v')[10:39]])
-    vac_l.2 <- c(rowSums(out.h[index,which(colnames(out.h) == 'sl2.v')[10:39]]) +
-                   rowSums(out.h[index,which(colnames(out.h) == 'il2.v')[10:39]]) + rowSums(out.h[index,which(colnames(out.h) == 'rl2.v')[10:39]]))
-    vac_l.3 <- c(rowSums(out.h[index,which(colnames(out.h) == 'sl3.v')[10:39]]) + rowSums(out.h[index,which(colnames(out.h) == 'il3.v')[10:39]]) + rowSums(out.h[index,which(colnames(out.h) == 'rl3.v')[10:39]]) +
-                   rowSums(out.h[index,which(colnames(out.h) == 'sl4.v')[10:39]]) + rowSums(out.h[index,which(colnames(out.h) == 'il4.v')[10:39]]) + rowSums(out.h[index,which(colnames(out.h) == 'rl4.v')[10:39]]))
+    vac_l.1 <- rowSums(out.h[index,which(colnames(out.h) == 'rl1.v')[9:38]])
+    vac_l.2 <- c(rowSums(out.h[index,which(colnames(out.h) == 'sl2.v')[9:38]]) +
+                   rowSums(out.h[index,which(colnames(out.h) == 'il2.v')[9:38]]) + rowSums(out.h[index,which(colnames(out.h) == 'rl2.v')[9:38]]))
+    vac_l.3 <- c(rowSums(out.h[index,which(colnames(out.h) == 'sl3.v')[9:38]]) + rowSums(out.h[index,which(colnames(out.h) == 'il3.v')[9:38]]) + rowSums(out.h[index,which(colnames(out.h) == 'rl3.v')[9:38]]) +
+                   rowSums(out.h[index,which(colnames(out.h) == 'sl4.v')[9:38]]) + rowSums(out.h[index,which(colnames(out.h) == 'il4.v')[9:38]]) + rowSums(out.h[index,which(colnames(out.h) == 'rl4.v')[9:38]]))
     
-    pop_l.1 <- c(rowSums(out.h[index,which(colnames(out.h) == 'sl1')[10:39]]) + 
-                   rowSums(out.h[index,which(colnames(out.h) == 'il1')[10:39]]) +
-                   rowSums(out.h[index,which(colnames(out.h) == 'rl1')[10:39]]) +
-                   rowSums(out.h[index,which(colnames(out.h) == 'rl1')[10:39]]))
+    pop_l.1 <- c(rowSums(out.h[index,which(colnames(out.h) == 'sl1')[9:38]]) + 
+                   rowSums(out.h[index,which(colnames(out.h) == 'il1')[9:38]]) +
+                   rowSums(out.h[index,which(colnames(out.h) == 'rl1')[9:38]]) +
+                   rowSums(out.h[index,which(colnames(out.h) == 'rl1')[9:38]]))
    
     
     
-    pop_l.2 <- c(  rowSums(out.h[index,which(colnames(out.h) == 'sl2')[10:39]]) + 
-                     rowSums(out.h[index,which(colnames(out.h) == 'il2')[10:39]]) +
-                     rowSums(out.h[index,which(colnames(out.h) == 'rl2')[10:39]]) +
-                     rowSums(out.h[index,which(colnames(out.h) == 'sl2.v')[10:39]]) + 
-                     rowSums(out.h[index,which(colnames(out.h) == 'il2.v')[10:39]]) +
-                     rowSums(out.h[index,which(colnames(out.h) == 'rl2.v')[10:39]])
+    pop_l.2 <- c(  rowSums(out.h[index,which(colnames(out.h) == 'sl2')[9:38]]) + 
+                     rowSums(out.h[index,which(colnames(out.h) == 'il2')[9:38]]) +
+                     rowSums(out.h[index,which(colnames(out.h) == 'rl2')[9:38]]) +
+                     rowSums(out.h[index,which(colnames(out.h) == 'sl2.v')[9:38]]) + 
+                     rowSums(out.h[index,which(colnames(out.h) == 'il2.v')[9:38]]) +
+                     rowSums(out.h[index,which(colnames(out.h) == 'rl2.v')[9:38]])
     )
-    pop_l.3 <- c( rowSums(out.h[index,which(colnames(out.h) == 'sl3')[10:39]]) + 
-                    rowSums(out.h[index,which(colnames(out.h) == 'il3')[10:39]]) +
-                    rowSums(out.h[index,which(colnames(out.h) == 'rl3')[10:39]]) +
-                    rowSums(out.h[index,which(colnames(out.h) == 'sl4')[10:39]]) + 
-                    rowSums(out.h[index,which(colnames(out.h) == 'il4')[10:39]]) +
-                    rowSums(out.h[index,which(colnames(out.h) == 'rl4')[10:39]]) + 
-                    rowSums(out.h[index,which(colnames(out.h) == 'sl3.v')[10:39]]) + 
-                    rowSums(out.h[index,which(colnames(out.h) == 'il3.v')[10:39]]) +
-                    rowSums(out.h[index,which(colnames(out.h) == 'rl3.v')[10:39]]) +
-                    rowSums(out.h[index,which(colnames(out.h) == 'sl4.v')[10:39]]) + 
-                    rowSums(out.h[index,which(colnames(out.h) == 'il4.v')[10:39]]) +
-                    rowSums(out.h[index,which(colnames(out.h) == 'rl4.v')[10:39]])
+    pop_l.3 <- c( rowSums(out.h[index,which(colnames(out.h) == 'sl3')[9:38]]) + 
+                    rowSums(out.h[index,which(colnames(out.h) == 'il3')[9:38]]) +
+                    rowSums(out.h[index,which(colnames(out.h) == 'rl3')[9:38]]) +
+                    rowSums(out.h[index,which(colnames(out.h) == 'sl4')[9:38]]) + 
+                    rowSums(out.h[index,which(colnames(out.h) == 'il4')[9:38]]) +
+                    rowSums(out.h[index,which(colnames(out.h) == 'rl4')[9:38]]) + 
+                    rowSums(out.h[index,which(colnames(out.h) == 'sl3.v')[9:38]]) + 
+                    rowSums(out.h[index,which(colnames(out.h) == 'il3.v')[9:38]]) +
+                    rowSums(out.h[index,which(colnames(out.h) == 'rl3.v')[9:38]]) +
+                    rowSums(out.h[index,which(colnames(out.h) == 'sl4.v')[9:38]]) + 
+                    rowSums(out.h[index,which(colnames(out.h) == 'il4.v')[9:38]]) +
+                    rowSums(out.h[index,which(colnames(out.h) == 'rl4.v')[9:38]])
     )
 
-    # coverage_l <- list(vac_l.1 / pop_l.1, vac_l.2 / pop_l.2, vac_l.3 / pop_l.3)
+    coverage_l <- c((vac_l.1 / pop_l.1)[length(vac_l.1 / pop_l.1)], (vac_l.2 / pop_l.2)[length(vac_l.2 / pop_l.2)], (vac_l.3 / pop_l.3)[length((vac_l.3 / pop_l.3))])
     coverage_l.cum <- c(vac_l.1 + vac_l.2 + vac_l.3) / c(pop_l.1 + pop_l.2 + pop_l.3)
     coverage_l.cum.list <- list()
     for(i in 1:(years - years_vac)){
