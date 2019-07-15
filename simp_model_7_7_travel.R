@@ -12,8 +12,7 @@ load("parms.mat.dec_16.RData")
 parse <- which(new.parms.mat[,3] == seq(0, 0.05, length.out = 20)[11])
 new.parms.mat <- new.parms.mat[parse,]
 
-vec <- c(8,10)
-input <- vec[input]
+
 
 beta_h <- new.parms.mat[input,1]
 beta_l <- new.parms.mat[input,2]
