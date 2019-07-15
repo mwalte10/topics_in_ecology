@@ -53,6 +53,7 @@ fill_inf <- function(num.inf.h, num.inf.l){
 susceptible_h <- function(exposure){
   x <- exposure - 1
   susceptible <- c(susceptible_init_h[(x * 80) + 1:80,3])
+  return(susceptible)
 }
 susceptible_total_h <- sum(susceptible_h(1) + susceptible_h(2) + susceptible_h(3) + susceptible_h(4))
 susceptible_l <- function(exposure){
@@ -90,8 +91,9 @@ population_l <- sum(susceptible_total_l + infected_total_l + recovered_total_l)
 ###########################
 ##CASES AVERTED
 ###########################
-{cases_averted.func <- function(out_mat, out_mat_null, timepoint_year, cases){
-  indexing <- c((3650 * years_vac + 1):(timepoint_year * 3650 ))
+{
+  cases_averted.func <- function(out_mat, out_mat_null, timepoint_year, cases){
+  indexing <- c((3650 * years_vac ):(timepoint_year * 3650 ))
   if(cases == 1){ ##vaccinated, whole pop
     cases_vac<- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'sec_vac.cases.h')]),
                     diff(out_mat[indexing,which(colnames(out_mat) == 'psec_vac.cases.h')]),
@@ -122,19 +124,37 @@ population_l <- sum(susceptible_total_l + infected_total_l + recovered_total_l)
     cases_vac.l <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'sec_vac.cases.l')]),
                        diff(out_mat[indexing,which(colnames(out_mat) == 'psec_vac.cases.l')]))
     
+  
     
-    cases_vac.h.null <-sum( c(sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'prim_cases.h')])),
-                              sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'sec_cases.h')])),
-                              sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'psec_cases.h')]))) * coverage_h)
-    cases_vac.null <- sum( c(sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'prim_cases.h')])),
-                             sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'sec_cases.h')])),
-                             sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'psec_cases.h')])),
-                             sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'prim_cases.l')])),
-                             sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'sec_cases.l')])),
-                             sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'psec_cases.l')]))) * c(coverage_h, coverage_l))
-    cases_vac.l.null <- sum( c(sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'prim_cases.l')])),
-                               sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'sec_cases.l')])),
-                               sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'psec_cases.l')]))) * coverage_l)
+    cases_vac.h.null <-sum( c(sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'vac_eleg_p.h')])),
+                              sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'vac_eleg_s.h')])),
+                              sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'vac_eleg.ps.h')]))) * coverage_h)
+    cases_vac.null <- sum( c(sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'vac_eleg_p.h')])),
+                             sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'vac_eleg_s.h')])),
+                             sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'vac_eleg.ps.h')])),
+                             sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'vac_eleg_p.l')])),
+                             sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'vac_eleg_s.l')])),
+                             sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'vac_elege_ps.l')]))) * c(coverage_h, coverage_l))
+    cases_vac.l.null <- sum( c(sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'vac_eleg_p.l')])),
+                               sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'vac_eleg_s.l')])),
+                               sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'vac_elege_ps.l')]))) * coverage_l)
+    
+    
+    cases_vac.h.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'prim_cases.h')]) * coverage_h[[1]] + 
+                            diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'sec_cases.h')]) * coverage_h[[2]] +
+                            diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'psec_cases.h')]) * coverage_h[[3]])
+      
+
+    cases_vac.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'prim_cases.h')])  * coverage_h[[1]] + 
+                             diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'sec_cases.h')]) * coverage_h[[2]] +
+                             diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'psec_cases.h')]) * coverage_h[[3]] +
+                             diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'prim_cases.l')]) * coverage_l[[1]] +
+                             diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'sec_cases.l')]) * coverage_l[[2]] +
+                             diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'psec_cases.l')]) * coverage_l[[3]])
+    cases_vac.l.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'prim_cases.l')]) * coverage_l[[1]] + 
+                               diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'sec_cases.l')]) * coverage_l[[2]] + 
+                               diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'psec_cases.l')]) * coverage_l[[3]])
+    
     ##unvaccinaetd, high
     cases_uvac.h <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'prim_cases.h')]),
                         diff(out_mat[indexing,which(colnames(out_mat) == 'sec_cases.h')]),
