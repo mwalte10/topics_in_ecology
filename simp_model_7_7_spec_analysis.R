@@ -12,7 +12,7 @@ load("parms.mat.dec_16.RData")
 
 # input.vec <- c(13,18,19)
 # input <- input.vec[input]
-parse <- which(new.parms.mat[,3] == seq(0, 0.05, length.out = 20)[11])
+parse <- which(new.parms.mat[,3] == seq(0, 0.05, length.out = 20)[1])
 new.parms.mat <- new.parms.mat[parse,]
 new.table <- list()
 for(i in 1:20){
