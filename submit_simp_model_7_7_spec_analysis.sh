@@ -1,7 +1,7 @@
 #!/bin/csh
 
 #$ -N simp_
-#$ -t 1-400
+#$ -t 1-120
 
 module load bio/R/3.4.0
 

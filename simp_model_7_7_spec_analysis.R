@@ -15,12 +15,12 @@ load("parms.mat.dec_16.RData")
 parse <- which(new.parms.mat[,3] == seq(0, 0.05, length.out = 20)[1])
 new.parms.mat <- new.parms.mat[parse,]
 new.table <- list()
-for(i in 1:20){
+for(i in 1:6){
   new.table[[i]] <- new.parms.mat
 }
 spec <- list()
-spec.vec <- seq(0, 1, by = 0.1)
-for(i in 1:10){
+spec.vec <- seq(0, 1, by = 0.2)
+for(i in 1:6){
   spec[[i]] <- rep(spec.vec[i], 20)
 }
 spec <- unlist(spec)
