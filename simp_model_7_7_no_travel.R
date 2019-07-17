@@ -9,20 +9,28 @@ input = as.numeric(args[1])
 #IF DOING VAC COVERAGE
 ##########################
 load("parms.mat.dec_16.RData")
-parse <- which(new.parms.mat[,3] == seq(0, 0.05, length.out = 20)[1])
-new.parms.mat <- new.parms.mat[parse,]
 
+# input.vec <- c(13,18,19)
+# input <- input.vec[input]
+parse <- which(new.parms.mat[,3] == seq(0, 0.05, length.out = 20)[1])
+
+
+# missing.vec <- c(6,7,33,34,36,45,48,50,55,102)
+# input <- missing.vec[input]
 
 
 beta_h <- new.parms.mat[input,1]
 beta_l <- new.parms.mat[input,2]
 native <- 1 - new.parms.mat[input,3]
+travel <- new.parms.mat[input,3]
 vac_h <- new.parms.mat[input,4]
 vac_l <- new.parms.mat[input,5]
+# spec <- new.parms.mat[input, 6]
+
 
 # validation_parms.test <- c(0.1660247, 0.1717892, 0.1826108 , 0.2045885, 0.2716160)
 
-#1
+
 
 load('pop_1950.RData')
 load('birth_1950.RData')
@@ -806,6 +814,39 @@ model <- function(t, y, parms){
           travel * 2 * beta_h * (native * (sym_inf_h)/ pop_h + travel * (sym_inf_l) / pop_l) +
           native * beta_l * (native * (inf_l) / pop_l + travel * (inf_h) / pop_h) +
           travel * beta_h * (native * (inf_h)/ pop_h + travel * (inf_l) / pop_l))}
+  
+  
+  #############################
+  ##Vaccination coverages
+  ############################# 
+  ####inappropriate vaccinations
+  vac_1.h <-  sum(S1_h * vac_h * (1 - spec)) /  sum(S1_h[9])
+  vac_1.l <-  sum(S1_l * vac_l * (1 - spec)) / sum(S1_l[9])
+  
+  pop_1.h.9 <- sum(S1_h[9])
+  pop_1.l.9 <- sum(S1_l[9])
+  
+  
+  ##appropriate vaccinations, averts secondary infections
+  vac_2.h <- sum(R1_h * vac_h * sens)  + sum(S2_h * vac_h * sens) 
+  vac_2.l <- sum(R1_l * vac_l * sens )  + sum(S2_l * vac_l * sens) 
+  
+  pop_2.h.9 <- sum(S2_h[9] + R1_h[9])
+  pop_2.l.9 <- sum(S2_l[9] + R1_l[9])
+  
+  ####averts tertiary infects
+  vac_3.h <- sum(R2_h * vac_h * sens) + sum(S3_h * vac_h * sens) 
+  vac_3.l <- sum(R2_l * vac_l * sens) + sum(S3_l * vac_l * sens) 
+  
+  pop_3.h.9 <- sum(S3_h[9] + R2_h[9])
+  pop_3.l.9 <- sum(S3_l[9] + R2_l[9])
+  
+  ##### averts quat infects
+  vac_4.h <- sum(R3_h * vac_h * sens) + sum(S4_h * vac_h * sens)
+  vac_4.l <- sum(R3_l * vac_l * sens) + sum(S4_l * vac_l * sens) 
+  
+  pop_4.h.9 <- sum(S4_h[9] + R3_h[9])
+  pop_4.l.9 <- sum(S4_l[9] + R3_l[9])
 
   
   
@@ -850,7 +891,17 @@ model <- function(t, y, parms){
     
     primary_cases.l.v,  primary_cases.h.v,
     secondary_cases.l.v,  secondary_cases.h.v,
-    postsec_cases.l.v, postsec_cases.h.v
+    postsec_cases.l.v, postsec_cases.h.v,
+    
+    vac_1.h,  vac_1.l,
+    vac_2.h,  vac_2.l,
+    vac_3.h,  vac_3.l,
+    vac_4.h,  vac_4.l,
+    
+    pop_1.h.9, pop_1.l.9,
+    pop_2.h.9, pop_2.l.9,
+    pop_3.h.9, pop_3.l.9,
+    pop_4.h.9, pop_4.l.9
     
   ))
   
@@ -871,7 +922,8 @@ y_init <- c(susceptible_h(1), infected_h(1), recovered_h(1),
             susceptible_l(4), infected_l(4), recovered_l(4),
             rep(0, 80), rep(0, 80), rep(0, 80), rep(0, 80), rep(0, 80),
             rep(0, 80), rep(0, 80), rep(0, 80), rep(0, 80), rep(0, 80),
-            rep(0, 12), rep(0,2), rep(0,6))
+            rep(0, 12), rep(0,2), rep(0,6), 
+            rep(0, 8), rep(0, 8))
 names(y_init) <- c(rep('sh1', 80), rep('ih1', 80), rep('rh1', 80),
                    rep('sh2', 80), rep('ih2', 80), rep('rh2', 80),
                    rep('sh3', 80), rep('ih3', 80), rep('rh3', 80),
@@ -908,7 +960,17 @@ names(y_init) <- c(rep('sh1', 80), rep('ih1', 80), rep('rh1', 80),
                    'pop_h', 'pop_l',
                    'vac_eleg_p.l', 'vac_eleg_p.h',
                    'vac_eleg_s.l', 'vac_eleg_s.h',
-                   'vac_elege_ps.l', 'vac_eleg.ps.h'
+                   'vac_elege_ps.l', 'vac_eleg.ps.h',
+                   
+                   rep('vac_1.h', 1),  rep('vac_1.l', 1),
+                   rep('vac_2.h', 1), rep('vac_2.l', 1),
+                   rep('vac_3.h', 1),  rep('vac_3.l', 1),
+                   rep('vac_4.h', 1),  rep('vac_4.l', 1),
+                   
+                   rep('pop_1.h', 1),  rep('pop_1.l', 1),
+                   rep('pop_2.h', 1), rep('pop_2.l', 1),
+                   rep('pop_3.h', 1),  rep('pop_3.l', 1),
+                   rep('pop_4.h', 1),  rep('pop_4.l', 1)
                    
 )
 
@@ -927,160 +989,45 @@ out_null.h <- out_null.h[,2:ncol(out_null.h)]
 ###################
 #CASES AVERTED
 ###################
-{
-  ###CALCULATE COVERAGE RATES
-  {
-  #   vac_h <- sum(sum(out.h[nrow(out.h),which(colnames(out.h) == 'rh1.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'sh2.v')]) +
-  #                sum(out.h[nrow(out.h),which(colnames(out.h) == 'ih2.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'rh2.v')]) +
-  #                sum(out.h[nrow(out.h),which(colnames(out.h) == 'sh3.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'ih3.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'rh3.v')]) +
-  #                sum(out.h[nrow(out.h),which(colnames(out.h) == 'sh4.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'ih4.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'rh4.v')]))
-  # 
-  # 
-  # vac_h.1 <- sum(out.h[nrow(out.h),which(colnames(out.h) == 'rh1.v')])
-  # vac_h.2 <- sum(sum(out.h[nrow(out.h),which(colnames(out.h) == 'sh2.v')]) +
-  #                  sum(out.h[nrow(out.h),which(colnames(out.h) == 'ih2.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'rh2.v')]))
-  # vac_h.3 <- sum(sum(out.h[nrow(out.h),which(colnames(out.h) == 'sh3.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'ih3.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'rh3.v')]) +
-  #                  sum(out.h[nrow(out.h),which(colnames(out.h) == 'sh4.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'ih4.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'rh4.v')]))
-  # 
-  # pop_h.1 <- sum(out.h[nrow(out.h),((which(colnames(out.h) == 'sh1')[1]):(which(colnames(out.h) == 'rh1'))[length(which(colnames(out.h) == 'rh1'))])] +
-  #                  sum(out.h[nrow(out.h),which(colnames(out.h) == 'rh1.v')]))
-  # pop_h.2 <- sum(out.h[nrow(out.h),((which(colnames(out.h) == 'sh2')[1]):(which(colnames(out.h) == 'rh2'))[length(which(colnames(out.h) == 'rh2'))])] +
-  #                  sum(out.h[nrow(out.h),which(colnames(out.h) == 'sh2.v')]) +
-  #                  sum(out.h[nrow(out.h),which(colnames(out.h) == 'ih2.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'rh2.v')]))
-  # pop_h.3 <- sum(out.h[nrow(out.h),((which(colnames(out.h) == 'sh3')[1]):(which(colnames(out.h) == 'rh4'))[length(which(colnames(out.h) == 'rh4'))])] + 
-  #                  sum(out.h[nrow(out.h),which(colnames(out.h) == 'sh3.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'ih3.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'rh3.v')]) +
-  #                  sum(out.h[nrow(out.h),which(colnames(out.h) == 'sh4.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'ih4.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'rh4.v')]))
-  # 
-  # coverage_h <- c(vac_h.1 / pop_h.1, vac_h.2 / pop_h.2, vac_h.3 / pop_h.3)
-  # coverage_h.cum <- sum(vac_h.1 + vac_h.2 + vac_h.3) / sum(pop_h.1 + pop_h.2 + pop_h.3)
-  # 
-  # 
-  # vac_l.1 <- sum(out.h[nrow(out.h),which(colnames(out.h) == 'rl1.v')])
-  # vac_l.2 <- sum(sum(out.h[nrow(out.h),which(colnames(out.h) == 'sl2.v')]) +
-  #                  sum(out.h[nrow(out.h),which(colnames(out.h) == 'il2.v')]))
-  # vac_l.3 <- sum(sum(out.h[nrow(out.h),which(colnames(out.h) == 'rl2.v')]) +
-  #                  sum(out.h[nrow(out.h),which(colnames(out.h) == 'sl3.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'il3.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'rl3.v')]) +
-  #                  sum(out.h[nrow(out.h),which(colnames(out.h) == 'sl4.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'il4.v')]) + sum(out.h[nrow(out.h),which(colnames(out.h) == 'rl4.v')]))
-  # 
-  # pop_l.1 <- sum(out.h[nrow(out.h),((which(colnames(out.h) == 'sl1')[1]):(which(colnames(out.h) == 'rl1'))[length(which(colnames(out.h) == 'rl1'))])] +
-  #                  vac_l.1)
-  # pop_l.2 <- sum(out.h[nrow(out.h),((which(colnames(out.h) == 'sl2')[1]):(which(colnames(out.h) == 'rl2'))[length(which(colnames(out.h) == 'rl2'))])] + vac_l.2)
-  # pop_l.3 <- sum(out.h[nrow(out.h),((which(colnames(out.h) == 'sl3')[1]):(which(colnames(out.h) == 'rl4'))[length(which(colnames(out.h) == 'rl4'))])] + vac_l.3)
-  # 
-  # coverage_l <- c(vac_l.1 / pop_l.1, vac_l.2 / pop_l.2, vac_l.3 / pop_l.3)
-  # coverage_l.cum <- sum(vac_l.1 + vac_l.2 + vac_l.3) / sum(pop_l.1 + pop_l.2 + pop_l.3)
-  # 
-  # 
-  # coverage <- c(((vac_h.1 + vac_l.1) / (pop_h.1 + pop_l.1)),
-  #               ((vac_h.2 + vac_l.2) / (pop_h.2 + pop_l.2)),
-  #               ((vac_h.3 + vac_l.3) / (pop_h.3 + pop_l.3)))
-  # coverage.cum <- sum(vac_l.1 + vac_l.2 + vac_l.3 + vac_h.1 + vac_h.2 + vac_h.3) / sum(pop_l.1 + pop_l.2 + pop_l.3 + pop_h.1 + pop_h.2 + pop_h.3)
-  # coverage_list <- list(coverage_h.cum, coverage_l.cum, coverage.cum)
-  # save(coverage_list, file = paste('coverage_', input, '.RData', sep = ''))
-  
-  }
+
   
   ####time series coverage
   {
     timepoint_year <- years
-    index <- c((3650 * years_vac + 1):(timepoint_year * 3650 ))
-    vac_h.1 <- rowSums(out.h[index,which(colnames(out.h) == 'rh1.v')[9:38]])
-    vac_h.2 <- c(rowSums(out.h[index,which(colnames(out.h) == 'sh2.v')[9:38]]) +
-                     rowSums(out.h[index,which(colnames(out.h) == 'ih2.v')[9:38]]) + rowSums(out.h[index,which(colnames(out.h) == 'rh2.v')[9:38]]))
-    vac_h.3 <- c(rowSums(out.h[index,which(colnames(out.h) == 'sh3.v')[9:38]]) + rowSums(out.h[index,which(colnames(out.h) == 'ih3.v')[9:38]]) + rowSums(out.h[index,which(colnames(out.h) == 'rh3.v')[9:38]]) +
-                   rowSums(out.h[index,which(colnames(out.h) == 'sh4.v')[9:38]]) + rowSums(out.h[index,which(colnames(out.h) == 'ih4.v')[9:38]]) + rowSums(out.h[index,which(colnames(out.h) == 'rh4.v')[9:38]]))
-
-    pop_h.1 <- c(rowSums(out.h[index,which(colnames(out.h) == 'sh1')[9:38]]) + 
-                   rowSums(out.h[index,which(colnames(out.h) == 'ih1')[9:38]]) +
-                   rowSums(out.h[index,which(colnames(out.h) == 'rh1')[9:38]]) +
-                   rowSums(out.h[index,which(colnames(out.h) == 'rh1')[9:38]]))
-                   
-
-    pop_h.2 <- c(  rowSums(out.h[index,which(colnames(out.h) == 'sh2')[9:38]]) + 
-                     rowSums(out.h[index,which(colnames(out.h) == 'ih2')[9:38]]) +
-                     rowSums(out.h[index,which(colnames(out.h) == 'rh2')[9:38]]) +
-                     rowSums(out.h[index,which(colnames(out.h) == 'sh2.v')[9:38]]) + 
-                     rowSums(out.h[index,which(colnames(out.h) == 'ih2.v')[9:38]]) +
-                     rowSums(out.h[index,which(colnames(out.h) == 'rh2.v')[9:38]])
-                 )
-    pop_h.3 <- c( rowSums(out.h[index,which(colnames(out.h) == 'sh3')[9:38]]) + 
-                    rowSums(out.h[index,which(colnames(out.h) == 'ih3')[9:38]]) +
-                    rowSums(out.h[index,which(colnames(out.h) == 'rh3')[9:38]]) +
-                    rowSums(out.h[index,which(colnames(out.h) == 'sh4')[9:38]]) + 
-                    rowSums(out.h[index,which(colnames(out.h) == 'ih4')[9:38]]) +
-                    rowSums(out.h[index,which(colnames(out.h) == 'rh4')[9:38]]) + 
-                    rowSums(out.h[index,which(colnames(out.h) == 'sh3.v')[9:38]]) + 
-                    rowSums(out.h[index,which(colnames(out.h) == 'ih3.v')[9:38]]) +
-                    rowSums(out.h[index,which(colnames(out.h) == 'rh3.v')[9:38]]) +
-                    rowSums(out.h[index,which(colnames(out.h) == 'sh4.v')[9:38]]) + 
-                    rowSums(out.h[index,which(colnames(out.h) == 'ih4.v')[9:38]]) +
-                    rowSums(out.h[index,which(colnames(out.h) == 'rh4.v')[9:38]])
-                 )
-
-    coverage_h <- c((vac_h.1 / pop_h.1)[length(vac_h.1 / pop_h.1)], (vac_h.2 / pop_h.2)[length(vac_h.2 / pop_h.2)], (vac_h.3 / pop_h.3)[length((vac_h.3 / pop_h.3))])
-    coverage_h.cum <- c(vac_h.1 + vac_h.2 + vac_h.3) / c(pop_h.1 + pop_h.2 + pop_h.3)
-    coverage_h.cum.list <- list()
-    for(i in 1:(years - years_vac)){
-      index <- seq(1:3650) * (i - 1) + seq(1:3650)
-      index <- index[length(index)]
-      coverage_h.cum.list[[i]] <- coverage_h.cum[index]
-    }
-
-    index <- c((3650 * years_vac + 1):(timepoint_year * 3650 ))
-
-    vac_l.1 <- rowSums(out.h[index,which(colnames(out.h) == 'rl1.v')[9:38]])
-    vac_l.2 <- c(rowSums(out.h[index,which(colnames(out.h) == 'sl2.v')[9:38]]) +
-                   rowSums(out.h[index,which(colnames(out.h) == 'il2.v')[9:38]]) + rowSums(out.h[index,which(colnames(out.h) == 'rl2.v')[9:38]]))
-    vac_l.3 <- c(rowSums(out.h[index,which(colnames(out.h) == 'sl3.v')[9:38]]) + rowSums(out.h[index,which(colnames(out.h) == 'il3.v')[9:38]]) + rowSums(out.h[index,which(colnames(out.h) == 'rl3.v')[9:38]]) +
-                   rowSums(out.h[index,which(colnames(out.h) == 'sl4.v')[9:38]]) + rowSums(out.h[index,which(colnames(out.h) == 'il4.v')[9:38]]) + rowSums(out.h[index,which(colnames(out.h) == 'rl4.v')[9:38]]))
+    index <- (timepoint_year * 3650 )
     
-    pop_l.1 <- c(rowSums(out.h[index,which(colnames(out.h) == 'sl1')[9:38]]) + 
-                   rowSums(out.h[index,which(colnames(out.h) == 'il1')[9:38]]) +
-                   rowSums(out.h[index,which(colnames(out.h) == 'rl1')[9:38]]) +
-                   rowSums(out.h[index,which(colnames(out.h) == 'rl1')[9:38]]))
-   
+    vac_h.1 <- out.h[index,which(colnames(out.h) == 'vac_1.h')] / out.h[index,which(colnames(out.h) == 'pop_1.h')]
+    vac_h.2 <- out.h[index,which(colnames(out.h) == 'vac_2.h')] / out.h[index,which(colnames(out.h) == 'pop_2.h')]
+    vac_h.3 <- sum(out.h[index,which(colnames(out.h) == 'vac_3.h')] + out.h[index,which(colnames(out.h) == 'vac_4.h')]) / 
+      sum(out.h[index,which(colnames(out.h) == 'pop_3.h')] + out.h[index,which(colnames(out.h) == 'pop_4.h')])
+    
+    cov_h <- sum(out.h[index,which(colnames(out.h) == 'vac_1.h')] + 
+                   out.h[index,which(colnames(out.h) == 'vac_2.h')] +
+                   out.h[index,which(colnames(out.h) == 'vac_3.h')] + 
+                   out.h[index,which(colnames(out.h) == 'vac_4.h')]) / sum(out.h[index,which(colnames(out.h) == 'pop_1.h')] +
+                                                                             out.h[index,which(colnames(out.h) == 'pop_2.h')] +
+                                                                             out.h[index,which(colnames(out.h) == 'pop_3.h')] + 
+                                                                             out.h[index,which(colnames(out.h) == 'pop_4.h')])
+    coverage_h <- c(vac_h.1, vac_h.2, vac_h.3)
     
     
-    pop_l.2 <- c(  rowSums(out.h[index,which(colnames(out.h) == 'sl2')[9:38]]) + 
-                     rowSums(out.h[index,which(colnames(out.h) == 'il2')[9:38]]) +
-                     rowSums(out.h[index,which(colnames(out.h) == 'rl2')[9:38]]) +
-                     rowSums(out.h[index,which(colnames(out.h) == 'sl2.v')[9:38]]) + 
-                     rowSums(out.h[index,which(colnames(out.h) == 'il2.v')[9:38]]) +
-                     rowSums(out.h[index,which(colnames(out.h) == 'rl2.v')[9:38]])
-    )
-    pop_l.3 <- c( rowSums(out.h[index,which(colnames(out.h) == 'sl3')[9:38]]) + 
-                    rowSums(out.h[index,which(colnames(out.h) == 'il3')[9:38]]) +
-                    rowSums(out.h[index,which(colnames(out.h) == 'rl3')[9:38]]) +
-                    rowSums(out.h[index,which(colnames(out.h) == 'sl4')[9:38]]) + 
-                    rowSums(out.h[index,which(colnames(out.h) == 'il4')[9:38]]) +
-                    rowSums(out.h[index,which(colnames(out.h) == 'rl4')[9:38]]) + 
-                    rowSums(out.h[index,which(colnames(out.h) == 'sl3.v')[9:38]]) + 
-                    rowSums(out.h[index,which(colnames(out.h) == 'il3.v')[9:38]]) +
-                    rowSums(out.h[index,which(colnames(out.h) == 'rl3.v')[9:38]]) +
-                    rowSums(out.h[index,which(colnames(out.h) == 'sl4.v')[9:38]]) + 
-                    rowSums(out.h[index,which(colnames(out.h) == 'il4.v')[9:38]]) +
-                    rowSums(out.h[index,which(colnames(out.h) == 'rl4.v')[9:38]])
-    )
+    
+    vac_l.1 <- out.h[index,which(colnames(out.h) == 'vac_1.l')] / out.h[index,which(colnames(out.h) == 'pop_1.l')]
+    vac_l.2 <- out.h[index,which(colnames(out.h) == 'vac_2.l')] / out.h[index,which(colnames(out.h) == 'pop_2.l')]
+    vac_l.3 <- sum(out.h[index,which(colnames(out.h) == 'vac_3.l')] + out.h[index,which(colnames(out.h) == 'vac_4.l')]) / 
+      sum(out.h[index,which(colnames(out.h) == 'pop_3.l')] + out.h[index,which(colnames(out.h) == 'pop_4.l')])
+    
+    cov_l <- sum(out.h[index,which(colnames(out.h) == 'vac_1.l')] + 
+                   out.h[index,which(colnames(out.h) == 'vac_2.l')] +
+                   out.h[index,which(colnames(out.h) == 'vac_3.l')] + 
+                   out.h[index,which(colnames(out.h) == 'vac_4.l')]) / sum(out.h[index,which(colnames(out.h) == 'pop_1.l')] +
+                                                                             out.h[index,which(colnames(out.h) == 'pop_2.l')] +
+                                                                             out.h[index,which(colnames(out.h) == 'pop_3.l')] + 
+                                                                             out.h[index,which(colnames(out.h) == 'pop_4.l')])
+    coverage_l <- c(vac_l.1, vac_l.2, vac_l.3)
 
-    coverage_l <- c((vac_l.1 / pop_l.1)[length(vac_l.1 / pop_l.1)], (vac_l.2 / pop_l.2)[length(vac_l.2 / pop_l.2)], (vac_l.3 / pop_l.3)[length((vac_l.3 / pop_l.3))])
-    coverage_l.cum <- c(vac_l.1 + vac_l.2 + vac_l.3) / c(pop_l.1 + pop_l.2 + pop_l.3)
-    coverage_l.cum.list <- list()
-    for(i in 1:(years - years_vac)){
-      index <- seq(1:3650) * (i - 1) + seq(1:3650)
-      index <- index[length(index)]
-      coverage_l.cum.list[[i]] <- coverage_l.cum[index]
-    }
-
-    coverage.cum <- c(vac_l.1 + vac_l.2 + vac_l.3 + vac_h.1 + vac_h.2 + vac_h.3) / c(pop_l.1 + pop_l.2 + pop_l.3 + pop_h.1 + pop_h.2 + pop_h.3)
-    coverage.cum.list <- list()
-    for(i in 1:(years - years_vac)){
-      index <- seq(1:3650) * (i - 1) + seq(1:3650)
-      index <- index[length(index)]
-      coverage.cum.list[[i]] <- coverage.cum[index]
-    }
-
-    coverage <- list(unlist(coverage_h.cum.list), unlist(coverage_l.cum.list), unlist(coverage.cum.list))
-    names(coverage) <- c('h', 'l', 'pop')
+    coverage <- c(cov_h, cov_h)
+    names(coverage) <- c('h', 'l')
     save(coverage, file = paste('new.cov_', input, '.RData', sep = ''))
  
     cases.output.vec.h  <- cases_averted.func(out_mat = out.h, out_mat_null = out_null.h, timepoint_year = years, cases = 1)
@@ -1093,10 +1040,10 @@ out_null.h <- out_null.h[,2:ncol(out_null.h)]
   
 }
 
-}
 
-last_row <- out.h[nrow(out.h),]
-save(last_row, file = paste('last_row_', input, '.RData', sep =''))
+
+# last_row <- out.h[nrow(out.h),]
+# save(last_row, file = paste('last_row_', input, '.RData', sep =''))
 
 ######check seroprevalence levels
 
