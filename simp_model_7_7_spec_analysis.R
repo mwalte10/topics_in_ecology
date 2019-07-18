@@ -27,8 +27,8 @@ spec <- unlist(spec)
 new.table <- do.call('rbind', new.table)
 new.parms.mat <- cbind(new.table, spec)
 
-missing.vec <- c(29, 117)
-input <- missing.vec[input]
+# missing.vec <- c(29, 117)
+# input <- missing.vec[input]
 
 
 beta_h <- new.parms.mat[input,1]
@@ -695,7 +695,7 @@ model <- function(t, y, parms){
       native * S1_l * beta_l * (native * (inf_l) / pop_l + travel * (inf_h) / pop_h) +
       travel * S1_l * 2 * beta_h * (native * (sym_inf_h)/ pop_h + travel * (sym_inf_l) / pop_l) +
       travel * S1_l * beta_h * (native * (inf_h)/ pop_h + travel * (inf_l) / pop_l) 
-    primary_cases.l.v <- sum(primary_cases.l[9:38]) * inf[1]
+    primary_cases.l.v <- sum(primary_cases.l[9]) * inf[1]
     primary_cases.l <- sum(primary_cases.l) * inf[1]
     
     
@@ -704,7 +704,7 @@ model <- function(t, y, parms){
       native * S1_h * beta_h * (native * (inf_h) / pop_h + travel * (inf_l) / pop_l) +
       travel * S1_h * 2 * beta_l * (native * (sym_inf_l) / pop_l + travel * (sym_inf_h) / pop_h) +
       travel * S1_h * beta_l * (native * (inf_l) / pop_l + travel * (inf_h) / pop_h) 
-    primary_cases.h.v <- sum(primary_cases.h[9:38]) * inf[1]
+    primary_cases.h.v <- sum(primary_cases.h[9]) * inf[1]
     primary_cases.h <- sum(primary_cases.h) * inf[1]
   }
 
@@ -737,7 +737,7 @@ model <- function(t, y, parms){
       travel * S2_l * beta_h * 0.75 * (native * (inf_h)  / pop_h + travel * (inf_l) / pop_l) +
       native * S2_l * beta_l * 2 * 0.75 * (native * (sym_inf_l) / pop_l + travel * (sym_inf_h)  / pop_h) +
       native * S2_l * beta_l * 0.75 * (native * (inf_l) / pop_l + travel * (inf_h)  / pop_h) 
-    secondary_cases.l.v <- sum(secondary_cases.l[9:38]) * inf[2]
+    secondary_cases.l.v <- sum(secondary_cases.l[9]) * inf[2]
      secondary_cases.l <- sum(secondary_cases.l) * inf[2]
     
 
@@ -747,7 +747,7 @@ model <- function(t, y, parms){
       native * S2_h * 0.75 * beta_h * (native * (inf_h) / pop_h + travel * (inf_l) / pop_l) +
       travel * S2_h * 2 * 0.75 * beta_l * (native * (sym_inf_l) / pop_l + travel * (sym_inf_h) / pop_h) +
       travel * S2_h * 0.75 * beta_l * (native * (inf_l) / pop_l + travel * (inf_h) / pop_h) 
-    secondary_cases.h.v <- sum(secondary_cases.h[9:38]) * inf[2]
+    secondary_cases.h.v <- sum(secondary_cases.h[9]) * inf[2]
     secondary_cases.h <- sum(secondary_cases.h) * inf[2]
     
   }
@@ -793,7 +793,7 @@ model <- function(t, y, parms){
       native * S3_l * beta_l * 0.5 * (native * (inf_l) / pop_l + travel * (inf_h)  / pop_h) +
       native * S4_l * beta_l * 2 * 0.25 * (native * (sym_inf_l) / pop_l + travel * (sym_inf_h)  / pop_h) +
       native * S4_l * beta_l * 0.25 * (native * (inf_l) / pop_l + travel * (inf_h)  / pop_h) 
-    postsec_cases.l.v <- sum(postsec_cases.l[9:38]) * inf[3]
+    postsec_cases.l.v <- sum(postsec_cases.l[9]) * inf[3]
     postsec_cases.l <- sum(postsec_cases.l) * inf[3]
     
     
@@ -806,7 +806,7 @@ model <- function(t, y, parms){
       travel * S3_h * 0.5 * beta_l * (native * (inf_l) / pop_l + travel * (inf_h) / pop_h) +
       travel * S4_h * 2 * 0.25 * beta_l * (native * (sym_inf_l) / pop_l + travel * (sym_inf_h) / pop_h) +
       travel * S4_h * 0.25 * beta_l * (native * (inf_l) / pop_l + travel * (inf_h) / pop_h) 
-    postsec_cases.h.v <- sum(postsec_cases.h[9:38]) * inf[3]
+    postsec_cases.h.v <- sum(postsec_cases.h[9]) * inf[3]
     postsec_cases.h <- sum(postsec_cases.h) * inf[3]
  
   }
@@ -832,8 +832,8 @@ model <- function(t, y, parms){
   ##Vaccination coverages
   ############################# 
   ####inappropriate vaccinations
-  vac_1.h <-  sum(S1_h * vac_h * (1 - spec)) /  sum(S1_h[9])
-  vac_1.l <-  sum(S1_l * vac_l * (1 - spec)) / sum(S1_l[9])
+  vac_1.h <-  sum(S1_h * vac_h * (1 - spec)) 
+  vac_1.l <-  sum(S1_l * vac_l * (1 - spec)) 
   
   pop_1.h.9 <- sum(S1_h[9])
   pop_1.l.9 <- sum(S1_l[9])

@@ -13,6 +13,8 @@ load("parms.mat.dec_16.RData")
 # input.vec <- c(13,18,19)
 # input <- input.vec[input]
 parse <- which(new.parms.mat[,3] == seq(0, 0.05, length.out = 20)[11])
+new.parms.mat <- new.parms.mat[parse,]
+
 
 
 # missing.vec <- c(6,7,33,34,36,45,48,50,55,102)
