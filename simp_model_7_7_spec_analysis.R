@@ -27,8 +27,8 @@ spec <- unlist(spec)
 new.table <- do.call('rbind', new.table)
 new.parms.mat <- cbind(new.table, spec)
 
-# missing.vec <- c(29, 117)
-# input <- missing.vec[input]
+missing.vec <- c(14, 15, 85)
+input <- missing.vec[input]
 
 
 beta_h <- new.parms.mat[input,1]
