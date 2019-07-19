@@ -219,13 +219,13 @@ model <- function(t, y, parms){
   infecteds_h.sec.c <- cbind(I2_h, I2_h.v) * inf[2]
   infecteds_h.psec.c <- cbind(I3_h, I4_h, I3_h.v, I4_h.v) * inf[3]
   sym_inf_h <- cbind(infecteds_h.prim.c, infecteds_h.sec.c, infecteds_h.psec.c)
-  sym_inf_h <- rowSums(sym_inf_h)
+  sym_inf_h <- sum(sym_inf_h)
   
   infecteds_l.prim.c <- I1_l * inf[1]
   infecteds_l.sec.c <- cbind(I2_l, I2_l.v) * inf[2]
   infecteds_l.psec.c <- cbind(I3_l, I4_l, I3_l.v, I4_l.v) * inf[3]
   sym_inf_l <- cbind(infecteds_l.prim.c, infecteds_l.sec.c, infecteds_l.psec.c)
-  sym_inf_l <- rowSums(sym_inf_l)
+  sym_inf_l <- sum(sym_inf_l)
   
   
   #############################
@@ -235,13 +235,13 @@ model <- function(t, y, parms){
   infecteds_h.sec <- cbind(I2_h, I2_h.v) * ninf[2]
   infecteds_h.psec <- cbind(I3_h, I4_h, I3_h.v, I4_h.v) * ninf[3]
   inf_h <- cbind(infecteds_h.prim, infecteds_h.sec, infecteds_h.psec)
-  inf_h <- rowSums(inf_h)
+  inf_h <- sum(inf_h)
   
   infecteds_l.prim <- I1_l * ninf[1]
   infecteds_l.sec <- cbind(I2_l, I2_l.v) * ninf[2]
   infecteds_l.psec <- cbind(I3_l, I4_l, I3_l.v, I4_l.v) * ninf[3]
   inf_l <- cbind(infecteds_l.prim, infecteds_l.sec, infecteds_l.psec)
-  inf_l <- rowSums(inf_l)
+  inf_l <- sum(inf_l)
   
   
   #############################
@@ -257,6 +257,7 @@ model <- function(t, y, parms){
                         S4_h.v, I4_h.v, R4_h.v)
   pop_h <- rowSums(population_h)
   birth_pop_h <- sum(pop_h)
+  pop_h <- sum(pop_h)
 
   population_l <- cbind(S1_l, I1_l, R1_l,
                         S2_l, I2_l, R2_l,
@@ -268,6 +269,7 @@ model <- function(t, y, parms){
                         S4_l.v, I4_l.v, R4_l.v)
   pop_l <- rowSums(population_l)
   birth_pop_l <- sum(pop_l)
+  pop_l <- sum(pop_l)
 
   
   #############################
@@ -1049,8 +1051,8 @@ out_null.h <- out_null.h[,2:ncol(out_null.h)]
 
 ######check seroprevalence levels
 
-# sp9.vec <- seroprevalence_fun(out_mat = out.h, age = 9)
-# save(sp9.vec, file = paste('sp9_', input, '.RData', sep = ''))
+sp9.vec <- seroprevalence_fun(out_mat = out.h, age = 9)
+save(sp9.vec, file = paste('sp9_', input, '.RData', sep = ''))
 
 ######check FOI
 # foi_h <- FOI_h.fun(years = years)
