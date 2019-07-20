@@ -1039,7 +1039,7 @@ out_null.h <- out_null.h[,2:ncol(out_null.h)]
 save(cases.output.vec.h, file = paste('cases_averted_', input, '.RData', sep = ''))
 #   # save(infections.output.vec.h, file = paste('infections_averted_', input, '.RData', sep = ''))
 #   
-# }
+ }
 
 
 
