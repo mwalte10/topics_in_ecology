@@ -8,12 +8,8 @@ input = as.numeric(args[1])
 ##########################
 #IF DOING VAC COVERAGE
 ##########################
-load("parms.mat.dec_16.RData")
+load("parms.mat.simp_model_NO_TRAVEL.RData")
 
-# input.vec <- c(13,18,19)
-# input <- input.vec[input]
-parse <- which(new.parms.mat[,3] == seq(0, 0.05, length.out = 20)[1])
-new.parms.mat <- new.parms.mat[parse,]
 new.table <- list()
 for(i in 1:6){
   new.table[[i]] <- new.parms.mat
@@ -27,8 +23,9 @@ spec <- unlist(spec)
 new.table <- do.call('rbind', new.table)
 new.parms.mat <- cbind(new.table, spec)
 
-missing.vec <- c(14, 15, 85)
-input <- missing.vec[input]
+
+# missing.vec <- c(6,7,33,34,36,45,48,50,55,102)
+# input <- missing.vec[input]
 
 
 beta_h <- new.parms.mat[input,1]
@@ -43,10 +40,12 @@ spec <- new.parms.mat[input, 6]
 # validation_parms.test <- c(0.1660247, 0.1717892, 0.1826108 , 0.2045885, 0.2716160)
 
 
-
-load('pop_1950.RData')
+# load('pop_1950.RData')
 load('birth_1950.RData')
+birth <- birth[51:80]
 load('death_1950.RData')
+death <- death[51:80]
+source("formulas_for_model.R")
 
 
 hopkins <- c(0.53, 1, 0.115)
@@ -61,46 +60,8 @@ library(deSolve)
 ############################
 #Initial conidtions and parameters
 ###########################
-
-initial_conditions <- as.data.frame(matrix(NA, nrow = 80*4, ncol = 3))
-initial_conditions[,2] <- rep(0:79,4)
-for(i in 1:4){
-  x <- i - 1
-  initial_conditions[x*(80) + (1:80),1] <- rep(i,80)
-}
-initial_conditions[,3] <- rep(pop,4)
-
-source("formulas_for_model.R")
-
-susceptible_init_h <- cbind(initial_conditions[,1], initial_conditions[,2], rep(NA, 320))
-susceptible_init_l <- cbind(initial_conditions[,1], initial_conditions[,2], rep(NA, 320))
-susceptible_init_h[,3] <- fill_suscep(prop.h.1 = 0.5 , prop.h.2=0,  prop.h.3=0,  prop.h.4=0, prop.l.1 = 0.5, prop.l.2=0,  prop.l.3=0, prop.l.4=0)[[1]]
-susceptible_init_l[,3] <-  fill_suscep(prop.h.1 = 0.5 , prop.h.2=0,  prop.h.3=0,  prop.h.4=0, prop.l.1 = 0.5, prop.l.2=0,  prop.l.3=0, prop.l.4=0)[[2]]
-
-infected_init_h <- cbind(initial_conditions[,1], initial_conditions[,2], rep(NA, 320))
-infected_init_l <- cbind(initial_conditions[,1], initial_conditions[,2], rep(NA, 320))
-infected_init_h[,3] <- fill_inf(1,1)[[1]]
-infected_init_l[,3] <- fill_inf(1,1)[[2]]
-
-
-load('recovered_init_h.RData')
-load('recovered_init_l.RData')
-
-
-susceptible_total_h <- sum(susceptible_h(1) + susceptible_h(2) + susceptible_h(3) + susceptible_h(4))
-susceptible_total_l <- sum(susceptible_l(1) + susceptible_l(2) + susceptible_l(3) + susceptible_l(4))
-
-
-infected_total_h <- sum(infected_h(1) + infected_h(2) + infected_h(3) + infected_h(4))
-infected_total_l <- sum(infected_l(1) + infected_l(2) + infected_l(3) + infected_l(4))
-
- 
-recovered_total_h <- sum(recovered_h(1) + recovered_h(2) + recovered_h(3) + recovered_h(4))
-recovered_total_l <- sum(recovered_l(1) + recovered_l(2) + recovered_l(3) + recovered_l(4))
-
-population_h <- sum(susceptible_total_h + infected_total_h + recovered_total_h)
-population_l <- sum(susceptible_total_l + infected_total_l + recovered_total_l)
-
+load('last_row_1.RData')
+y_init <- last_row
 
 
 parms.h <- list(beta_h = beta_h,
@@ -136,8 +97,8 @@ parms_null.h <- list(beta_h = beta_h,
 
 
 
-years = 90
-years_vac = 60
+years = 30
+years_vac = 0
 times <- seq(from = 0, to = 365 * years, by = 0.1)
 times <- times[1:(length(times) - 1)]
 
@@ -229,13 +190,13 @@ model <- function(t, y, parms){
   infecteds_h.sec.c <- cbind(I2_h, I2_h.v) * inf[2]
   infecteds_h.psec.c <- cbind(I3_h, I4_h, I3_h.v, I4_h.v) * inf[3]
   sym_inf_h <- cbind(infecteds_h.prim.c, infecteds_h.sec.c, infecteds_h.psec.c)
-  sym_inf_h <- rowSums(sym_inf_h)
+  sym_inf_h <- sum(sym_inf_h)
   
   infecteds_l.prim.c <- I1_l * inf[1]
   infecteds_l.sec.c <- cbind(I2_l, I2_l.v) * inf[2]
   infecteds_l.psec.c <- cbind(I3_l, I4_l, I3_l.v, I4_l.v) * inf[3]
   sym_inf_l <- cbind(infecteds_l.prim.c, infecteds_l.sec.c, infecteds_l.psec.c)
-  sym_inf_l <- rowSums(sym_inf_l)
+  sym_inf_l <- sum(sym_inf_l)
   
   
   #############################
@@ -245,13 +206,13 @@ model <- function(t, y, parms){
   infecteds_h.sec <- cbind(I2_h, I2_h.v) * ninf[2]
   infecteds_h.psec <- cbind(I3_h, I4_h, I3_h.v, I4_h.v) * ninf[3]
   inf_h <- cbind(infecteds_h.prim, infecteds_h.sec, infecteds_h.psec)
-  inf_h <- rowSums(inf_h)
+  inf_h <- sum(inf_h)
   
   infecteds_l.prim <- I1_l * ninf[1]
   infecteds_l.sec <- cbind(I2_l, I2_l.v) * ninf[2]
   infecteds_l.psec <- cbind(I3_l, I4_l, I3_l.v, I4_l.v) * ninf[3]
   inf_l <- cbind(infecteds_l.prim, infecteds_l.sec, infecteds_l.psec)
-  inf_l <- rowSums(inf_l)
+  inf_l <- sum(inf_l)
   
   
   #############################
@@ -267,6 +228,7 @@ model <- function(t, y, parms){
                         S4_h.v, I4_h.v, R4_h.v)
   pop_h <- rowSums(population_h)
   birth_pop_h <- sum(pop_h)
+  pop_h <- sum(pop_h)
 
   population_l <- cbind(S1_l, I1_l, R1_l,
                         S2_l, I2_l, R2_l,
@@ -278,6 +240,7 @@ model <- function(t, y, parms){
                         S4_l.v, I4_l.v, R4_l.v)
   pop_l <- rowSums(population_l)
   birth_pop_l <- sum(pop_l)
+  pop_l <- sum(pop_l)
 
   
   #############################
@@ -922,20 +885,8 @@ model <- function(t, y, parms){
 ############################
 #RUN MODEL
 ############################
-y_init <- c(susceptible_h(1), infected_h(1), recovered_h(1),
-            susceptible_h(2), infected_h(2), recovered_h(2),
-            susceptible_h(3), infected_h(3), recovered_h(3),
-            susceptible_h(4), infected_h(4), recovered_h(4),
-            rep(0, 80), rep(0, 80), rep(0, 80), rep(0, 80), rep(0, 80),
-            rep(0, 80), rep(0, 80), rep(0, 80), rep(0, 80), rep(0, 80),
-            susceptible_l(1), infected_l(1), recovered_l(1),
-            susceptible_l(2), infected_l(2), recovered_l(2),
-            susceptible_l(3), infected_l(3), recovered_l(3),
-            susceptible_l(4), infected_l(4), recovered_l(4),
-            rep(0, 80), rep(0, 80), rep(0, 80), rep(0, 80), rep(0, 80),
-            rep(0, 80), rep(0, 80), rep(0, 80), rep(0, 80), rep(0, 80),
-            rep(0, 12), rep(0,2), rep(0,6), 
-            rep(0, 8), rep(0, 8))
+
+
 names(y_init) <- c(rep('sh1', 80), rep('ih1', 80), rep('rh1', 80),
                    rep('sh2', 80), rep('ih2', 80), rep('rh2', 80),
                    rep('sh3', 80), rep('ih3', 80), rep('rh3', 80),
@@ -1004,53 +955,53 @@ out_null.h <- out_null.h[,2:ncol(out_null.h)]
 
   
   ####time series coverage
-  {
+#   {
     timepoint_year <- years
     index <- (timepoint_year * 3650 )
-    
+
     vac_h.1 <- out.h[index,which(colnames(out.h) == 'vac_1.h')] / out.h[index,which(colnames(out.h) == 'pop_1.h')]
     vac_h.2 <- out.h[index,which(colnames(out.h) == 'vac_2.h')] / out.h[index,which(colnames(out.h) == 'pop_2.h')]
-    vac_h.3 <- sum(out.h[index,which(colnames(out.h) == 'vac_3.h')] + out.h[index,which(colnames(out.h) == 'vac_4.h')]) / 
+    vac_h.3 <- sum(out.h[index,which(colnames(out.h) == 'vac_3.h')] + out.h[index,which(colnames(out.h) == 'vac_4.h')]) /
       sum(out.h[index,which(colnames(out.h) == 'pop_3.h')] + out.h[index,which(colnames(out.h) == 'pop_4.h')])
-    
-    cov_h <- sum(out.h[index,which(colnames(out.h) == 'vac_1.h')] + 
+
+    cov_h <- sum(out.h[index,which(colnames(out.h) == 'vac_1.h')] +
                    out.h[index,which(colnames(out.h) == 'vac_2.h')] +
-                   out.h[index,which(colnames(out.h) == 'vac_3.h')] + 
+                   out.h[index,which(colnames(out.h) == 'vac_3.h')] +
                    out.h[index,which(colnames(out.h) == 'vac_4.h')]) / sum(out.h[index,which(colnames(out.h) == 'pop_1.h')] +
                                                                              out.h[index,which(colnames(out.h) == 'pop_2.h')] +
-                                                                             out.h[index,which(colnames(out.h) == 'pop_3.h')] + 
+                                                                             out.h[index,which(colnames(out.h) == 'pop_3.h')] +
                                                                              out.h[index,which(colnames(out.h) == 'pop_4.h')])
     coverage_h <- c(vac_h.1, vac_h.2, vac_h.3)
-    
-    
-    
+
+
+
     vac_l.1 <- out.h[index,which(colnames(out.h) == 'vac_1.l')] / out.h[index,which(colnames(out.h) == 'pop_1.l')]
     vac_l.2 <- out.h[index,which(colnames(out.h) == 'vac_2.l')] / out.h[index,which(colnames(out.h) == 'pop_2.l')]
-    vac_l.3 <- sum(out.h[index,which(colnames(out.h) == 'vac_3.l')] + out.h[index,which(colnames(out.h) == 'vac_4.l')]) / 
+    vac_l.3 <- sum(out.h[index,which(colnames(out.h) == 'vac_3.l')] + out.h[index,which(colnames(out.h) == 'vac_4.l')]) /
       sum(out.h[index,which(colnames(out.h) == 'pop_3.l')] + out.h[index,which(colnames(out.h) == 'pop_4.l')])
-    
-    cov_l <- sum(out.h[index,which(colnames(out.h) == 'vac_1.l')] + 
+
+    cov_l <- sum(out.h[index,which(colnames(out.h) == 'vac_1.l')] +
                    out.h[index,which(colnames(out.h) == 'vac_2.l')] +
-                   out.h[index,which(colnames(out.h) == 'vac_3.l')] + 
+                   out.h[index,which(colnames(out.h) == 'vac_3.l')] +
                    out.h[index,which(colnames(out.h) == 'vac_4.l')]) / sum(out.h[index,which(colnames(out.h) == 'pop_1.l')] +
                                                                              out.h[index,which(colnames(out.h) == 'pop_2.l')] +
-                                                                             out.h[index,which(colnames(out.h) == 'pop_3.l')] + 
+                                                                             out.h[index,which(colnames(out.h) == 'pop_3.l')] +
                                                                              out.h[index,which(colnames(out.h) == 'pop_4.l')])
     coverage_l <- c(vac_l.1, vac_l.2, vac_l.3)
 
     coverage <- c(cov_h, cov_h)
     names(coverage) <- c('h', 'l')
-    # save(coverage, file = paste('new.cov_', input, '.RData', sep = ''))
- 
+    save(coverage, file = paste('new.cov_', input, '.RData', sep = ''))
+
     cases.output.vec.h  <- cases_averted.func(out_mat = out.h, out_mat_null = out_null.h, timepoint_year = years, cases = 1)
-  # infections.output.vec.h  <- cases_averted.func(out_mat = out.h, out_mat_null = out_null.h, timepoint_year = years, cases = 0)
-  
-  
-  
+#   # infections.output.vec.h  <- cases_averted.func(out_mat = out.h, out_mat_null = out_null.h, timepoint_year = years, cases = 0)
+#   
+#   
+#   
    save(cases.output.vec.h, file = paste('cases_averted_', input, '.RData', sep = ''))
-  # save(infections.output.vec.h, file = paste('infections_averted_', input, '.RData', sep = ''))
-  
-}
+#   # save(infections.output.vec.h, file = paste('infections_averted_', input, '.RData', sep = ''))
+#   
+# }
 
 
 
@@ -1063,10 +1014,10 @@ out_null.h <- out_null.h[,2:ncol(out_null.h)]
 # save(sp9.vec, file = paste('sp9_', input, '.RData', sep = ''))
 
 ######check FOI
-# foi_h <- FOI_h.fun(years = years)
-# foi_l <- FOI_l.fun(years = years)
-# foi <- c(foi_h, foi_l)
-# names(foi) <- c('h', 'l')
-# save(foi, file = paste('foi_', input, '.RData', sep = ''))
+foi_h <- FOI_h.fun(years = years)
+foi_l <- FOI_l.fun(years = years)
+foi <- c(foi_h, foi_l)
+names(foi) <- c('h', 'l')
+save(foi, file = paste('foi_', input, '.RData', sep = ''))
 # 
 # 
