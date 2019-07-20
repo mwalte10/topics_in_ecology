@@ -21,8 +21,8 @@ load("parms.mat.simp_model_NO_TRAVEL.RData")
 
 
 validation_parms.test <- c(0.1632653, 0.2122449, 0.2938776 , 0.4163265, 0.7020408)
-beta_h <- new.parms.mat[validation_parms.test[input],1]
-beta_l <- new.parms.mat[validation_parms.test[input],2]
+beta_h <- validation_parms.test[input]
+beta_l <- validation_parms.test[input]
 native <- 1 - new.parms.mat[input,3]
 travel <- new.parms.mat[input,3]
 vac_h <- new.parms.mat[input,4]
@@ -813,7 +813,8 @@ model <- function(t, y, parms){
     sum(native * 2 * beta_l * (native * (sym_inf_l) / pop_l + travel * (sym_inf_h) / pop_h) +
           travel * 2 * beta_h * (native * (sym_inf_h)/ pop_h + travel * (sym_inf_l) / pop_l) +
           native * beta_l * (native * (inf_l) / pop_l + travel * (inf_h) / pop_h) +
-          travel * beta_h * (native * (inf_h)/ pop_h + travel * (inf_l) / pop_l))}
+          travel * beta_h * (native * (inf_h)/ pop_h + travel * (inf_l) / pop_l))
+  }
   
   
   #############################
