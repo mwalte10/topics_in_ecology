@@ -8,7 +8,6 @@ input = as.numeric(args[1])
 ##########################
 #IF DOING VAC COVERAGE
 ##########################
-load("parms.mat.simp_model_NO_TRAVEL.RData")
 
 
 
@@ -23,10 +22,10 @@ load("parms.mat.simp_model_NO_TRAVEL.RData")
 validation_parms.test <- c(0.1714286, 0.2142857, 0.2571429 , 0.4224490, 0.7081633)
 beta_h <- validation_parms.test[input]
 beta_l <- validation_parms.test[input]
-native <- 1 - new.parms.mat[input,3]
-travel <- new.parms.mat[input,3]
-vac_h <- new.parms.mat[input,4]
-vac_l <- new.parms.mat[input,5]
+native <- 1 
+travel <- 0
+vac_h <- 0.8
+vac_l <- 0.8
 
 
 
@@ -100,8 +99,8 @@ parms.h <- list(beta_h = beta_h,
                 travel = 1 - native,
                 vac_h = vac_h,
                 vac_l = vac_l,
-                sens = 0.85,
-                spec = 0.95,
+                sens = 1,
+                spec = 0,
                 hopkins,
                 hopkins_inverse)
 parms_null.h <- list(beta_h = beta_h,
@@ -115,8 +114,8 @@ parms_null.h <- list(beta_h = beta_h,
                      travel = 1 - native,
                      vac_h = 0,
                      vac_l = 0,
-                     sens = 0.85,
-                     spec = 0.95,
+                     sens = 1,
+                     spec = 0,
                      hopkins,
                      hopkins_inverse)
 
@@ -912,7 +911,20 @@ model <- function(t, y, parms, null){
 ############################
 #RUN MODEL
 ############################
-
+y_init <- c(susceptible_h(1), infected_h(1), recovered_h(1),
+            susceptible_h(2), infected_h(2), recovered_h(2),
+            susceptible_h(3), infected_h(3), recovered_h(3),
+            susceptible_h(4), infected_h(4), recovered_h(4),
+            rep(0, 80), rep(0, 80), rep(0, 80), rep(0, 80), rep(0, 80),
+            rep(0, 80), rep(0, 80), rep(0, 80), rep(0, 80), rep(0, 80),
+            susceptible_l(1), infected_l(1), recovered_l(1),
+            susceptible_l(2), infected_l(2), recovered_l(2),
+            susceptible_l(3), infected_l(3), recovered_l(3),
+            susceptible_l(4), infected_l(4), recovered_l(4),
+            rep(0, 80), rep(0, 80), rep(0, 80), rep(0, 80), rep(0, 80),
+            rep(0, 80), rep(0, 80), rep(0, 80), rep(0, 80), rep(0, 80),
+            rep(0, 12), rep(0,2), rep(0,6), 
+            rep(0, 8), rep(0, 8))
 
 names(y_init) <- c(rep('sh1', 80), rep('ih1', 80), rep('rh1', 80),
                    rep('sh2', 80), rep('ih2', 80), rep('rh2', 80),
