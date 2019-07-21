@@ -977,7 +977,7 @@ index <- timepoint_year * 3650
                    out.h[index,which(colnames(out.h) == 'vac_4.h')]) / sum(out.h[index,which(colnames(out.h) == 'pop_1.h')] +
                                                                              out.h[index,which(colnames(out.h) == 'pop_2.h')] +
                                                                              out.h[index,which(colnames(out.h) == 'pop_3.h')] +
-                                                                             out.h[index,which(colnames(out.h) == 'pop_4.h')])
+                                                                             out.h[index,which(colnames(out.h) == 'pop_4.h')]) * 365
     coverage_h <- list(vac_h.1, vac_h.2, vac_h.3)
 
 
@@ -993,11 +993,11 @@ index <- timepoint_year * 3650
                    out.h[index,which(colnames(out.h) == 'vac_4.l')]) / sum(out.h[index,which(colnames(out.h) == 'pop_1.l')] +
                                                                              out.h[index,which(colnames(out.h) == 'pop_2.l')] +
                                                                              out.h[index,which(colnames(out.h) == 'pop_3.l')] +
-                                                                             out.h[index,which(colnames(out.h) == 'pop_4.l')])
+                                                                             out.h[index,which(colnames(out.h) == 'pop_4.l')]) *365
     coverage_l <- list(vac_l.1, vac_l.2, vac_l.3)
 
-    coverage <- list(coverage_h, coverage_l)
-    names(coverage) <- c('h', 'l')
+    coverage <- list(coverage_h, coverage_l, cov_l, cov_h)
+    names(coverage) <- c('h', 'l', 'l.tot', 'h.tot')
     save(coverage, file = paste('new.cov_', input, '.RData', sep = ''))
 
      cases.output.vec.h  <- cases_averted.func(out_mat = out.h, out_mat_null = out_null.h, timepoint_year = years)
