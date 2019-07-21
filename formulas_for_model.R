@@ -93,7 +93,7 @@ population_l <- sum(susceptible_total_l + infected_total_l + recovered_total_l)
 ###########################
 
   cases_averted.func <- function(out_mat, out_mat_null, timepoint_year){
-  indexing <- seq((3650 * years_vac):(timepoint_year * 3650))
+  indexing <- seq((3650 * years_vac):(timepoint_year * 3650 - 1))
   # if(cases == 1){ ##vaccinated, whole pop
     cases_vac<- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'sec_vac.cases.h')]),
                     diff(out_mat[indexing,which(colnames(out_mat) == 'psec_vac.cases.h')]),
