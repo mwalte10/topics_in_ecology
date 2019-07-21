@@ -1,6 +1,6 @@
 #!/bin/csh
 
-#$ -N val_
+#$ -N vali_
 #$ -t 1-5
 
 module load bio/R/3.4.0
