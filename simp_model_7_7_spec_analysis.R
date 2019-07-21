@@ -57,11 +57,12 @@ library(deSolve)
 
 
 
+
 ############################
 #Initial conidtions and parameters
 ###########################
 load('last_row_1.RData')
-y_init <- last_row
+y_init <- c(last_row[1:3520], rep(0,36))
 
 
 parms.h <- list(beta_h = beta_h,
@@ -76,7 +77,7 @@ parms.h <- list(beta_h = beta_h,
                 vac_h = vac_h,
                 vac_l = vac_l,
                 sens = 0.85,
-                spec = spec,
+                spec = 0.95,
                 hopkins,
                 hopkins_inverse)
 parms_null.h <- list(beta_h = beta_h,
@@ -91,9 +92,10 @@ parms_null.h <- list(beta_h = beta_h,
                      vac_h = 0,
                      vac_l = 0,
                      sens = 0.85,
-                     spec = spec,
+                     spec = 0.95,
                      hopkins,
                      hopkins_inverse)
+
 
 
 years = 30
@@ -659,7 +661,7 @@ model <- function(t, y, parms, null){
       travel * S1_l * 2 * beta_h * ((sym_inf_h)/ pop_h) +
       native * S1_l * beta_l * ((inf_l) / pop_l) +
       travel * S1_l * beta_h * ((inf_h)/ pop_h)
-    primary_cases.l.v <- primary_cases.l[9] * inf[1]
+    primary_cases.l.v <- primary_cases.l[9] * inf[2]
     primary_cases.l <- sum(primary_cases.l) * inf[1]
     
     
@@ -668,7 +670,7 @@ model <- function(t, y, parms, null){
       travel * S1_h * 2 * beta_l * ((sym_inf_l) / pop_l) +
       native * S1_h * beta_h * ((inf_h) / pop_h) +
       travel * S1_h * beta_l * ((inf_l) / pop_l) 
-    primary_cases.h.v <- primary_cases.h[9] * inf[1]
+    primary_cases.h.v <- primary_cases.h[9] * inf[2]
     primary_cases.h <- sum(primary_cases.h) * inf[1]
   }
 
@@ -701,7 +703,7 @@ model <- function(t, y, parms, null){
       travel * S2_l * beta_h * 2 *  0.75 * ((sym_inf_h)  / pop_h) +
       native * S2_l * beta_l * 0.75 * ((inf_l) / pop_l) +
       travel * S2_l * beta_h * 0.75 * ((inf_h)  / pop_h)
-    secondary_cases.l.v <- secondary_cases.l[9] * inf[2]
+    secondary_cases.l.v <- secondary_cases.l[9] * inf[3]
      secondary_cases.l <- sum(secondary_cases.l) * inf[2]
     
 
@@ -711,7 +713,7 @@ model <- function(t, y, parms, null){
       travel * S2_h * 2 * 0.75 * beta_l * ((sym_inf_l) / pop_l) +
       native * S2_h * 0.75 * beta_h * ((inf_h) / pop_h) +
       travel * S2_h * 0.75 * beta_l * ((inf_l) / pop_l)
-    secondary_cases.h.v <- secondary_cases.h[9] * inf[2]
+    secondary_cases.h.v <- secondary_cases.h[9] * inf[3]
     secondary_cases.h <- sum(secondary_cases.h) * inf[2]
     
   }
@@ -766,10 +768,10 @@ model <- function(t, y, parms, null){
       travel * S3_h * 2 * 0.5 * beta_l * ((sym_inf_l) / pop_l) +
       native * S3_h * 0.5 * beta_h * ((inf_h) / pop_h) +
       travel * S3_h * 0.5 * beta_l * ((inf_l) / pop_l) + 
-      native * S4_l * beta_l * 2 * 0.25 * ((sym_inf_l) / pop_l) +
-      travel * S4_l * beta_h * 2 *  0.25 * ((sym_inf_h)  / pop_h) +
-      native * S4_l * beta_l * 0.25 * ((inf_l) / pop_l) +
-      travel * S4_l * beta_h * 0.25 * ((inf_h)  / pop_h)
+      native * S4_h * 2 * 0.25 * beta_h * ((sym_inf_h) / pop_h) +
+      travel * S4_h * 2 * 0.25 * beta_l * ((sym_inf_l) / pop_l ) +
+      native * S4_h * 0.25 * beta_h * ((inf_h) / pop_h ) +
+      travel * S4_h * 0.25 * beta_l * ((inf_l) / pop_l) 
     
     postsec_cases.h.v <- postsec_cases.h[9] * inf[3]
     postsec_cases.h <- sum(postsec_cases.h) * inf[3]
@@ -959,12 +961,12 @@ out_null.h <- out_null.h[,2:ncol(out_null.h)]
   ####time series coverage
 #   {
     timepoint_year <- years
-index <- c((3650 * years_vac):(timepoint_year * 3650 - 1))
+index <- c((3650 * years_vac):(timepoint_year * 3650))
 
-    vac_h.1 <- out.h[index,which(colnames(out.h) == 'vac_1.h')] / out.h[index,which(colnames(out.h) == 'pop_1.h')]
-    vac_h.2 <- out.h[index,which(colnames(out.h) == 'vac_2.h')] / out.h[index,which(colnames(out.h) == 'pop_2.h')]
-    vac_h.3 <- (out.h[index,which(colnames(out.h) == 'vac_3.h')] + out.h[index,which(colnames(out.h) == 'vac_4.h')]) /
-      (out.h[index,which(colnames(out.h) == 'pop_3.h')] + out.h[index,which(colnames(out.h) == 'pop_4.h')])
+    vac_h.1 <- diff(out.h[index,which(colnames(out.h) == 'vac_1.h')]) / diff(out.h[index,which(colnames(out.h) == 'pop_1.h')])
+    vac_h.2 <- diff(out.h[index,which(colnames(out.h) == 'vac_2.h')]) / diff(out.h[index,which(colnames(out.h) == 'pop_2.h')])
+    vac_h.3 <- diff(out.h[index,which(colnames(out.h) == 'vac_3.h')] + out.h[index,which(colnames(out.h) == 'vac_4.h')]) /
+      diff(out.h[index,which(colnames(out.h) == 'pop_3.h')] + out.h[index,which(colnames(out.h) == 'pop_4.h')])
 
 
 
@@ -979,10 +981,10 @@ index <- c((3650 * years_vac):(timepoint_year * 3650 - 1))
 
 
 
-    vac_l.1 <- out.h[index,which(colnames(out.h) == 'vac_1.l')] / out.h[index,which(colnames(out.h) == 'pop_1.l')]
-    vac_l.2 <- out.h[index,which(colnames(out.h) == 'vac_2.l')] / out.h[index,which(colnames(out.h) == 'pop_2.l')]
-    vac_l.3 <- sum(out.h[index,which(colnames(out.h) == 'vac_3.l')] + out.h[index,which(colnames(out.h) == 'vac_4.l')]) /
-      sum(out.h[index,which(colnames(out.h) == 'pop_3.l')] + out.h[index,which(colnames(out.h) == 'pop_4.l')])
+    vac_l.1 <- diff(out.h[index,which(colnames(out.h) == 'vac_1.l')] )/ diff(out.h[index,which(colnames(out.h) == 'pop_1.l')])
+    vac_l.2 <- diff(out.h[index,which(colnames(out.h) == 'vac_2.l')] )/ diff(out.h[index,which(colnames(out.h) == 'pop_2.l')])
+    vac_l.3 <- diff((out.h[index,which(colnames(out.h) == 'vac_3.l')] + out.h[index,which(colnames(out.h) == 'vac_4.l')])) /
+    diff( (out.h[index,which(colnames(out.h) == 'pop_3.l')] + out.h[index,which(colnames(out.h) == 'pop_4.l')]))
 
     cov_l <- sum(out.h[index,which(colnames(out.h) == 'vac_1.l')] +
                    out.h[index,which(colnames(out.h) == 'vac_2.l')] +
@@ -991,9 +993,9 @@ index <- c((3650 * years_vac):(timepoint_year * 3650 - 1))
                                                                              out.h[index,which(colnames(out.h) == 'pop_2.l')] +
                                                                              out.h[index,which(colnames(out.h) == 'pop_3.l')] +
                                                                              out.h[index,which(colnames(out.h) == 'pop_4.l')])
-    coverage_l <- c(vac_l.1, vac_l.2, vac_l.3)
+    coverage_l <- list(vac_l.1, vac_l.2, vac_l.3)
 
-    coverage <- c(cov_h, cov_h)
+    coverage <- list(coverage_h, coverage_l)
     names(coverage) <- c('h', 'l')
     save(coverage, file = paste('new.cov_', input, '.RData', sep = ''))
 
@@ -1002,7 +1004,7 @@ index <- c((3650 * years_vac):(timepoint_year * 3650 - 1))
 #
 #   
 #   
-   #save(cases.output.vec.h, file = paste('cases_averted_', input, '.RData', sep = ''))
+  save(cases.output.vec.h, file = paste('cases_averted_', input, '.RData', sep = ''))
 #   # save(infections.output.vec.h, file = paste('infections_averted_', input, '.RData', sep = ''))
 #   
 # }
