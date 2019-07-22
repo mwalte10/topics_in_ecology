@@ -124,20 +124,14 @@ population_l <- sum(susceptible_total_l + infected_total_l + recovered_total_l)
     cases_vac.l <- sum((out_mat[indexing,which(colnames(out_mat) == 'sec_vac.cases.l')]) + 
                        (out_mat[indexing,which(colnames(out_mat) == 'psec_vac.cases.l')]))
     
-    coverage_h[[1]][which(is.nan(coverage_h[[1]]))] <- 0
-    coverage_h[[2]][which(is.nan(coverage_h[[2]]))] <- 0
-    coverage_h[[3]][which(is.nan(coverage_h[[3]]))] <- 0
-    
-    coverage_l[[1]][which(is.nan(coverage_l[[1]]))] <- 0
-    coverage_l[[2]][which(is.nan(coverage_l[[2]]))] <- 0
-    coverage_l[[3]][which(is.nan(coverage_l[[3]]))] <- 0
+
     
     # cases_vac.h.null <- sum( out_mat_null[indexing,which(colnames(out_mat_null) == 'vac_eleg_p.h')] * coverage_h[[1]] +
     #                           out_mat_null[indexing,which(colnames(out_mat_null) == 'vac_eleg_s.h')] * coverage_h[[2]] +
     #                           out_mat_null[indexing,which(colnames(out_mat_null) == 'vac_eleg.ps.h')] * coverage_h[[3]])
     
-    cases_vac.h.null <- out.h[indexing,which(colnames(out.h) == 'ca_av_h')]
-    cases_vac.l.null <- out.h[indexing,which(colnames(out.h) == 'ca_av_l')]
+    cases_vac.h.null <- out_null.h[indexing,which(colnames(out_null.h) == 'ca_av_h')]
+    cases_vac.l.null <- out_null.h[indexing,which(colnames(out_null.h) == 'ca_av_l')]
     cases_vac.null <- sum(cases_vac.h.null + cases_vac.l.null)
     
     

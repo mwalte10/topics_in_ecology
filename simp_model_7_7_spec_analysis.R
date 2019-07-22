@@ -62,7 +62,7 @@ library(deSolve)
 #Initial conidtions and parameters
 ###########################
 load('last_row_1.RData')
-y_init <- c(last_row[1:3520], rep(0,22))
+y_init <- c(last_row[1:3520], rep(0,24))
 
 
 parms.h <- list(beta_h = beta_h,
@@ -76,6 +76,8 @@ parms.h <- list(beta_h = beta_h,
                 travel = 1 - native,
                 vac_h = vac_h,
                 vac_l = vac_l,
+                vac_h.test = vac_h,
+                vac_l.test = vac_l, 
                 sens = 0.85,
                 spec = spec,
                 hopkins,
@@ -91,6 +93,8 @@ parms_null.h <- list(beta_h = beta_h,
                      travel = 1 - native,
                      vac_h = 0,
                      vac_l = 0,
+                     vac_h.test = vac_h,
+                     vac_l.test = vac_l, 
                      sens = 0.85,
                      spec = spec,
                      hopkins,
@@ -124,10 +128,16 @@ model <- function(t, y, parms, null){
   t_vac.l <- ifelse((t>(365*(years_vac))), parms[[11]] / 365, 0)
   vac_h <- c(rep(0,8), t_vac.h, rep(0,71))
   vac_l <- c(rep(0,8), t_vac.l, rep(0,71))
-  sens <- parms[[12]]
-  spec <- parms[[13]]
-  inf <- parms[[14]]
-  ninf <- parms[[15]]
+  
+  t_vac.h.test <- ifelse((t>(365*(years_vac))), parms[[12]] / 365, 0)
+  t_vac.l.test <- ifelse((t>(365*(years_vac))), parms[[13]] / 365, 0)
+  vac_h.test <- c(rep(0,8), t_vac.h.test, rep(0,71))
+  vac_l.test <- c(rep(0,8), t_vac.l.test, rep(0,71))
+
+  sens <- parms[[14]]
+  spec <- parms[[15]]
+  inf <- parms[[16]]
+  ninf <- parms[[17]]
   
 #############################
 ##SET UP STATE VARIABLES
@@ -800,96 +810,224 @@ model <- function(t, y, parms, null){
   ##Vaccination coverages
   ############################# 
   ####inappropriate vaccinations
-  vac_1.h <-  (S1_h * vac_h * (1 - spec)) / sum(S1_h[9]) 
-  vac_1.l <-  (S1_l * vac_l * (1 - spec))  /sum(S1_l[9]) 
+  vac_1.h <-  (S1_h * vac_h.test * (1 - spec)) / sum(S1_h[9]) 
+  vac_1.l <-  (S1_l * vac_l.test * (1 - spec))  /sum(S1_l[9]) 
   
-  av_ca_1_h <-  sum(vac_1.h * (beta_h * native * S1_h * 2 * ((sym_inf_h)/ pop_h) * inf[2] +
-                                 beta_h * native * S1_h  * ((inf_h)/ pop_h) * inf[2] + 
-                                 beta_l * travel * S1_h * 2 * ((sym_inf_l)/ pop_l) * inf[2] +
-                                 beta_l * travel * S1_h  * ((inf_l)/ pop_l) * inf[2] + 
+  sym_new_h <- sum((sym_inf_h + sum(beta_h * native * S1_h * 2 * ((sym_inf_h)/ pop_h) * inf[2] +
+                                      beta_h * native * S1_h  * ((inf_h)/ pop_h) * inf[2] + 
+                                      beta_l * travel * S1_h * 2 * ((sym_inf_l)/ pop_l) * inf[2] +
+                                      beta_l * travel * S1_h  * ((inf_l)/ pop_l) * inf[2] + 
+                                      
+                                      
+                                      beta_h * native * S1_h * 0.75 * 2 * ((sym_inf_h)/ pop_h) * inf[3] +
+                                      beta_h * native * S1_h * 0.75 * ((inf_h)/ pop_h) * inf[3] + 
+                                      beta_l * travel * S1_h * 0.75 * 2 * ((sym_inf_l)/ pop_l) * inf[3] +
+                                      beta_l * travel * S1_h * 0.75 * ((inf_l)/ pop_l) * inf[3] + 
+                                      
+                                      beta_h * native * S1_h * 0.5 * 2 * ((sym_inf_h)/ pop_h) * inf[3] +
+                                      beta_h * native * S1_h * 0.5 * ((inf_h)/ pop_h) * inf[3] + 
+                                      beta_l * travel * S1_h * 0.5 * 2 * ((sym_inf_l)/ pop_l) * inf[3] +
+                                      beta_l * travel * S1_h * 0.5 * ((inf_l)/ pop_l) * inf[3] +
+                                      
+                                      native * beta_h * S2_h * 2 * 0.75 * (sym_inf_h/ pop_h) * inf[3] +
+                                      native * beta_h * S2_h  *  0.75 * (inf_h/ pop_h) * inf[3] +
+                                      travel * beta_l * S2_h * 2 * 0.75 *  (sym_inf_l/ pop_l) * inf[3] +
+                                      travel * beta_l * S2_h  * 0.75 *  (inf_l/ pop_l) * inf[3] +
+                                      native * beta_h * S2_h * 2 * 0.5 * (sym_inf_h/ pop_h) * inf[3] +
+                                      native * beta_h * S2_h  *  0.5 * (inf_h/ pop_h) * inf[3] +
+                                      travel * beta_l * S2_h * 2 * 0.5 *  (sym_inf_l/ pop_l) * inf[3] +
+                                      travel * beta_l * S2_h  * 0.5 *  (inf_l/ pop_l) * inf[3] +
+                                      
+                                      native * beta_h * S3_h * 2 * 0.5 * (sym_inf_h/ pop_h) * inf[3] + 
+                                      native * beta_h * S3_h  * 0.5 * (inf_h/ pop_h) * inf[3] +  
+                                      travel * beta_l * S3_h * 2 * 0.5 * (sym_inf_l/ pop_l) * inf[3] + 
+                                      travel * beta_l * S3_h  * 0.5 * (inf_l/ pop_l) * inf[3])))
+  
+  inf_new_h <- sum(inf_h + sum(beta_h * native * S1_h * 2 * ((sym_new_h)/ pop_h) * ninf[2] +
+                                 beta_h * native * S1_h  * ((inf_h)/ pop_h) * ninf[2] + 
+                                 beta_l * travel * S1_h * 2 * ((sym_inf_l)/ pop_l) * ninf[2] +
+                                 beta_l * travel * S1_h  * ((inf_l)/ pop_l) * ninf[2] + 
                                  
                                  
-                                 beta_h * native * S1_h * 0.75 * 2 * ((sym_inf_h)/ pop_h) * inf[3] +
-                                 beta_h * native * S1_h * 0.75 * ((inf_h)/ pop_h) * inf[3] + 
-                                 beta_l * travel * S1_h * 0.75 * 2 * ((sym_inf_l)/ pop_l) * inf[3] +
-                                 beta_l * travel * S1_h * 0.75 * ((inf_l)/ pop_l) * inf[3] + 
+                                 beta_h * native * S1_h * 0.75 * 2 * ((sym_new_h)/ pop_h) * ninf[3] +
+                                 beta_h * native * S1_h * 0.75 * ((inf_h)/ pop_h) * ninf[3] + 
+                                 beta_l * travel * S1_h * 0.75 * 2 * ((sym_inf_l)/ pop_l) * ninf[3] +
+                                 beta_l * travel * S1_h * 0.75 * ((inf_l)/ pop_l) * ninf[3] + 
                                  
-                                 beta_h * native * S1_h * 0.5 * 2 * ((sym_inf_h)/ pop_h) * inf[3] +
-                                 beta_h * native * S1_h * 0.5 * ((inf_h)/ pop_h) * inf[3] + 
-                                 beta_l * travel * S1_h * 0.5 * 2 * ((sym_inf_l)/ pop_l) * inf[3] +
-                                 beta_l * travel * S1_h * 0.5 * ((inf_l)/ pop_l) * inf[3]))
-  
-  av_ca_1_l <-  sum(vac_1.l * (beta_l * native * S1_l * 2 * ((sym_inf_l)/ pop_l) * inf[2] +
-                   beta_l * native * S1_l  * ((inf_l)/ pop_l) * inf[2] + 
-                   beta_h * travel * S1_l * 2 * ((sym_inf_h)/ pop_h) * inf[2] +
-                   beta_h * travel * S1_l  * ((inf_h)/ pop_h) * inf[2] + 
-                   
-                   
-                   beta_l * native * S1_l * 0.75 * 2 * ((sym_inf_l)/ pop_l) * inf[3] +
-                   beta_l * native * S1_l * 0.75 * ((inf_l)/ pop_l) * inf[3] + 
-                   beta_h * travel * S1_l * 0.75 * 2 * ((sym_inf_h)/ pop_h) * inf[3] +
-                   beta_h * travel * S1_l * 0.75 * ((inf_h)/ pop_h) * inf[3] + 
-                   
-                   beta_l * native * S1_l * 0.5 * 2 * ((sym_inf_l)/ pop_l) * inf[3] +
-                   beta_l * native * S1_l * 0.5 * ((inf_l)/ pop_l) * inf[3] + 
-                   beta_h * travel * S1_l * 0.5 * 2 * ((sym_inf_h)/ pop_h) * inf[3] +
-                   beta_h * travel * S1_l * 0.5 * ((inf_h)/ pop_h) * inf[3]))
-  
-  pop_1.h.9 <- sum(S1_h[9])
-  pop_1.l.9 <- sum(S1_l[9])
-  
-  
-  ##appropriate vaccinations, averts secondary infections
-  vac_2.h <- sum(R1_h * vac_h * sens  + S2_h * vac_h * sens ) / sum(S2_h[9] + R1_h[9])
-  vac_2.l <- sum(R1_l * vac_l * sens  + S2_l * vac_l * sens ) / sum(S2_l[9] + R1_l[9])
-  
-  av_ca_2_h <-  sum(vac_2.h * 2 * R1_h * inf[3]  + vac_2.h  * (native * beta_h * S2_h * 2 * 0.75 * (sym_inf_h/ pop_h) * inf[3] +
-                                                                native * beta_h * S2_h  *  0.75 * (inf_h/ pop_h) * inf[3] +
-                                                                travel * beta_l * S2_h * 2 * 0.75 *  (sym_inf_l/ pop_l) * inf[3] +
-                                                                travel * beta_l * S2_h  * 0.75 *  (inf_l/ pop_l) * inf[3] +
-                                                                 native * beta_h * S2_h * 2 * 0.5 * (sym_inf_h/ pop_h) * inf[3] +
-                                                                 native * beta_h * S2_h  *  0.5 * (inf_h/ pop_h) * inf[3] +
-                                                                 travel * beta_l * S2_h * 2 * 0.5 *  (sym_inf_l/ pop_l) * inf[3] +
-                                                                 travel * beta_l * S2_h  * 0.5 *  (inf_l/ pop_l) * inf[3] )) 
+                                 beta_h * native * S1_h * 0.5 * 2 * ((sym_new_h)/ pop_h) * ninf[3] +
+                                 beta_h * native * S1_h * 0.5 * ((inf_h)/ pop_h) * ninf[3] + 
+                                 beta_l * travel * S1_h * 0.5 * 2 * ((sym_inf_l)/ pop_l) * ninf[3] +
+                                 beta_l * travel * S1_h * 0.5 * ((inf_l)/ pop_l) * ninf[3] +
+                                 native * beta_h * S2_h * 2 * 0.75 * (sym_inf_h/ pop_h) * ninf[3] +
+                                 native * beta_h * S2_h  *  0.75 * (inf_h/ pop_h) * ninf[3] +
+                                 travel * beta_l * S2_h * 2 * 0.75 *  (sym_inf_l/ pop_l) * ninf[3] +
+                                 travel * beta_l * S2_h  * 0.75 *  (inf_l/ pop_l) * ninf[3] +
+                                 native * beta_h * S2_h * 2 * 0.5 * (sym_inf_h/ pop_h) * ninf[3] +
+                                 native * beta_h * S2_h  *  0.5 * (inf_h/ pop_h) * ninf[3] +
+                                 travel * beta_l * S2_h * 2 * 0.5 *  (sym_inf_l/ pop_l) * ninf[3] +
+                                 travel * beta_l * S2_h  * 0.5 *  (inf_l/ pop_l) * ninf[3] +
+                                 
+                                 native * beta_h * S3_h * 2 * 0.5 * (sym_inf_h/ pop_h) * ninf[3] + 
+                                 native * beta_h * S3_h  * 0.5 * (inf_h/ pop_h) * ninf[3] +  
+                                 travel * beta_l * S3_h * 2 * 0.5 * (sym_inf_l/ pop_l) * ninf[3] + 
+                                 travel * beta_l * S3_h  * 0.5 * (inf_l/ pop_l) * ninf[3]))
 
-  av_ca_2_l <- sum(vac_2.l * 2 * R1_l * inf[3]  + vac_2.l * (native * beta_l * S2_l * 2 * 0.75 * (sym_inf_l/ pop_l) * inf[3] +
-                                                    native * beta_l * S2_l  *0.75 *  (inf_l/ pop_l) * inf[3] +
-                                                    travel * beta_h * S2_l * 2 * 0.75 * (sym_inf_h/ pop_h) * inf[3] +
-                                                    travel * beta_h * S2_l  * 0.75 * (inf_h/ pop_h) * inf[3] +
-                                                      native * beta_l * S2_l * 2 * 0.5 * (sym_inf_l/ pop_l) * inf[3] +
-                                                      native * beta_l * S2_l  *0.5 *  (inf_l/ pop_l) * inf[3] +
-                                                      travel * beta_h * S2_l * 2 * 0.5 * (sym_inf_h/ pop_h) * inf[3] +
-                                                      travel * beta_h * S2_l  * 0.5 * (inf_h/ pop_h) * inf[3]) )
-  
-  pop_2.h.9 <- sum(S2_h[9] + R1_h[9])
-  pop_2.l.9 <- sum(S2_l[9] + R1_l[9])
-  
-  ####averts tertiary infects
-  vac_3.h <- sum(R2_h * vac_h * sens + S3_h * vac_h * sens) / sum(S3_h[9] + R2_h[9])
-  vac_3.l <- sum(R2_l * vac_l * sens + S3_l * vac_l * sens) /sum(S3_l[9] + R2_l[9])
-  
-  av_ca_3_h <-  sum(vac_3.h * R2_h * inf[3] +  vac_3.h * (native * beta_h * S3_h * 2 * 0.5 * (sym_inf_h/ pop_h) * inf[3] + 
+
+
+sym_new_l <- sum(sym_inf_l + sum(beta_l * native * S1_l * 2 * ((sym_inf_l)/ pop_l) * inf[2] +
+                                   beta_l * native * S1_l  * ((inf_l)/ pop_l) * inf[2] + 
+                                   beta_h * travel * S1_l * 2 * ((sym_inf_h)/ pop_h) * inf[2] +
+                                   beta_h * travel * S1_l  * ((inf_h)/ pop_h) * inf[2] + 
+                                   
+                                   
+                                   beta_l * native * S1_l * 0.75 * 2 * ((sym_inf_l)/ pop_l) * inf[3] +
+                                   beta_l * native * S1_l * 0.75 * ((inf_l)/ pop_l) * inf[3] + 
+                                   beta_h * travel * S1_l * 0.75 * 2 * ((sym_inf_h)/ pop_h) * inf[3] +
+                                   beta_h * travel * S1_l * 0.75 * ((inf_h)/ pop_h) * inf[3] + 
+                                   
+                                   beta_l * native * S1_l * 0.5 * 2 * ((sym_inf_l)/ pop_l) * inf[3] +
+                                   beta_l * native * S1_l * 0.5 * ((inf_l)/ pop_l) * inf[3] + 
+                                   beta_h * travel * S1_l * 0.5 * 2 * ((sym_inf_h)/ pop_h) * inf[3] +
+                                   beta_h * travel * S1_l * 0.5 * ((inf_h)/ pop_h) * inf[3] + 
+                                   native * beta_l * S2_l * 2 * 0.75 * (sym_inf_l/ pop_l) * inf[3] +
+                                   native * beta_l * S2_l  *0.75 *  (inf_l/ pop_l) * inf[3] +
+                                   travel * beta_h * S2_l * 2 * 0.75 * (sym_inf_h/ pop_h) * inf[3] +
+                                   travel * beta_h * S2_l  * 0.75 * (inf_h/ pop_h) * inf[3] +
+                                   native * beta_l * S2_l * 2 * 0.5 * (sym_inf_l/ pop_l) * inf[3] +
+                                   native * beta_l * S2_l  *0.5 *  (inf_l/ pop_l) * inf[3] +
+                                   travel * beta_h * S2_l * 2 * 0.5 * (sym_inf_h/ pop_h) * inf[3] +
+                                   travel * beta_h * S2_l  * 0.5 * (inf_h/ pop_h) * inf[3] + 
+                                   
+                                   native * beta_h * S3_h * 2 * 0.5 * (sym_inf_h/ pop_h) * inf[3] + 
                                    native * beta_h * S3_h  * 0.5 * (inf_h/ pop_h) * inf[3] +  
                                    travel * beta_l * S3_h * 2 * 0.5 * (sym_inf_l/ pop_l) * inf[3] + 
-                                   travel * beta_l * S3_h  * 0.5 * (inf_l/ pop_l) * inf[3])) 
-  av_ca_3_l <-  sum(vac_3.l * R2_l * inf[3] + vac_3.l * (travel * beta_h * S3_h * 2 * 0.5 * (sym_inf_h/ pop_h) * inf[3] + 
-                                   travel * beta_h * S3_h  * 0.5 * (inf_h/ pop_h) * inf[3] +  
-                                   native * beta_l * S3_h * 2 * 0.5 * (sym_inf_l/ pop_l) * inf[3] + 
-                                   native * beta_l * S3_h  * 0.5 * (inf_l/ pop_l) * inf[3])) 
+                                   travel * beta_l * S3_h  * 0.5 * (inf_l/ pop_l) * inf[3]))
+
+inf_new_l <- sum(sym_inf_l + sum(beta_l * native * S1_l * 2 * ((sym_inf_l)/ pop_l) * ninf[2] +
+                                   beta_l * native * S1_l  * ((inf_l)/ pop_l) * ninf[2] + 
+                                   beta_h * travel * S1_l * 2 * ((sym_inf_h)/ pop_h) * ninf[2] +
+                                   beta_h * travel * S1_l  * ((inf_h)/ pop_h) * ninf[2] + 
+                                   
+                                   
+                                   beta_l * native * S1_l * 0.75 * 2 * ((sym_inf_l)/ pop_l) * ninf[3] +
+                                   beta_l * native * S1_l * 0.75 * ((inf_l)/ pop_l) * ninf[3] + 
+                                   beta_h * travel * S1_l * 0.75 * 2 * ((sym_inf_h)/ pop_h) * ninf[3] +
+                                   beta_h * travel * S1_l * 0.75 * ((inf_h)/ pop_h) * ninf[3] + 
+                                   
+                                   beta_l * native * S1_l * 0.5 * 2 * ((sym_inf_l)/ pop_l) * ninf[3] +
+                                   beta_l * native * S1_l * 0.5 * ((inf_l)/ pop_l) * ninf[3] + 
+                                   beta_h * travel * S1_l * 0.5 * 2 * ((sym_inf_h)/ pop_h) * ninf[3] +
+                                   beta_h * travel * S1_l * 0.5 * ((inf_h)/ pop_h) * ninf[3] + 
+                                   native * beta_l * S2_l * 2 * 0.75 * (sym_inf_l/ pop_l) * ninf[3] +
+                                   native * beta_l * S2_l  *0.75 *  (inf_l/ pop_l) * ninf[3] +
+                                   travel * beta_h * S2_l * 2 * 0.75 * (sym_inf_h/ pop_h) * ninf[3] +
+                                   travel * beta_h * S2_l  * 0.75 * (inf_h/ pop_h) * ninf[3] +
+                                   native * beta_l * S2_l * 2 * 0.5 * (sym_inf_l/ pop_l) * ninf[3] +
+                                   native * beta_l * S2_l  *0.5 *  (inf_l/ pop_l) * ninf[3] +
+                                   travel * beta_h * S2_l * 2 * 0.5 * (sym_inf_h/ pop_h) * ninf[3] +
+                                   travel * beta_h * S2_l  * 0.5 * (inf_h/ pop_h) * ninf[3] + 
+                                   
+                                   native * beta_h * S3_h * 2 * 0.5 * (sym_inf_h/ pop_h) * ninf[3] + 
+                                   native * beta_h * S3_h  * 0.5 * (inf_h/ pop_h) * ninf[3] +  
+                                   travel * beta_l * S3_h * 2 * 0.5 * (sym_inf_l/ pop_l) * ninf[3] + 
+                                   travel * beta_l * S3_h  * 0.5 * (inf_l/ pop_l) * ninf[3]))
+
+av_ca_1_h <-  sum(vac_1.h * (beta_h * native * S1_h * 2 * ((sym_new_h)/ pop_h) * inf[2] +
+                               beta_h * native * S1_h  * ((inf_new_h)/ pop_h) * inf[2] + 
+                               beta_l * travel * S1_h * 2 * ((sym_new_l)/ pop_l) * inf[2] +
+                               beta_l * travel * S1_h  * ((inf_new_l)/ pop_l) * inf[2] + 
+                               
+                               
+                               beta_h * native * S1_h * 0.75 * 2 * ((sym_new_h)/ pop_h) * inf[3] +
+                               beta_h * native * S1_h * 0.75 * ((inf_new_h)/ pop_h) * inf[3] + 
+                               beta_l * travel * S1_h * 0.75 * 2 * ((sym_new_l)/ pop_l) * inf[3] +
+                               beta_l * travel * S1_h * 0.75 * ((inf_new_l)/ pop_l) * inf[3] + 
+                               
+                               beta_h * native * S1_h * 0.5 * 2 * ((sym_new_h)/ pop_h) * inf[3] +
+                               beta_h * native * S1_h * 0.5 * ((inf_new_h)/ pop_h) * inf[3] + 
+                               beta_l * travel * S1_h * 0.5 * 2 * ((sym_new_l)/ pop_l) * inf[3] +
+                               beta_l * travel * S1_h * 0.5 * ((inf_new_l)/ pop_l) * inf[3]))
+
+av_ca_1_l <-  sum(vac_1.l * (beta_l * native * S1_l * 2 * ((sym_new_l)/ pop_l) * inf[2] +
+                               beta_l * native * S1_l  * ((inf_new_l)/ pop_l) * inf[2] + 
+                               beta_h * travel * S1_l * 2 * ((sym_new_h)/ pop_h) * inf[2] +
+                               beta_h * travel * S1_l  * ((inf_new_h)/ pop_h) * inf[2] + 
+                               
+                               
+                               beta_l * native * S1_l * 0.75 * 2 * ((sym_new_l)/ pop_l) * inf[3] +
+                               beta_l * native * S1_l * 0.75 * ((inf_new_l)/ pop_l) * inf[3] + 
+                               beta_h * travel * S1_l * 0.75 * 2 * ((sym_new_h)/ pop_h) * inf[3] +
+                               beta_h * travel * S1_l * 0.75 * ((inf_new_h)/ pop_h) * inf[3] + 
+                               
+                               beta_l * native * S1_l * 0.5 * 2 * ((sym_new_l)/ pop_l) * inf[3] +
+                               beta_l * native * S1_l * 0.5 * ((inf_new_l)/ pop_l) * inf[3] + 
+                               beta_h * travel * S1_l * 0.5 * 2 * ((sym_new_h)/ pop_h) * inf[3] +
+                               beta_h * travel * S1_l * 0.5 * ((inf_new_h)/ pop_h) * inf[3]))
+
+pop_1.h.9 <- sum(S1_h[9])
+pop_1.l.9 <- sum(S1_l[9])
+
+
+##appropriate vaccinations, averts secondary infections
+vac_2.h <- (R1_h * vac_h.test * sens  + S2_h * vac_h.test * sens ) / (S2_h[9] + R1_h[9])
+vac_2.l <- (R1_l * vac_l.test * sens  + S2_l * vac_l.test * sens ) / (S2_l[9] + R1_l[9])
+
+av_ca_2_h <-  sum(vac_2.h * 2 * R1_h * inf[3]  + vac_2.h  * (native * beta_h * S2_h * 2 * 0.75 * (sym_new_h/ pop_h) * inf[3] +
+                                                               native * beta_h * S2_h  *  0.75 * (inf_new_h/ pop_h) * inf[3] +
+                                                               travel * beta_l * S2_h * 2 * 0.75 *  (sym_new_l/ pop_l) * inf[3] +
+                                                               travel * beta_l * S2_h  * 0.75 *  (inf_new_l/ pop_l) * inf[3] +
+                                                               native * beta_h * S2_h * 2 * 0.5 * (sym_new_h/ pop_h) * inf[3] +
+                                                               native * beta_h * S2_h  *  0.5 * (inf_new_h/ pop_h) * inf[3] +
+                                                               travel * beta_l * S2_h * 2 * 0.5 *  (sym_new_l/ pop_l) * inf[3] +
+                                                               travel * beta_l * S2_h  * 0.5 *  (inf_new_l/ pop_l) * inf[3] )) 
+
+av_ca_2_l <- sum(vac_2.l * 2 * R1_l * inf[3]  + vac_2.l * (native * beta_l * S2_l * 2 * 0.75 * (sym_new_l/ pop_l) * inf[3] +
+                                                             native * beta_l * S2_l  *0.75 *  (inf_new_l/ pop_l) * inf[3] +
+                                                             travel * beta_h * S2_l * 2 * 0.75 * (sym_new_h/ pop_h) * inf[3] +
+                                                             travel * beta_h * S2_l  * 0.75 * (inf_new_h/ pop_h) * inf[3] +
+                                                             native * beta_l * S2_l * 2 * 0.5 * (sym_new_l/ pop_l) * inf[3] +
+                                                             native * beta_l * S2_l  *0.5 *  (inf_new_l/ pop_l) * inf[3] +
+                                                             travel * beta_h * S2_l * 2 * 0.5 * (sym_new_h/ pop_h) * inf[3] +
+                                                             travel * beta_h * S2_l  * 0.5 * (inf_new_h/ pop_h) * inf[3]) )
+
+pop_2.h.9 <- sum(S2_h[9] + R1_h[9])
+pop_2.l.9 <- sum(S2_l[9] + R1_l[9])
+
+####averts tertiary infects
+vac_3.h <- (R2_h * vac_h.test * sens + S3_h * vac_h.test * sens) / (S3_h[9] + R2_h[9])
+vac_3.l <- (R2_l * vac_l.test * sens + S3_l * vac_l.test * sens) /(S3_l[9] + R2_l[9])
+
+av_ca_3_h <-  sum(vac_3.h * R2_h * inf[3] +  vac_3.h * (native * beta_h * S3_h * 2 * 0.5 * (sym_new_h/ pop_h) * inf[3] + 
+                                                          native * beta_h * S3_h  * 0.5 * (inf_new_h/ pop_h) * inf[3] +  
+                                                          travel * beta_l * S3_h * 2 * 0.5 * (sym_new_l/ pop_l) * inf[3] + 
+                                                          travel * beta_l * S3_h  * 0.5 * (inf_new_l/ pop_l) * inf[3])) 
+av_ca_3_l <-  sum(vac_3.l * R2_l * inf[3] + vac_3.l * (travel * beta_h * S3_h * 2 * 0.5 * (sym_new_h/ pop_h) * inf[3] + 
+                                                         travel * beta_h * S3_h  * 0.5 * (inf_new_h/ pop_h) * inf[3] +  
+                                                         native * beta_l * S3_h * 2 * 0.5 * (sym_new_l/ pop_l) * inf[3] + 
+                                                         native * beta_l * S3_h  * 0.5 * (inf_new_l/ pop_l) * inf[3])) 
+
+pop_3.h.9 <- sum(S3_h[9] + R2_h[9])
+pop_3.l.9 <- sum(S3_l[9] + R2_l[9])
+
+##### averts quat infects
+vac_4.h <- sum(R3_h * vac_h.test * sens + S4_h * vac_h.test * sens) / sum(S4_h[9] + R3_h[9])
+vac_4.l <- sum(R3_l * vac_l.test * sens + S4_l * vac_l.test * sens) / sum(S4_l[9] + R3_l[9])
+
+pop_4.h.9 <- sum(S4_h[9] + R3_h[9])
+pop_4.l.9 <- sum(S4_l[9] + R3_l[9])
+
+av_ca_h <- sum(av_ca_1_h + av_ca_2_h + av_ca_3_h)
+av_ca_l <- sum(av_ca_1_l + av_ca_2_l + av_ca_3_l)
+
+cov_h <- sum(S1_h * vac_h * (1 - spec) + 
+ R1_h * vac_h * sens  + S2_h * vac_h * sens +
+    R2_h * vac_h * sens + S3_h * vac_h * sens + 
+  R3_h * vac_h * sens + S4_h * vac_h * sens) / sum(S1_h[9] + S2_h[9] + R1_h[9] +  S3_h[9] + R2_h[9] + S4_h[9] + R3_h[9])
   
-  pop_3.h.9 <- sum(S3_h[9] + R2_h[9])
-  pop_3.l.9 <- sum(S3_l[9] + R2_l[9])
-  
-  ##### averts quat infects
-  vac_4.h <- sum(R3_h * vac_h * sens + S4_h * vac_h * sens) / sum(S4_h[9] + R3_h[9])
-  vac_4.l <- sum(R3_l * vac_l * sens + S4_l * vac_l * sens) / sum(S4_l[9] + R3_l[9])
-  
-  pop_4.h.9 <- sum(S4_h[9] + R3_h[9])
-  pop_4.l.9 <- sum(S4_l[9] + R3_l[9])
-  
-  av_ca_h <- sum(av_ca_1_h + av_ca_2_h + av_ca_3_h)
-  av_ca_l <- sum(av_ca_1_l + av_ca_2_l + av_ca_3_l)
-  
+cov_l <- sum(S1_l * vac_l * (1 - spec) + 
+               R1_l * vac_l * sens  + S2_l * vac_l * sens +
+               R2_l * vac_l * sens + S3_l * vac_l * sens + 
+               R3_l * vac_l * sens + S4_l * vac_l * sens) / sum(S1_l[9] + S2_l[9] + R1_l[9] +  S3_l[9] + R2_l[9] + S4_l[9] + R3_l[9])
   
   
   list(c(
@@ -935,17 +1073,9 @@ model <- function(t, y, parms, null){
     secondary_cases.l.v,  secondary_cases.h.v,
     postsec_cases.l.v, postsec_cases.h.v,
     
-    # vac_1.h,  vac_1.l,
-    # vac_2.h,  vac_2.l,
-    # vac_3.h,  vac_3.l,
-    # vac_4.h,  vac_4.l,
-    # 
-    # pop_1.h.9, pop_1.l.9,
-    # pop_2.h.9, pop_2.l.9,
-    # pop_3.h.9, pop_3.l.9,
-    # pop_4.h.9, pop_4.l.9,
     
-    av_ca_h, av_ca_l
+    av_ca_h, av_ca_l,
+    cov_h, cov_l
     
   ))
   
@@ -993,18 +1123,10 @@ names(y_init) <- c(rep('sh1', 80), rep('ih1', 80), rep('rh1', 80),
                    'vac_eleg_p.l', 'vac_eleg_p.h',
                    'vac_eleg_s.l', 'vac_eleg_s.h',
                    'vac_elege_ps.l', 'vac_eleg.ps.h',
-                   # 
-                   # rep('vac_1.h', 80),  rep('vac_1.l', 80),
-                   # rep('vac_2.h', 80), rep('vac_2.l', 80),
-                   # rep('vac_3.h', 80),  rep('vac_3.l', 80),
-                   # rep('vac_4.h', 80),  rep('vac_4.l', 80),
-                   # 
-                   # rep('pop_1.h', 1),  rep('pop_1.l', 1),
-                   # rep('pop_2.h', 1), rep('pop_2.l', 1),
-                   # rep('pop_3.h', 1),  rep('pop_3.l', 1),
-                   # rep('pop_4.h', 1),  rep('pop_4.l', 1),
                    
-                   'ca_av_h', 'ca_av_l'
+                   'ca_av_h', 'ca_av_l',
+                   
+                   'cov_h','cov_l'
                    
 )
 
@@ -1018,7 +1140,13 @@ out_null.h <- ode(times = times, y = y_init, func = model, parms = parms_null.h)
 out.h <- out.h[,2:ncol(out.h)]
 out_null.h <- out_null.h[,2:ncol(out_null.h)]
 
-
+timepoint_year <- years
+index <- timepoint_year * 3650
+cov_h <- out.h[index,which(colnames(out.h) == 'cov_h')]
+cov_l <- out.h[index,which(colnames(out.h) == 'cov_l')]
+coverage <- c(cov_h, cov_l)
+names(coverage) <- c('h','l')
+save(coverage, file = paste('new.cov_', input, '.RData', sep = ''))
 
 
 ###################
@@ -1028,44 +1156,13 @@ out_null.h <- out_null.h[,2:ncol(out_null.h)]
   
   ####time series coverage
 #   {
-    timepoint_year <- years
+timepoint_year <- years
 index <- timepoint_year * 3650
-
-    vac_h.1 <- (out.h[index,which(colnames(out.h) == 'vac_1.h')]) / (out.h[index,which(colnames(out.h) == 'pop_1.h')]) * 365
-    vac_h.2 <- (out.h[index,which(colnames(out.h) == 'vac_2.h')]) / (out.h[index,which(colnames(out.h) == 'pop_2.h')]) * 365
-    vac_h.3 <- (out.h[index,which(colnames(out.h) == 'vac_3.h')] ) /(out.h[index,which(colnames(out.h) == 'pop_3.h')]) * 365
-    vac_h.4 <- (out.h[index,which(colnames(out.h) == 'vac_4.h')]) / (out.h[index,which(colnames(out.h) == 'pop_4.h')])*365
-
-
-    cov_h <- sum(out.h[index,which(colnames(out.h) == 'vac_1.h')] +
-                   out.h[index,which(colnames(out.h) == 'vac_2.h')] +
-                   out.h[index,which(colnames(out.h) == 'vac_3.h')] +
-                   out.h[index,which(colnames(out.h) == 'vac_4.h')]) / sum(out.h[index,which(colnames(out.h) == 'pop_1.h')] +
-                                                                             out.h[index,which(colnames(out.h) == 'pop_2.h')] +
-                                                                             out.h[index,which(colnames(out.h) == 'pop_3.h')] +
-                                                                             out.h[index,which(colnames(out.h) == 'pop_4.h')]) * 365
-    coverage_h <- list(vac_h.1, vac_h.2, vac_h.3,vac_h.4)
-
-
-
-    vac_l.1 <- (out.h[index,which(colnames(out.h) == 'vac_1.l')] )/ (out.h[index,which(colnames(out.h) == 'pop_1.l')]) *365
-    vac_l.2 <- (out.h[index,which(colnames(out.h) == 'vac_2.l')] )/ (out.h[index,which(colnames(out.h) == 'pop_2.l')]) *365
-    vac_l.3 <- (out.h[index,which(colnames(out.h) == 'vac_3.l')] ) /(out.h[index,which(colnames(out.h) == 'pop_3.l')]) * 365
-    vac_l.4 <- (out.h[index,which(colnames(out.h) == 'vac_4.l')]) / (out.h[index,which(colnames(out.h) == 'pop_4.l')])*365
-    
-
-    cov_l <- sum(out.h[index,which(colnames(out.h) == 'vac_1.l')] +
-                   out.h[index,which(colnames(out.h) == 'vac_2.l')] +
-                   out.h[index,which(colnames(out.h) == 'vac_3.l')] +
-                   out.h[index,which(colnames(out.h) == 'vac_4.l')]) / sum(out.h[index,which(colnames(out.h) == 'pop_1.l')] +
-                                                                             out.h[index,which(colnames(out.h) == 'pop_2.l')] +
-                                                                             out.h[index,which(colnames(out.h) == 'pop_3.l')] +
-                                                                             out.h[index,which(colnames(out.h) == 'pop_4.l')]) *365
-    coverage_l <- list(vac_l.1, vac_l.2, vac_l.3, vac_l.4)
-
-    coverage <- list(coverage_h, coverage_l, cov_l, cov_h)
-    names(coverage) <- c('h', 'l', 'l.tot', 'h.tot')
-    save(coverage, file = paste('new.cov_', input, '.RData', sep = ''))
+cov_h <- out.h[index,which(colnames(out.h) == 'cov_h')]
+cov_l <- out.h[index,which(colnames(out.h) == 'cov_l')]
+coverage <- c(cov_h, cov_l)
+names(coverage) <- c('h','l')
+save(coverage, file = paste('new.cov_', input, '.RData', sep = ''))
 
      cases.output.vec.h  <- cases_averted.func(out_mat = out.h, out_mat_null = out_null.h, timepoint_year = years)
 #   # infections.output.vec.h  <- cases_averted.func(out_mat = out.h, out_mat_null = out_null.h, timepoint_year = years, cases = 0)
