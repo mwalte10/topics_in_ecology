@@ -63,7 +63,7 @@ library(deSolve)
 #Initial conidtions and parameters
 ###########################
 load('last_row_1.RData')
-y_init <- c(last_row[1:3520], rep(0,22))
+y_init <- c(last_row[1:3520], rep(0,22), rep(0,2))
 
 
 parms.h <- list(beta_h = beta_h,
@@ -844,7 +844,7 @@ model <- function(t, y, parms, null){
   vac_2.h <- sum(R1_h * vac_h * sens  + S2_h * vac_h * sens ) / sum(S2_h[9] + R1_h[9])
   vac_2.l <- sum(R1_l * vac_l * sens  + S2_l * vac_l * sens ) / sum(S2_l[9] + R1_l[9])
   
-  av_ca_2_h <-  sum(vac_2.h * 2 * R1_h * inf[3]  + vac_2.h  * (native * beta_h * S2_h * 2 * 0.75 * (sym_inf_h/ pop_h) * inf[3] +
+  av_ca_2_h <-  sum(vac_2.h * 2 * R1_h[9] * inf[3]  + vac_2.h  * (native * beta_h * S2_h * 2 * 0.75 * (sym_inf_h/ pop_h) * inf[3] +
                                                                 native * beta_h * S2_h  *  0.75 * (inf_h/ pop_h) * inf[3] +
                                                                 travel * beta_l * S2_h * 2 * 0.75 *  (sym_inf_l/ pop_l) * inf[3] +
                                                                 travel * beta_l * S2_h  * 0.75 *  (inf_l/ pop_l) * inf[3] +
@@ -891,6 +891,11 @@ model <- function(t, y, parms, null){
   av_ca_h <- sum(av_ca_1_h + av_ca_2_h + av_ca_3_h)
   av_ca_l <- sum(av_ca_1_l + av_ca_2_l + av_ca_3_l)
   
+ 
+  vac_h <- sum(R3_h * vac_h * sens + S4_h * vac_h * sens + R2_h * vac_h * sens + S3_h * vac_h * sens + R1_h * vac_h * sens  + S2_h * vac_h * sens + S1_h * vac_h * (1 - spec)) /
+    sum(S4_h[9] + R3_h[9] + S2_h[9] + R1_h[9] + S3_h[9] + R2_h[9] + S1_h[9])
+  vac_l <- sum(R3_l * vac_l * sens + S4_l * vac_l * sens + R2_l * vac_l * sens + S3_l * vac_l * sens + R1_l * vac_l * sens  + S2_l * vac_l * sens + S1_l * vac_l * (1 - spec)) /
+    sum(S4_l[9] + R3_l[9] + S2_l[9] + R1_l[9] + S3_l[9] + R2_l[9] + S1_l[9])
   
   
   list(c(
@@ -946,7 +951,8 @@ model <- function(t, y, parms, null){
     # pop_3.h.9, pop_3.l.9,
     # pop_4.h.9, pop_4.l.9,
     
-    av_ca_h, av_ca_l
+    av_ca_h, av_ca_l,
+  vac_h, vac_l
     
   ))
   
@@ -1005,7 +1011,8 @@ names(y_init) <- c(rep('sh1', 80), rep('ih1', 80), rep('rh1', 80),
                    # rep('pop_3.h', 1),  rep('pop_3.l', 1),
                    # rep('pop_4.h', 1),  rep('pop_4.l', 1),
                    
-                   'ca_av_h', 'ca_av_l'
+                   'ca_av_h', 'ca_av_l',
+                  'vac_h',  'vac_l'
                    
 )
 
@@ -1064,16 +1071,16 @@ index <- timepoint_year * 3650
                                                                              out.h[index,which(colnames(out.h) == 'pop_4.l')]) *365
     coverage_l <- list(vac_l.1, vac_l.2, vac_l.3, vac_l.4)
 
-    coverage <- list(coverage_h, coverage_l, cov_l, cov_h)
-    names(coverage) <- c('h', 'l', 'l.tot', 'h.tot')
+    coverage <- c(out.h[nrow(out.h),which(colnames(out.h) == 'vac_h')], out.h[nrow(out.h),which(colnames(out.h) == 'vac_l')])
+    names(coverage) <- c('h', 'l')
     save(coverage, file = paste('new.cov_', input, '.RData', sep = ''))
 
-     cases.output.vec.h  <- cases_averted.func(out_mat = out.h, out_mat_null = out_null.h, timepoint_year = years)
+     # cases.output.vec.h  <- cases_averted.func(out_mat = out.h, out_mat_null = out_null.h, timepoint_year = years)
 #   # infections.output.vec.h  <- cases_averted.func(out_mat = out.h, out_mat_null = out_null.h, timepoint_year = years, cases = 0)
 #
 #   
 #   
-  save(cases.output.vec.h, file = paste('cases_averted_', input, '.RData', sep = ''))
+  # save(cases.output.vec.h, file = paste('cases_averted_', input, '.RData', sep = ''))
 #   # save(infections.output.vec.h, file = paste('infections_averted_', input, '.RData', sep = ''))
 #   
 # }
