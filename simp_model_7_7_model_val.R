@@ -968,7 +968,19 @@ model <- function(t, y, parms, null){
 ############################
 #RUN MODEL
 ############################
-
+y_init <- c(susceptible_h(1), infected_h(1), recovered_h(1),
+            susceptible_h(2), infected_h(2), recovered_h(2),
+            susceptible_h(3), infected_h(3), recovered_h(3),
+            susceptible_h(4), infected_h(4), recovered_h(4),
+            rep(0, 80), rep(0, 80), rep(0, 80), rep(0, 80), rep(0, 80),
+            rep(0, 80), rep(0, 80), rep(0, 80), rep(0, 80), rep(0, 80),
+            susceptible_l(1), infected_l(1), recovered_l(1),
+            susceptible_l(2), infected_l(2), recovered_l(2),
+            susceptible_l(3), infected_l(3), recovered_l(3),
+            susceptible_l(4), infected_l(4), recovered_l(4),
+            rep(0, 80), rep(0, 80), rep(0, 80), rep(0, 80), rep(0, 80),
+            rep(0, 80), rep(0, 80), rep(0, 80), rep(0, 80), rep(0, 80),
+            rep(0, 22))
 
 names(y_init) <- c(rep('sh1', 80), rep('ih1', 80), rep('rh1', 80),
                    rep('sh2', 80), rep('ih2', 80), rep('rh2', 80),
