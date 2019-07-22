@@ -348,7 +348,7 @@ population_l <- sum(susceptible_total_l + infected_total_l + recovered_total_l)
   nines <- c(nines_h, nines_l)
   
   
-  i <- 365 * 10 * years_vac
+  i <- 365 * 10 * years_vac + 1
   no_exposure <- out.h[i, nines[1]] + out.h[i, nines[13]] + out.h[i, nines[14]] + out.h[i, nines[23]] + out.h[i, nines[35]] + out.h[i, nines[36]]
   no_exposure_h <- out.h[i, nines_h[1]] + out.h[i, nines_h[13]] + out.h[i, nines_h[14]]
   no_exposure_l <- out.h[i, nines_l[1]] + out.h[i, nines_l[13]] + out.h[i, nines_l[14]]
