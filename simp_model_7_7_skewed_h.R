@@ -84,7 +84,7 @@ parms.h <- list(beta_h = beta_h,
                 vac_h.test = vac_h,
                 vac_l.test = vac_l, 
                 sens = 0.85,
-                spec = spec,
+                spec = 0.95,
                 hopkins,
                 hopkins_inverse)
 parms_null.h <- list(beta_h = beta_h,
@@ -101,7 +101,7 @@ parms_null.h <- list(beta_h = beta_h,
                      vac_h.test = vac_h,
                      vac_l.test = vac_l, 
                      sens = 0.85,
-                     spec = spec,
+                     spec = 0.95,
                      hopkins,
                      hopkins_inverse)
 
