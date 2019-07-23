@@ -378,14 +378,18 @@ population_l <- sum(susceptible_total_l + infected_total_l + recovered_total_l)
 ###########################
 FOI_h.fun <- function(years){
   i <- years* 3650
-  indexing <- c(1:(i))
-  return(sum(diff(out.h[indexing,which(colnames(out.h) == 'FOI_h.travel')]) / (length(indexing) * 100)))
+  vac <- out.h[i,which(colnames(out.h) == 'FOI_h.travel')]
+  null <- out_null.h[i,which(colnames(out_null.h) == 'FOI_h.travel')]
+  
+  return(c(vac,null))
 }
 
 FOI_l.fun <- function(years){
   i <- years* 3650
-  indexing <- c(1:(i))
-  return(sum(diff(out.h[indexing,which(colnames(out.h) == 'FOI_l.travel')]) / (length(indexing) * 100)))
+  vac <- out.h[i,which(colnames(out.h) == 'FOI_l.travel')]
+  null <- out_null.h[i,which(colnames(out_null.h) == 'FOI_l.travel')]
+  
+  return(c(vac,null))
 }
 
 

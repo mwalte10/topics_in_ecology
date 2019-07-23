@@ -831,15 +831,15 @@ av_ca_1_h <-  sum(vac_1.h * (inf[2] * (beta_h * native * S1_h * 2 * ((sym_new_h)
                                   beta_l * travel  * 0.75 * 2 * ((sym_new_l)/ pop_l) +
                                   beta_l * travel  * 0.75 * ((inf_new_l)/ pop_l)) +
                                
-                                 inf[3] * (beta_h * native * S1_h * 2 * ((sym_new_h)/ pop_h)  +
+                                 inf[3] * ((beta_h * native * S1_h * 2 * ((sym_new_h)/ pop_h)  +
                                               beta_h * native * S1_h  * ((inf_new_h)/ pop_h)  + 
                                               beta_l * travel * S1_h * 2 * ((sym_new_l)/ pop_l)  +
                                               beta_l * travel * S1_h  * ((inf_new_l)/ pop_l)) *
                                (beta_h * native  * 0.75 * 2 * ((sym_new_h)/ pop_h)  +
                                   beta_h * native  * 0.75 * ((inf_new_h)/ pop_h)  + 
                                   beta_l * travel  * 0.75 * 2 * ((sym_new_l)/ pop_l) +
-                                  beta_l * travel  * 0.75 * ((inf_new_l)/ pop_l)) * (
-                                    beta_h * native  * 0.5 * 2 * ((sym_new_h)/ pop_h)  +
+                                  beta_l * travel  * 0.75 * ((inf_new_l)/ pop_l))) *
+                               ( beta_h * native  * 0.5 * 2 * ((sym_new_h)/ pop_h)  +
                                       beta_h * native  * 0.5 * ((inf_new_h)/ pop_h)  + 
                                       beta_l * travel  * 0.5 * 2 * ((sym_new_l)/ pop_l)  +
                                       beta_l * travel  * 0.5 * ((inf_new_l)/ pop_l) )  ) )
@@ -1140,8 +1140,8 @@ save(sp9.vec, file = paste('sp9_', input, '.RData', sep = ''))
 ######check FOI
 foi_h <- FOI_h.fun(years = years)
 foi_l <- FOI_l.fun(years = years)
-foi <- c(foi_h, foi_l)
-names(foi) <- c('h', 'l')
+foi <- list(foi_h, foi_l)
+names(foi) <- list('h', 'l')
 save(foi, file = paste('foi_', input, '.RData', sep = ''))
 # 
 # 

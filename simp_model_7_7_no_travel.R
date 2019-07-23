@@ -131,13 +131,13 @@ model <- function(t, y, parms, null){
   travel <- parms[[9]]
   t_vac.h <- ifelse((t>(365*(years_vac))), parms[[10]] / 365, 0)
   t_vac.l <- ifelse((t>(365*(years_vac))), parms[[11]] / 365, 0)
-  vac_h <- c(rep(0,8), t_vac.h, rep(0,71))
-  vac_l <- c(rep(0,8), t_vac.l, rep(0,71))
+  vac_h <- c(rep(0,9), t_vac.h, rep(0,70))
+  vac_l <- c(rep(0,9), t_vac.l, rep(0,70))
   
   t_vac.h.test <- ifelse((t>(365*(years_vac))), parms[[12]] / 365, 0)
   t_vac.l.test <- ifelse((t>(365*(years_vac))), parms[[13]] / 365, 0)
-  vac_h.test <- c(rep(0,8), t_vac.h.test, rep(0,71))
-  vac_l.test <- c(rep(0,8), t_vac.l.test, rep(0,71))
+  vac_h.test <- c(rep(0,9), t_vac.h.test, rep(0,70))
+  vac_l.test <- c(rep(0,9), t_vac.l.test, rep(0,70))
 
   sens <- parms[[14]]
   spec <- parms[[15]]
@@ -1190,14 +1190,12 @@ save(coverage, file = paste('new.cov_', input, '.RData', sep = ''))
 
 ######check seroprevalence levels
 
-sp9.vec <- seroprevalence_fun(out_mat = out.h, age = 9)
-save(sp9.vec, file = paste('sp9_', input, '.RData', sep = ''))
-
-######check FOI
-foi_h <- FOI_h.fun(years = years)
-foi_l <- FOI_l.fun(years = years)
-foi <- c(foi_h, foi_l)
-names(foi) <- c('h', 'l')
-save(foi, file = paste('foi_', input, '.RData', sep = ''))
-# 
-# 
+  sp9.vec <- seroprevalence_fun(out_mat = out.h, age = 9)
+  save(sp9.vec, file = paste('sp9_', input, '.RData', sep = ''))
+  
+  ######check FOI
+  foi_h <- FOI_h.fun(years = years)
+  foi_l <- FOI_l.fun(years = years)
+  foi <- list(foi_h, foi_l)
+  names(foi) <- list('h', 'l')
+  save(foi, file = paste('foi_', input, '.RData', sep = ''))
