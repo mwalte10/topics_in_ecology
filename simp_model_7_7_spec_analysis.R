@@ -1021,6 +1021,7 @@ vac_h <- sum(S1_h * vac_h * (1 - spec) +
  R1_h * vac_h * sens  + S2_h * vac_h * sens +
     R2_h * vac_h * sens + S3_h * vac_h * sens + 
   R3_h * vac_h * sens + S4_h * vac_h * sens) 
+
   pop_h <- sum(S1_h[9] + S2_h[9] + R1_h[9] +  S3_h[9] + R2_h[9] + S4_h[9] + R3_h[9])
   
 vac_l <- sum(S1_l * vac_l * (1 - spec) + 
@@ -1148,8 +1149,8 @@ out_null.h <- out_null.h[,2:ncol(out_null.h)]
 
 timepoint_year <- years
 index <- timepoint_year * 3650
-cov_h <- out.h[index,which(colnames(out.h) == 'cov_h')] / out.h[index,which(colnames(out.h) == 'pop_h')]
-cov_l <- out.h[index,which(colnames(out.h) == 'cov_l')] / out.h[index,which(colnames(out.h) == 'pop_l')]
+cov_h <- out.h[index,which(colnames(out.h) == 'cov_h')] / out.h[index,which(colnames(out.h) == 'pop_h')[2]]
+cov_l <- out.h[index,which(colnames(out.h) == 'cov_l')] / out.h[index,which(colnames(out.h) == 'pop_l')[2]]
 coverage <- c(cov_h, cov_l)
 names(coverage) <- c('h','l')
 save(coverage, file = paste('new.cov_', input, '.RData', sep = ''))

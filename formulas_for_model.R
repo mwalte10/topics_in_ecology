@@ -120,6 +120,7 @@ population_l <- sum(susceptible_total_l + infected_total_l + recovered_total_l)
                        (out_mat[indexing,which(colnames(out_mat) == 'psec_vac.cases.h')]))
     
     
+    
     ##vaccinated, low
     cases_vac.l <- sum((out_mat[indexing,which(colnames(out_mat) == 'sec_vac.cases.l')]) + 
                        (out_mat[indexing,which(colnames(out_mat) == 'psec_vac.cases.l')]))
@@ -174,6 +175,8 @@ population_l <- sum(susceptible_total_l + infected_total_l + recovered_total_l)
                              (out_mat_null[indexing,which(colnames(out_mat_null) == 'sec_cases.h')]),
                              (out_mat_null[indexing,which(colnames(out_mat_null) == 'psec_cases.h')]))
     
+
+    
     ##unvaccinated, low
     cases_uvac.l <- sum((out_mat[indexing,which(colnames(out_mat) == 'prim_cases.l')]),
                         (out_mat[indexing,which(colnames(out_mat) == 'sec_cases.l')]),
@@ -201,12 +204,12 @@ population_l <- sum(susceptible_total_l + infected_total_l + recovered_total_l)
     # cases.l.null <- cases_vac.l.null + cases_uvac.l.null
     cases.l <- cases_vac.l + cases_uvac.l
     
-    prop.h <- cases_vac.h / cases.h
+    prop.h <- cases_vac.h / (cases.h - cases_vac.h)
     cases_vac.h.null <- prop.h * cases.h.null 
-    prop.l <- cases_vac.l / cases.l
+    prop.l <- cases_vac.l / (cases.l - cases_vac.l)
     cases_vac.l.null <- prop.l * cases.l.null 
     
-    prop.tot <- (cases_vac.h + cases_vac.l) / (cases)
+    prop.tot <- (cases_vac.h + cases_vac.l) / (cases - (cases_vac.h + cases_vac.l))
     cases_vac.null <- prop.tot * cases.null
     
     cases_averted <-  ((cases.null - cases) / cases.null) * 100
