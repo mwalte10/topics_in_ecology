@@ -182,11 +182,23 @@ population_l <- sum(susceptible_total_l + infected_total_l + recovered_total_l)
                              (out_mat_null[indexing,which(colnames(out_mat_null) == 'sec_cases.l')]),
                              (out_mat_null[indexing,which(colnames(out_mat_null) == 'psec_cases.l')]))
     
+    cases.h.null <- sum((out_mat_null[indexing,which(colnames(out_mat_null) == 'prim_cases.h')]),
+                        (out_mat_null[indexing,which(colnames(out_mat_null) == 'sec_cases.h')]),
+                        (out_mat_null[indexing,which(colnames(out_mat_null) == 'psec_cases.h')]),
+                        (out_mat_null[indexing,which(colnames(out_mat_null) == 'sec_vac.cases.h')]) + 
+                          (out_mat_null[indexing,which(colnames(out_mat_null) == 'psec_vac.cases.h')]))
+    
+    cases.l.null <- sum((out_mat_null[indexing,which(colnames(out_mat_null) == 'prim_cases.l')]),
+                        (out_mat_null[indexing,which(colnames(out_mat_null) == 'sec_cases.l')]),
+                        (out_mat_null[indexing,which(colnames(out_mat_null) == 'psec_cases.l')]),
+                        (out_mat_null[indexing,which(colnames(out_mat_null) == 'sec_vac.cases.l')]) + 
+                          (out_mat_null[indexing,which(colnames(out_mat_null) == 'psec_vac.cases.l')]))
+    
     cases.null <- cases_vac.null + cases_uvac.null
     cases <- cases_vac + cases_uvac
-    cases.h.null <- cases_vac.h.null + cases_uvac.h.null
+    # cases.h.null <- cases_vac.h.null + cases_uvac.h.null
     cases.h <- cases_vac.h + cases_uvac.h
-    cases.l.null <- cases_vac.l.null + cases_uvac.l.null
+    # cases.l.null <- cases_vac.l.null + cases_uvac.l.null
     cases.l <- cases_vac.l + cases_uvac.l
     
     cases_averted <-  ((cases.null - cases) / cases.null) * 100
