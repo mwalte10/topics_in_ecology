@@ -136,8 +136,8 @@ model <- function(t, y, parms, null){
   travel <- parms[[9]]
   t_vac.h <- ifelse((t>(365*(years_vac))), parms[[10]] / 365, 0)
   t_vac.l <- ifelse((t>(365*(years_vac))), parms[[11]] / 365, 0)
-  vac_h <- c(rep(0,8), t_vac.h, rep(0,71))
-  vac_l <- c(rep(0,8), t_vac.l, rep(0,71))
+  vac_h <- c(rep(0,9), t_vac.h, rep(0,70))
+  vac_l <- c(rep(0,9), t_vac.l, rep(0,70))
   sens <- parms[[12]]
   spec <- parms[[13]]
   inf <- parms[[14]]
