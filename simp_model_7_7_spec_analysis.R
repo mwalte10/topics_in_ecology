@@ -104,6 +104,7 @@ years = 30
 years_vac = 0
 times <- seq(from = 0, to = 365 * years, by = 0.1)
 times <- times[1:(length(times) - 1)]
+
 ############################
 #MODEL
 ############################

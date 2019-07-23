@@ -1183,7 +1183,7 @@ cases.output.vec.h  <- cases_averted.func(out_mat = out.h, out_mat_null = out_nu
 
 
 
-#last_row <- out.h[nrow(out.h),]
+# last_row <- out.h[nrow(out.h),]
 # save(last_row, file = paste('last_row_', input, '.RData', sep =''))
 
 ######check seroprevalence levels

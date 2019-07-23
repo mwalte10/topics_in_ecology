@@ -202,12 +202,12 @@ population_l <- sum(susceptible_total_l + infected_total_l + recovered_total_l)
     cases.l <- cases_vac.l + cases_uvac.l
     
     prop.h <- cases_vac.h / cases.h
-    cases_vac.h.null <- prop.h * cases.l
+    cases_vac.h.null <- prop.h * cases.h.null 
     prop.l <- cases_vac.l / cases.l
-    cases_vac.l.null <- prop.l * cases.l
+    cases_vac.l.null <- prop.l * cases.l.null 
     
     prop.tot <- (cases_vac.h + cases_vac.l) / (cases)
-    cases_vac.null <- prop.tot * cases
+    cases_vac.null <- prop.tot * cases.null
     
     cases_averted <-  ((cases.null - cases) / cases.null) * 100
     cases_averted.h <- ((cases.h.null - cases.h) / cases.h.null) * 100
