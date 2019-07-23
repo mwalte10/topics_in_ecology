@@ -67,7 +67,7 @@ library(deSolve)
 #Initial conidtions and parameters
 ###########################
 load('last_row_1.RData')
-y_init <- c(last_row[1:3520], rep(0,24))
+y_init <- c(last_row[1:3520], rep(0,26))
 
 
 parms.h <- list(beta_h = beta_h,
@@ -1024,15 +1024,17 @@ pop_4.l.9 <- sum(S4_l[9] + R3_l[9])
 av_ca_h <- sum(av_ca_1_h + av_ca_2_h + av_ca_3_h)
 av_ca_l <- sum(av_ca_1_l + av_ca_2_l + av_ca_3_l)
 
-cov_h <- sum(S1_h * vac_h * (1 - spec) + 
+vac_h <- sum(S1_h * vac_h * (1 - spec) + 
  R1_h * vac_h * sens  + S2_h * vac_h * sens +
     R2_h * vac_h * sens + S3_h * vac_h * sens + 
-  R3_h * vac_h * sens + S4_h * vac_h * sens) / sum(S1_h[9] + S2_h[9] + R1_h[9] +  S3_h[9] + R2_h[9] + S4_h[9] + R3_h[9])
+  R3_h * vac_h * sens + S4_h * vac_h * sens) 
+  pop_h <- sum(S1_h[9] + S2_h[9] + R1_h[9] +  S3_h[9] + R2_h[9] + S4_h[9] + R3_h[9])
   
-cov_l <- sum(S1_l * vac_l * (1 - spec) + 
+vac_l <- sum(S1_l * vac_l * (1 - spec) + 
                R1_l * vac_l * sens  + S2_l * vac_l * sens +
                R2_l * vac_l * sens + S3_l * vac_l * sens + 
-               R3_l * vac_l * sens + S4_l * vac_l * sens) / sum(S1_l[9] + S2_l[9] + R1_l[9] +  S3_l[9] + R2_l[9] + S4_l[9] + R3_l[9])
+               R3_l * vac_l * sens + S4_l * vac_l * sens) 
+pop_l <- sum(S1_l[9] + S2_l[9] + R1_l[9] +  S3_l[9] + R2_l[9] + S4_l[9] + R3_l[9])
   
   
   list(c(
@@ -1080,7 +1082,8 @@ cov_l <- sum(S1_l * vac_l * (1 - spec) +
     
     
     av_ca_h, av_ca_l,
-    cov_h, cov_l
+    vac_h, vac_l,
+    pop_h, pop_l
     
   ))
   
@@ -1131,7 +1134,8 @@ names(y_init) <- c(rep('sh1', 80), rep('ih1', 80), rep('rh1', 80),
                    
                    'ca_av_h', 'ca_av_l',
                    
-                   'cov_h','cov_l'
+                   'cov_h','cov_l',
+                   'pop_h','pop_l'
                    
 )
 
@@ -1139,16 +1143,16 @@ names(y_init) <- c(rep('sh1', 80), rep('ih1', 80), rep('rh1', 80),
 #run intervention model
 out.h <- ode(times = times, y = y_init, func = model, parms = parms.h)
 #run null model 
-out_null.h <- ode(times = times, y = y_init, func = model, parms = parms_null.h)
+# out_null.h <- ode(times = times, y = y_init, func = model, parms = parms_null.h)
 
 ###remove the time column
 out.h <- out.h[,2:ncol(out.h)]
-out_null.h <- out_null.h[,2:ncol(out_null.h)]
+# out_null.h <- out_null.h[,2:ncol(out_null.h)]
 
 timepoint_year <- years
 index <- timepoint_year * 3650
-cov_h <- out.h[index,which(colnames(out.h) == 'cov_h')]
-cov_l <- out.h[index,which(colnames(out.h) == 'cov_l')]
+cov_h <- out.h[index,which(colnames(out.h) == 'cov_h')] / out.h[index,which(colnames(out.h) == 'pop_h')]
+cov_l <- out.h[index,which(colnames(out.h) == 'cov_l')] / out.h[index,which(colnames(out.h) == 'pop_l')]
 coverage <- c(cov_h, cov_l)
 names(coverage) <- c('h','l')
 save(coverage, file = paste('new.cov_', input, '.RData', sep = ''))
@@ -1161,12 +1165,12 @@ save(coverage, file = paste('new.cov_', input, '.RData', sep = ''))
   
   ####time series coverage
 #   {
-timepoint_year <- years
-index <- timepoint_year * 3650
-cov_h <- out.h[index,which(colnames(out.h) == 'cov_h')]
-cov_l <- out.h[index,which(colnames(out.h) == 'cov_l')]
-coverage <- c(cov_h, cov_l)
-names(coverage) <- c('h','l')
+# timepoint_year <- years
+# index <- timepoint_year * 3650
+# cov_h <- out.h[index,which(colnames(out.h) == 'cov_h')]
+# cov_l <- out.h[index,which(colnames(out.h) == 'cov_l')]
+# coverage <- c(cov_h, cov_l)
+# names(coverage) <- c('h','l')
 save(coverage, file = paste('new.cov_', input, '.RData', sep = ''))
 
      cases.output.vec.h  <- cases_averted.func(out_mat = out.h, out_mat_null = out_null.h, timepoint_year = years)
