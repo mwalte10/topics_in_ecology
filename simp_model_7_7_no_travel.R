@@ -676,7 +676,7 @@ model <- function(t, y, parms, null){
       travel * S1_l * 2 * beta_h * ((sym_inf_h)/ pop_h) +
       native * S1_l * beta_l * ((inf_l) / pop_l) +
       travel * S1_l * beta_h * ((inf_h)/ pop_h)
-    primary_cases.l.v <- primary_cases.l[9] * inf[2]
+    primary_cases.l.v <- primary_cases.l[9] * inf[1]
     primary_cases.l <- sum(primary_cases.l) * inf[1]
     
     
@@ -685,7 +685,7 @@ model <- function(t, y, parms, null){
       travel * S1_h * 2 * beta_l * ((sym_inf_l) / pop_l) +
       native * S1_h * beta_h * ((inf_h) / pop_h) +
       travel * S1_h * beta_l * ((inf_l) / pop_l) 
-    primary_cases.h.v <- primary_cases.h[9] * inf[2]
+    primary_cases.h.v <- primary_cases.h[9] * inf[1]
     primary_cases.h <- sum(primary_cases.h) * inf[1]
   }
 
@@ -718,7 +718,7 @@ model <- function(t, y, parms, null){
       travel * S2_l * beta_h * 2 *  0.75 * ((sym_inf_h)  / pop_h) +
       native * S2_l * beta_l * 0.75 * ((inf_l) / pop_l) +
       travel * S2_l * beta_h * 0.75 * ((inf_h)  / pop_h)
-    secondary_cases.l.v <- secondary_cases.l[9] * inf[3]
+    secondary_cases.l.v <- secondary_cases.l[10] * inf[2]
      secondary_cases.l <- sum(secondary_cases.l) * inf[2]
     
 
@@ -728,7 +728,7 @@ model <- function(t, y, parms, null){
       travel * S2_h * 2 * 0.75 * beta_l * ((sym_inf_l) / pop_l) +
       native * S2_h * 0.75 * beta_h * ((inf_h) / pop_h) +
       travel * S2_h * 0.75 * beta_l * ((inf_l) / pop_l)
-    secondary_cases.h.v <- secondary_cases.h[9] * inf[3]
+    secondary_cases.h.v <- secondary_cases.h[10] * inf[2]
     secondary_cases.h <- sum(secondary_cases.h) * inf[2]
     
   }
@@ -774,7 +774,7 @@ model <- function(t, y, parms, null){
   travel * S4_l * beta_h * 2 *  0.25 * ((sym_inf_h)  / pop_h) +
   native * S4_l * beta_l * 0.25 * ((inf_l) / pop_l) +
   travel * S4_l * beta_h * 0.25 * ((inf_h)  / pop_h)
-    postsec_cases.l.v <- postsec_cases.l[9] * inf[3]
+    postsec_cases.l.v <- postsec_cases.l[10] * inf[3]
     postsec_cases.l <- sum(postsec_cases.l) * inf[3]
     
     
@@ -788,7 +788,7 @@ model <- function(t, y, parms, null){
       native * S4_h * 0.25 * beta_h * ((inf_h) / pop_h ) +
       travel * S4_h * 0.25 * beta_l * ((inf_l) / pop_l) 
     
-    postsec_cases.h.v <- postsec_cases.h[9] * inf[3]
+    postsec_cases.h.v <- postsec_cases.h[10] * inf[3]
     postsec_cases.h <- sum(postsec_cases.h) * inf[3]
  
   }
@@ -815,8 +815,8 @@ model <- function(t, y, parms, null){
   ##Vaccination coverages
   ############################# 
   ####inappropriate vaccinations
-  vac_1.h <-  (S1_h * vac_h.test * (1 - spec)) / sum(S1_h[9]) 
-  vac_1.l <-  (S1_l * vac_l.test * (1 - spec))  /sum(S1_l[9]) 
+  vac_1.h <-  (S1_h * vac_h.test * (1 - spec)) / sum(S1_h[10]) 
+  vac_1.l <-  (S1_l * vac_l.test * (1 - spec))  /sum(S1_l[10]) 
   
 #   sym_new_h <- sum((sym_inf_h + sum(beta_h * native * S1_h * 2 * ((sym_inf_h)/ pop_h) * inf[2] +
 #                                       beta_h * native * S1_h  * ((inf_h)/ pop_h) * inf[2] + 
@@ -969,13 +969,13 @@ model <- function(t, y, parms, null){
 #                                beta_h * travel * S1_l * 0.5 * 2 * ((sym_new_h)/ pop_h) * inf[3] +
 #                                beta_h * travel * S1_l * 0.5 * ((inf_new_h)/ pop_h) * inf[3]))
 
-pop_1.h.9 <- sum(S1_h[9])
-pop_1.l.9 <- sum(S1_l[9])
+pop_1.h.9 <- sum(S1_h[10])
+pop_1.l.9 <- sum(S1_l[10])
 
 
 ##appropriate vaccinations, averts secondary infections
-vac_2.h <- (R1_h * vac_h.test * sens  + S2_h * vac_h.test * sens ) / (S2_h[9] + R1_h[9])
-vac_2.l <- (R1_l * vac_l.test * sens  + S2_l * vac_l.test * sens ) / (S2_l[9] + R1_l[9])
+vac_2.h <- (R1_h * vac_h.test * sens  + S2_h * vac_h.test * sens ) / (S2_h[10] + R1_h[10])
+vac_2.l <- (R1_l * vac_l.test * sens  + S2_l * vac_l.test * sens ) / (S2_l[10] + R1_l[10])
 
 # av_ca_2_h <-  sum(vac_2.h * 2 * R1_h * inf[3]  + vac_2.h  * (native * beta_h * S2_h * 2 * 0.75 * (sym_new_h/ pop_h) * inf[3] +
 #                                                                native * beta_h * S2_h  *  0.75 * (inf_new_h/ pop_h) * inf[3] +
@@ -995,12 +995,12 @@ vac_2.l <- (R1_l * vac_l.test * sens  + S2_l * vac_l.test * sens ) / (S2_l[9] + 
 #                                                              travel * beta_h * S2_l * 2 * 0.5 * (sym_new_h/ pop_h) * inf[3] +
 #                                                              travel * beta_h * S2_l  * 0.5 * (inf_new_h/ pop_h) * inf[3]) )
 
-pop_2.h.9 <- sum(S2_h[9] + R1_h[9])
-pop_2.l.9 <- sum(S2_l[9] + R1_l[9])
+pop_2.h.9 <- sum(S2_h[10] + R1_h[10])
+pop_2.l.9 <- sum(S2_l[10] + R1_l[10])
 
 ####averts tertiary infects
-vac_3.h <- (R2_h * vac_h.test * sens + S3_h * vac_h.test * sens) / (S3_h[9] + R2_h[9])
-vac_3.l <- (R2_l * vac_l.test * sens + S3_l * vac_l.test * sens) /(S3_l[9] + R2_l[9])
+vac_3.h <- (R2_h * vac_h.test * sens + S3_h * vac_h.test * sens) / (S3_h[10] + R2_h[10])
+vac_3.l <- (R2_l * vac_l.test * sens + S3_l * vac_l.test * sens) /(S3_l[10] + R2_l[10])
 
 # av_ca_3_h <-  sum(vac_3.h * R2_h * inf[3] +  vac_3.h * (native * beta_h * S3_h * 2 * 0.5 * (sym_new_h/ pop_h) * inf[3] + 
 #                                                           native * beta_h * S3_h  * 0.5 * (inf_new_h/ pop_h) * inf[3] +  
@@ -1011,15 +1011,15 @@ vac_3.l <- (R2_l * vac_l.test * sens + S3_l * vac_l.test * sens) /(S3_l[9] + R2_
 #                                                          native * beta_l * S3_h * 2 * 0.5 * (sym_new_l/ pop_l) * inf[3] + 
 #                                                          native * beta_l * S3_h  * 0.5 * (inf_new_l/ pop_l) * inf[3])) 
 
-pop_3.h.9 <- sum(S3_h[9] + R2_h[9])
-pop_3.l.9 <- sum(S3_l[9] + R2_l[9])
+pop_3.h.9 <- sum(S3_h[10] + R2_h[10])
+pop_3.l.9 <- sum(S3_l[10] + R2_l[10])
 
 ##### averts quat infects
-vac_4.h <- sum(R3_h * vac_h.test * sens + S4_h * vac_h.test * sens) / sum(S4_h[9] + R3_h[9])
-vac_4.l <- sum(R3_l * vac_l.test * sens + S4_l * vac_l.test * sens) / sum(S4_l[9] + R3_l[9])
+vac_4.h <- sum(R3_h * vac_h.test * sens + S4_h * vac_h.test * sens) / sum(S4_h[10] + R3_h[10])
+vac_4.l <- sum(R3_l * vac_l.test * sens + S4_l * vac_l.test * sens) / sum(S4_l[10] + R3_l[10])
 
-pop_4.h.9 <- sum(S4_h[9] + R3_h[9])
-pop_4.l.9 <- sum(S4_l[9] + R3_l[9])
+pop_4.h.9 <- sum(S4_h[10] + R3_h[10])
+pop_4.l.9 <- sum(S4_l[10] + R3_l[10])
 
 # av_ca_h <- sum(av_ca_1_h + av_ca_2_h + av_ca_3_h)
 # av_ca_l <- sum(av_ca_1_l + av_ca_2_l + av_ca_3_l)
@@ -1028,13 +1028,13 @@ vac_h <- sum(S1_h * vac_h * (1 - spec) +
  R1_h * vac_h * sens  + S2_h * vac_h * sens +
     R2_h * vac_h * sens + S3_h * vac_h * sens + 
   R3_h * vac_h * sens + S4_h * vac_h * sens) 
-  pop_h <- sum(S1_h[9] + S2_h[9] + R1_h[9] +  S3_h[9] + R2_h[9] + S4_h[9] + R3_h[9])
+  pop_h <- sum(S1_h[10] + S2_h[10] + R1_h[10] +  S3_h[10] + R2_h[10] + S4_h[10] + R3_h[10])
   
 vac_l <- sum(S1_l * vac_l * (1 - spec) + 
                R1_l * vac_l * sens  + S2_l * vac_l * sens +
                R2_l * vac_l * sens + S3_l * vac_l * sens + 
                R3_l * vac_l * sens + S4_l * vac_l * sens) 
-pop_l <- sum(S1_l[9] + S2_l[9] + R1_l[9] +  S3_l[9] + R2_l[9] + S4_l[9] + R3_l[9])
+pop_l <- sum(S1_l[10] + S2_l[10] + R1_l[10] +  S3_l[10] + R2_l[10] + S4_l[10] + R3_l[10])
   
   
   list(c(
@@ -1143,21 +1143,21 @@ names(y_init) <- c(rep('sh1', 80), rep('ih1', 80), rep('rh1', 80),
 #run intervention model
 out.h <- ode(times = times, y = y_init, func = model, parms = parms.h)
 #run null model 
-out_null.h <- ode(times = times, y = y_init, func = model, parms = parms_null.h)
+# out_null.h <- ode(times = times, y = y_init, func = model, parms = parms_null.h)
 
 ###remove the time column
-out.h <- out.h[,2:ncol(out.h)]
-out_null.h <- out_null.h[,2:ncol(out_null.h)]
+# out.h <- out.h[,2:ncol(out.h)]
+# out_null.h <- out_null.h[,2:ncol(out_null.h)]
 
 
 
 
 
-timepoint_year <- years
-index <- timepoint_year * 3650
-cov_h <- out.h[index,which(colnames(out.h) == 'cov_h')] / out.h[index,which(colnames(out.h) == 'pop_h')]
-cov_l <- out.h[index,which(colnames(out.h) == 'cov_l')] / out.h[index,which(colnames(out.h) == 'pop_l')]
-coverage <- c(cov_h, cov_l)
+# timepoint_year <- years
+# index <- timepoint_year * 3650
+cov_h <- (out.h[,which(colnames(out.h) == 'cov_h')] / out.h[,which(colnames(out.h) == 'pop_h')][,2]) * 365 * 100
+cov_l <- (out.h[,which(colnames(out.h) == 'cov_l')] / out.h[,which(colnames(out.h) == 'pop_l')][,2]) * 365 * 100
+coverage <- list(cov_h, cov_l)
 names(coverage) <- c('h','l')
 save(coverage, file = paste('new.cov_', input, '.RData', sep = ''))
 
@@ -1171,12 +1171,12 @@ save(coverage, file = paste('new.cov_', input, '.RData', sep = ''))
 #   {
 
 
-cases.output.vec.h  <- cases_averted.func(out_mat = out.h, out_mat_null = out_null.h, timepoint_year = years)
+# cases.output.vec.h  <- cases_averted.func(out_mat = out.h, out_mat_null = out_null.h, timepoint_year = years)
 #   # infections.output.vec.h  <- cases_averted.func(out_mat = out.h, out_mat_null = out_null.h, timepoint_year = years, cases = 0)
 #
 #   
 #   
-  save(cases.output.vec.h, file = paste('cases_averted_', input, '.RData', sep = ''))
+  # save(cases.output.vec.h, file = paste('cases_averted_', input, '.RData', sep = ''))
 #   # save(infections.output.vec.h, file = paste('infections_averted_', input, '.RData', sep = ''))
 #   
 # }
@@ -1188,12 +1188,12 @@ cases.output.vec.h  <- cases_averted.func(out_mat = out.h, out_mat_null = out_nu
 
 ######check seroprevalence levels
 
-  sp9.vec <- seroprevalence_fun(out_mat = out.h, age = 9)
-  save(sp9.vec, file = paste('sp9_', input, '.RData', sep = ''))
-  
-  ######check FOI
-  foi_h <- FOI_h.fun(years = years)
-  foi_l <- FOI_l.fun(years = years)
-  foi <- list(foi_h, foi_l)
-  names(foi) <- list('h', 'l')
-  save(foi, file = paste('foi_', input, '.RData', sep = ''))
+  # sp9.vec <- seroprevalence_fun(out_mat = out.h, age = 9)
+  # save(sp9.vec, file = paste('sp9_', input, '.RData', sep = ''))
+  # 
+  # ######check FOI
+  # foi_h <- FOI_h.fun(years = years)
+  # foi_l <- FOI_l.fun(years = years)
+  # foi <- list(foi_h, foi_l)
+  # names(foi) <- list('h', 'l')
+  # save(foi, file = paste('foi_', input, '.RData', sep = ''))
