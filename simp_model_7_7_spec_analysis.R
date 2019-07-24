@@ -1676,6 +1676,19 @@ save(coverage, file = paste('new.cov_', input, '.RData', sep = ''))
 
 
 
+coverage_l.1 <- (out.h[nrow(out.h),which(colnames(out.h) == 'cov_l')])[1] / sum(out.h[nrow(out.h),which(colnames(out.h) == 'pop_l')][1]) * 365
+coverage_l.2 <- (out.h[nrow(out.h),which(colnames(out.h) == 'cov_l')])[2] / sum(out.h[nrow(out.h),which(colnames(out.h) == 'pop_l')][2]) * 365
+coverage_l.3 <- (out.h[nrow(out.h),which(colnames(out.h) == 'cov_l')])[3] / sum(out.h[nrow(out.h),which(colnames(out.h) == 'pop_l')][3]) * 365
+
+
+coverage_h.1 <- (out.h[nrow(out.h),which(colnames(out.h) == 'cov_h')])[1] / sum(out.h[nrow(out.h),which(colnames(out.h) == 'pop_h')][1]) * 365
+coverage_h.2 <- (out.h[nrow(out.h),which(colnames(out.h) == 'cov_h')])[2] / sum(out.h[nrow(out.h),which(colnames(out.h) == 'pop_h')][2]) * 365
+coverage_h.3 <- (out.h[nrow(out.h),which(colnames(out.h) == 'cov_h')])[3] / sum(out.h[nrow(out.h),which(colnames(out.h) == 'pop_h')][3]) * 365
+
+coverage.1 <- sum(out.h[nrow(out.h),which(colnames(out.h) == 'cov_l')][1] + out.h[nrow(out.h),which(colnames(out.h) == 'cov_h')][1]) / sum(out.h[nrow(out.h),which(colnames(out.h) == 'pop_l')][1] + out.h[nrow(out.h),which(colnames(out.h) == 'pop_h')][1]) * 365
+coverage.2 <- sum(out.h[nrow(out.h),which(colnames(out.h) == 'cov_l')][2] + out.h[nrow(out.h),which(colnames(out.h) == 'cov_h')][2]) / sum(out.h[nrow(out.h),which(colnames(out.h) == 'pop_l')][2] + out.h[nrow(out.h),which(colnames(out.h) == 'pop_h')][2]) * 365
+coverage.3 <- sum(out.h[nrow(out.h),which(colnames(out.h) == 'cov_l')][3] + out.h[nrow(out.h),which(colnames(out.h) == 'cov_h')][3]) / sum(out.h[nrow(out.h),which(colnames(out.h) == 'pop_l')][3] + out.h[nrow(out.h),which(colnames(out.h) == 'pop_h')][3]) * 365
+
 
 
 cases_averted.func <- function(out_mat, out_mat_null, timepoint_year){
