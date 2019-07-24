@@ -1822,7 +1822,7 @@ cases.output.vec.h  <- cases_averted.func(out.h, out_null.h, years)
 #
 #   
 #   
-  save(cases.output.vec.h, file = paste('cases_averted_', input, '.RData', sep = ''))
+  save(cases.output.vec.h, file = paste('cases_averted.v_', input, '.RData', sep = ''))
 #   # save(infections.output.vec.h, file = paste('infections_averted_', input, '.RData', sep = ''))
 #   
 # }
