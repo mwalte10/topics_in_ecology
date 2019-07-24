@@ -1798,9 +1798,8 @@ cases_averted.func <- function(out_mat, out_mat_null, timepoint_year){
   
   
   output <- c(cases_av_vac.h, cases_av_vac, cases_av_vac.l)
-  names(output) <- c('cases_averted.h', 'cases_averted', 'cases_averted.l',
-                     'cases_av_vac.h', 'cases_av_vac', 'cases_av_vac.l',
-                     'cases_av_uvac.h', 'cases_av_uvac', 'cases_av_uvac.l')
+  names(output) <- c(
+                     'cases_av_vac.h', 'cases_av_vac', 'cases_av_vac.l')
   
   return(output)
 }
