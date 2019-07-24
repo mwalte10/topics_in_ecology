@@ -1737,7 +1737,7 @@ cases_averted.func <- function(out_mat, out_mat_null, timepoint_year){
                            sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'sec_cases.l.e')])),
                            sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'psec_cases.l.e')]))))
   
-    cases_vac.l.null.e <- sum( c(sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'prim_cases.l.e')])),
+    cases_vac.l.null <- sum( c(sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'prim_cases.l.e')])),
                              sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'sec_cases.l.e')])),
                              sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'psec_cases.l.e')]))))
   ##unvaccinaetd, high
