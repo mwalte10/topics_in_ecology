@@ -10,22 +10,22 @@ input = as.numeric(args[1])
 ##########################
 load("parms.mat.simp_model_NO_TRAVEL.RData")
 
-new.table <- list()
-for(i in 1:6){
-  new.table[[i]] <- new.parms.mat
-}
+
+new.table <- new.parms.mat[1:12,1:3]
 spec <- list()
 spec.vec <- seq(0, 1, by = 0.2)
 for(i in 1:6){
-  spec[[i]] <- rep(spec.vec[i], 20)
+  spec[[i]] <- rep(spec.vec[i], 2)
 }
 spec <- unlist(spec)
-new.table <- do.call('rbind', new.table)
-new.parms.mat <- cbind(new.table, spec)
+vac_h <- rep(c(0,1), 6)
+vac_l <- rev(vac_h)
+new.parms.mat <- cbind(new.table, vac_h, vac_l, spec)
 
 
 # missing.vec <- c(6,7,33,34,36,45,48,50,55,102)
 # input <- missing.vec[input]
+
 
 
 beta_h <- new.parms.mat[input,1]
@@ -34,6 +34,7 @@ native <- 1 - new.parms.mat[input,3]
 travel <- new.parms.mat[input,3]
 vac_h <- new.parms.mat[input,4]
 vac_l <- new.parms.mat[input,5]
+
 spec <- new.parms.mat[input, 6]
 
 
@@ -669,7 +670,7 @@ model <- function(t, y, parms, null){
       travel * S1_l * 2 * beta_h * ((sym_inf_h)/ pop_h) +
       native * S1_l * beta_l * ((inf_l) / pop_l) +
       travel * S1_l * beta_h * ((inf_h)/ pop_h)
-    primary_cases.l.v <- primary_cases.l[10] * inf[1]
+    primary_cases.l.v <- primary_cases.l[10] * inf[1] 
     primary_cases.l <- sum(primary_cases.l) * inf[1]
     
     
@@ -759,7 +760,8 @@ model <- function(t, y, parms, null){
   #############################
   ##CUMULATIVE POST-SECONDARY CASES, UNVACCINATED
   #############################
-{    postsec_cases.l <- 
+{    
+  postsec_cases.l <- 
   native * S3_l * beta_l * 2 * 0.5 * ((sym_inf_l) / pop_l ) +
   travel * S3_l * beta_h * 2 *  0.5 * ((sym_inf_h)  / pop_h ) +
   native * S3_l * beta_l * 0.5 * ((inf_l) / pop_l) +
