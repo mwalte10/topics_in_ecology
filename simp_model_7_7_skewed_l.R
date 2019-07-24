@@ -1624,7 +1624,7 @@ names(y_init) <- c(rep('sh1', 80), rep('ih1', 80), rep('rh1', 80),
                    rep('sl2.v', 80), rep('il2.v', 80), rep('rl2.v', 80),
                    rep('sl3.v', 80), rep('il3.v', 80), rep('rl3.v', 80),
                    rep('sl4.v', 80), rep('il4.v', 80), rep('rl4.v', 80),
-
+                   
                    'i_sec_vac', 'i_psec_vac',
                    'il_sec_vac', 'il_psec_vac',
                    'prim_tot.cases', 'prim_tot.ncases',
@@ -1663,7 +1663,6 @@ names(y_init) <- c(rep('sh1', 80), rep('ih1', 80), rep('rh1', 80),
                    rep('pop_h',3),rep('pop_l',3)
                    
 )
-
 
 #run intervention model
 out.h <- ode(times = times, y = y_init, func = model, parms = parms.h)
