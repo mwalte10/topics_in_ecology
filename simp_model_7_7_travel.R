@@ -1722,9 +1722,11 @@ vac.l <- out.h[nrow(out.h), which(colnames(out.h) == 'cases_vac.l')]
 null.l <- out_null.h[nrow(out.h), which(colnames(out_null.h) == 'cases_vac.l')]
 
 av.l <- ((null.l - vac.l) / null.l ) * 100
-
-cases.output.vec.h <- c(av.h, av.l)
-names(cases.output.vec.h) <- c('h', 'l')
+vac <- vac.h + vac.l
+null <- null.h + null.l
+av <- ((null - vac) / null) * 100
+cases.output.vec.h <- c(av.h, av.l,av)
+names(cases.output.vec.h) <- c('h', 'l', 'tot')
 
 save(cases.output.vec.h, file = paste('cases_averted.new_', input, '.RData', sep = ''))
 
