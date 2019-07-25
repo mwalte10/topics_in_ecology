@@ -66,7 +66,7 @@ library(deSolve)
 #Initial conidtions and parameters
 ###########################
 load('last_row_1.RData')
-y_init <- c(last_row[1:3520], rep(0,78))
+y_init <- c(last_row[1:3520], rep(0,80))
 
 
 parms.h <- list(beta_h = beta_h,
