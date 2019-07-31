@@ -1702,13 +1702,33 @@ out_null.h <- ode(times = times, y = y_init, func = model, parms = parms_null.h)
 out.h <- out.h[,2:ncol(out.h)]
 out_null.h <- out_null.h[,2:ncol(out_null.h)]
 
+##vaccinated, high
+cases_vac.h <- sum((out.h[nrow(out.h),which(colnames(out.h) == 'sec_vac.cases.h')]),
+                   (out.h[nrow(out.h),which(colnames(out.h) == 'psec_vac.cases.h')]))
+
+
+##vaccinated, low
+cases_vac.l <- sum((out_mat[nrow(out.h),which(colnames(out_mat) == 'sec_vac.cases.l')]),
+                   (out_mat[nrow(out.h),which(colnames(out_mat) == 'psec_vac.cases.l')]))
+
+cases_vac <- cases_vac.h + cases_vac.l
+
 vac.h <- out.h[nrow(out.h), which(colnames(out.h) == 'cases_vac.h')]
 null.h <- out_null.h[nrow(out.h), which(colnames(out_null.h) == 'cases_vac.h')]
+vac.l <- out.h[nrow(out.h), which(colnames(out.h) == 'cases_vac.l')]
+null.l <- out_null.h[nrow(out.h), which(colnames(out_null.h) == 'cases_vac.l')]
+
+ratio.l <- cases_vac.l / vac.l
+ratio.h <- cases_vac.h / vac.h
+ratio <-  cases_vac / (vac.l + vac.h)
+
+vac.h <- out.h[nrow(out.h), which(colnames(out.h) == 'cases_vac.h')] * ratio.h
+null.h <- out_null.h[nrow(out.h), which(colnames(out_null.h) == 'cases_vac.h')] * ratio.h
 
 av.h <- ((null.h - vac.h) / null.h ) * 100
 
-vac.l <- out.h[nrow(out.h), which(colnames(out.h) == 'cases_vac.l')]
-null.l <- out_null.h[nrow(out.h), which(colnames(out_null.h) == 'cases_vac.l')]
+vac.l <- out.h[nrow(out.h), which(colnames(out.h) == 'cases_vac.l')] * ratio.l
+null.l <- out_null.h[nrow(out.h), which(colnames(out_null.h) == 'cases_vac.l')] * ratio.l
 
 av.l <- ((null.l - vac.l) / null.l ) * 100
 
@@ -1825,6 +1845,7 @@ cases_averted.func <- function(out_mat, out_mat_null, timepoint_year){
   cases_uvac.h.e <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'prim_cases.h.e')]),
                         diff(out_mat[indexing,which(colnames(out_mat) == 'sec_cases.h.e')]),
                         diff(out_mat[indexing,which(colnames(out_mat) == 'psec_cases.h.e')]))
+ 
   cases_uvac.h.null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'prim_cases.h')]),
                            diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'sec_cases.h')]),
                            diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'psec_cases.h')]))
@@ -1842,6 +1863,8 @@ cases_averted.func <- function(out_mat, out_mat_null, timepoint_year){
                            diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'sec_cases.l')]),
                            diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'psec_cases.l')]))
   
+  null.h <- ifelse( is.nan(null.h), 0, null.h)
+  null.l <- ifelse(is.nan(null.l),  0,null.l)
   
   cases.null <- null.l+ null.h+ cases_uvac.h.null +cases_uvac.l.null
   cases <- cases_vac + cases_uvac
@@ -1865,6 +1888,7 @@ cases_averted.func <- function(out_mat, out_mat_null, timepoint_year){
   #                         out_mat_null[nrow(out.h),which(colnames(out_mat_null) == 'psec_cases.l.e')] * coverage_l.2)
   # cases_vac_null <- sum(cases_vac_h_null + cases_vac_l_null)
   
+ 
   
   cases_uvac.h.null <- cases.h.null - (null.h)
   cases_uvac.l.null <- cases.l.null - (null.l)
