@@ -1718,8 +1718,8 @@ cases_vac.h <- sum((out.h[nrow(out.h),which(colnames(out.h) == 'sec_vac.cases.h'
 
 
 ##vaccinated, low
-cases_vac.l <- sum((out_mat[nrow(out.h),which(colnames(out_mat) == 'sec_vac.cases.l')]),
-                   (out_mat[nrow(out.h),which(colnames(out_mat) == 'psec_vac.cases.l')]))
+cases_vac.l <- sum((out_mat[nrow(out.h),which(colnames(out.h) == 'sec_vac.cases.l')]),
+                   (out_mat[nrow(out.h),which(colnames(out.h) == 'psec_vac.cases.l')]))
 
 cases_vac <- cases_vac.h + cases_vac.l
 
