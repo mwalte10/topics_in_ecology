@@ -8,7 +8,7 @@ input = as.numeric(args[1])
 ##########################
 #IF DOING VAC COVERAGE
 ##########################
-load("parms.mat.simp_model_TRAVEL.RData")
+load("parms.mat.simp_model_SKEW_L.RData")
 
 # missing.vec <- c(6,7,33,34,36,45,48,50,55,102)
 # input <- missing.vec[input]

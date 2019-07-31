@@ -1,7 +1,7 @@
 #!/bin/csh
 
 #$ -N spec_
-#$ -t 1-2
+#$ -t 1-420
 
 module load bio/R/3.4.0
 
