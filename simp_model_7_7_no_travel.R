@@ -1789,6 +1789,20 @@ cases_averted.func <- function(out_mat, out_mat_null, timepoint_year){
                   diff(out_mat[indexing,which(colnames(out_mat) == 'sec_vac.cases.l')]),
                   diff(out_mat[indexing,which(colnames(out_mat) == 'psec_vac.cases.l')]))
   
+  cases_null <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'prim_cases.h')]),
+                    diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'sec_cases.h')]),
+                    diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'psec_cases.h')]),
+                    diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'prim_cases.l')]),
+                    diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'sec_cases.l')]),
+                    diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'psec_cases.l')]))
+  
+  cases_null.h <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'prim_cases.h')]),
+                    diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'sec_cases.h')]),
+                    diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'psec_cases.h')]))
+  
+  cases_null.l <- sum(diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'prim_cases.l')]),
+                      diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'sec_cases.l')]),
+                      diff(out_mat_null[indexing,which(colnames(out_mat_null) == 'psec_cases.l')]))
   
   ##unvaccinated, whole pop
   cases_uvac <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'prim_cases.h')]),
@@ -1852,6 +1866,7 @@ cases_averted.func <- function(out_mat, out_mat_null, timepoint_year){
   cases_uvac.h <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'prim_cases.h')]),
                       diff(out_mat[indexing,which(colnames(out_mat) == 'sec_cases.h')]),
                       diff(out_mat[indexing,which(colnames(out_mat) == 'psec_cases.h')]))
+  
   cases_uvac.h.e <- sum(diff(out_mat[indexing,which(colnames(out_mat) == 'prim_cases.h.e')]),
                         diff(out_mat[indexing,which(colnames(out_mat) == 'sec_cases.h.e')]),
                         diff(out_mat[indexing,which(colnames(out_mat) == 'psec_cases.h.e')]))
@@ -1876,15 +1891,15 @@ cases_averted.func <- function(out_mat, out_mat_null, timepoint_year){
   null.h <- ifelse( is.nan(null.h), 0, null.h)
   null.l <- ifelse(is.nan(null.l),  0,null.l)
   
-  cases.null <- null.l+ null.h+ cases_uvac.h.null +cases_uvac.l.null
+  cases.null <- cases_null
   cases <- cases_vac + cases_uvac
   cases.e <- cases_vac + cases_uvac.e
   
-  cases.h.null <- null.h + cases_uvac.h.null
+  cases.h.null <- cases_null.h
   cases.h <- cases_vac.h + cases_uvac.h
   cases.h.e <- cases_vac.h + cases_uvac.h.e
   
-  cases.l.null <- null.l + cases_uvac.l.null
+  cases.l.null <- cases_null.l
   cases.l <- cases_vac.l + cases_uvac.l
   cases.l.e <- cases_vac.l + cases_uvac.l.e
   
