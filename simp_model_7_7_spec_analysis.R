@@ -21,8 +21,9 @@ for(i in 1:21){
 spec <- unlist(spec)
 new.table <- do.call('rbind', new.table)
 new.parms.mat <- cbind(new.table, spec)
-# missing.vec <- c(32, 33)
-# input <- missing.vec[input]
+missing.vec <- c(23,24,25,42,67,96,98,99,100,101,120,151,173,176,186,187,195,203,208,209,211,244,245,246,
+                 269, 286,287,292,312,325,326,341,404,408,413)
+input <- missing.vec[input]
 beta_h <- new.parms.mat[input,1]
 beta_l <- new.parms.mat[input,2]
 native <- 1 - new.parms.mat[input,3]

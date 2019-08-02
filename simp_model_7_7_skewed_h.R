@@ -10,8 +10,8 @@ input = as.numeric(args[1])
 ##########################
 load("parms.mat.simp_model_SKEW_H.RData")
 
-# missing.vec <- c(6,7,33,34,36,45,48,50,55,102)
-# input <- missing.vec[input]
+missing.vec <- c(6,7,8,9,13,15,16)
+input <- missing.vec[input]
 
 
 beta_h <- new.parms.mat[input,1]
