@@ -32,6 +32,14 @@ vac_h <- new.parms.mat[input,4]
 vac_l <- new.parms.mat[input,5]
 spec <- new.parms.mat[input, 6]
 
+load('birth_1950.RData')
+birth <- birth[51:80]
+load('death_1950.RData')
+death <- death[51:80]
+source("formulas_for_model.R")
+
+
+
 
 hopkins <- c(0.53, 1, 0.115)
 hopkins_inverse <- 1 - hopkins
