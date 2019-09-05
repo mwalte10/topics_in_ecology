@@ -92,9 +92,9 @@ parms_null.h <- list(beta_h = beta_h,
                      hopkins,
                      hopkins_inverse)
 #TOTAL TIME
-years = 60
+years = 30
 #TIME OF VAC START
-years_vac = 60
+years_vac = 0
 times <- seq(from = 0, to = 365 * years, by = 0.1)
 times <- times[1:(length(times) - 1)]
 ############################
